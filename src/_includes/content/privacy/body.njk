@@ -1,0 +1,147 @@
+{%- set appName = app.name | loc(lang) %}
+{%- set p = app.privacy %}
+<h1>{{ appName }} {{ t.privacy.title }}</h1>
+
+{%- if site.privacyDraftBanner %}
+<p class="banner">{{ t.privacy.draftBanner }}</p>
+{%- endif %}
+
+<p class="updated">{{ t.privacy.updated | fill({ date: app.policyUpdated | loc(lang) }) }}</p>
+
+<p>{{ t.privacy.introLead | fill({ app: appName, operator: site.operator | loc(lang) }) }}</p>
+<p>{{ app.description | loc(lang) }}</p>
+<p>{{ t.privacy.introPolicy }}</p>
+
+<section>
+  <h2>{{ t.privacy.policyHeading }}</h2>
+  <p>{{ t.privacy.policyLead }}</p>
+  <ul>
+    {%- if p.storage == "cloudkit-private" %}
+    <li>{{ t.privacy.policyLocal }}</li>
+    <li>{{ t.privacy.policyNoServer }}</li>
+    {%- endif %}
+    {%- if p.noAdsNoTracking %}
+    <li>{{ t.privacy.policyNoAds }}</li>
+    {%- endif %}
+  </ul>
+</section>
+
+<section>
+  <h2>{{ t.privacy.collectHeading }}</h2>
+  <p>{{ t.privacy.collectLead }}</p>
+  <div class="table-scroll">
+    <table>
+      <thead>
+        <tr><th scope="col">{{ t.privacy.collectColCategory }}</th><th scope="col">{{ t.privacy.collectColItems }}</th></tr>
+      </thead>
+      <tbody>
+        {%- for row in p.dataCollected | loc(lang) %}
+        <tr><th scope="row">{{ row.category }}</th><td>{{ row.items }}</td></tr>
+        {%- endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section>
+  <h2>{{ t.privacy.storageHeading }}</h2>
+  <ul>
+    <li>{{ t.privacy.storageLocal }}</li>
+    {%- if p.storage == "cloudkit-private" %}
+    <li>{{ t.privacy.storageCloud }}</li>
+    {%- endif %}
+  </ul>
+</section>
+
+<section>
+  <h2>{{ t.privacy.thirdPartyHeading }}</h2>
+  <p>{{ t.privacy.thirdPartyBody }}</p>
+</section>
+
+{#- 機能ごとの説明。app.notes に本文があるものだけを出す #}
+{%- for feature in p.features %}
+  {%- set note = app.notes[feature] | locStrict(lang) if app.notes else null %}
+  {%- if note and t.privacy.featureHeadings[feature] %}
+<section>
+  <h2>{{ t.privacy.featureHeadings[feature] }}</h2>
+  <p>{{ note }}</p>
+</section>
+  {%- endif %}
+{%- endfor %}
+
+{%- if "subscription" in p.features %}
+<section>
+  <h2>{{ t.privacy.billingHeading }}</h2>
+  <p>{{ t.privacy.billingBody | fill({ subscription: app.subscription | loc(lang) }) }}</p>
+</section>
+{%- endif %}
+
+{%- if p.childDirected %}
+<section>
+  <h2>{{ t.privacy.childrenHeading }}</h2>
+  <p>{{ t.privacy.childrenLead }}</p>
+  <ul>
+    {%- if p.noAdsNoTracking %}
+    <li>{{ t.privacy.childrenNoAds }}</li>
+    {%- endif %}
+    {%- if p.uuidIdentifier %}
+    <li>{{ t.privacy.childrenUuid }}</li>
+    {%- endif %}
+  </ul>
+</section>
+{%- endif %}
+
+<section>
+  <h2>{{ t.privacy.deletionHeading }}</h2>
+  <ul>
+    {%- for step in p.dataDeletion | loc(lang) %}
+    <li>{{ step }}</li>
+    {%- endfor %}
+  </ul>
+</section>
+
+{%- if "jp" in p.regions %}
+<section>
+  <h2>{{ t.privacy.disclosureHeading }}</h2>
+  <p>{{ t.privacy.disclosureBody }}</p>
+</section>
+{%- endif %}
+
+<section>
+  <h2>{{ t.privacy.inquiryDataHeading }}</h2>
+  <p>{{ t.privacy.inquiryDataBody }}</p>
+</section>
+
+{#- 海外配信するアプリで regions に "eu" / "us" を足すと、下記の節が有効になる。
+    中身は未記載。TODO-legal.md のチェックリストを埋めてから公開すること。 #}
+{%- if "eu" in p.regions %}
+{%- include "content/privacy/gdpr.njk" %}
+{%- endif %}
+{%- if "us" in p.regions %}
+{%- include "content/privacy/coppa.njk" %}
+{%- endif %}
+
+{%- if p.medicalDisclaimer %}
+<section>
+  <h2>{{ t.privacy.medicalHeading }}</h2>
+  <p>{{ t.privacy.medicalBody }}</p>
+</section>
+{%- endif %}
+
+<section>
+  <h2>{{ t.privacy.changesHeading }}</h2>
+  <p>{{ t.privacy.changesBody }}</p>
+</section>
+
+<section>
+  <h2>{{ t.privacy.contactHeading }}</h2>
+  <p>{{ t.privacy.contactBody }}</p>
+  <dl class="contact-list">
+    <dt>{{ t.privacy.contactOperatorLabel }}</dt>
+    <dd>{{ site.operator | loc(lang) }}</dd>
+    <dt>{{ t.privacy.contactEmailLabel }}</dt>
+    <dd><a href="mailto:{{ site.email.privacy }}">{{ site.email.privacy }}</a></dd>
+  </dl>
+</section>
+
+{%- include "content/apps/" + app.slug + "/privacy-" + lang + ".njk" ignore missing %}

@@ -1,0 +1,52 @@
+{
+  "_comment": "アプリを1本追加するときのテンプレート。このファイルをコピーして src/_data/apps/<slug>.json として保存する。日英両対応の例。日本語のみのアプリは languages を [\"ja\"] にして en のキーを省く。",
+
+  "slug": "tabiwari",
+  "name": { "ja": "TabiWari", "en": "TabiWari" },
+  "platform": "iOS",
+  "languages": ["ja", "en"],
+  "defaultLanguage": "ja",
+  "email": "tabiwari@greencornlab.com",
+  "policyUpdated": { "ja": "2026年1月1日", "en": "January 1, 2026" },
+
+  "description": {
+    "ja": "アプリの説明を1〜3文で。サポートページとプライバシーポリシーの冒頭に出る。",
+    "en": "One to three sentences describing the app. Shown at the top of the support page and the privacy policy."
+  },
+
+  "subscription": {
+    "ja": "月額◯◯円 / 年額◯◯円の自動更新サブスクリプション",
+    "en": "An auto-renewing subscription at ¥— per month or ¥— per year"
+  },
+
+  "privacy": {
+    "_comment_regions": "配信地域。現状は \"jp\" のみ有効。\"eu\" / \"us\" を足すとビルドが止まる（GDPR / COPPA の節が未記載のため。TODO-legal.md 参照）",
+    "regions": ["jp"],
+    "childDirected": true,
+    "storage": "cloudkit-private",
+    "_comment_features": "photos / export-json / pdf-report / calendar / subscription から、そのアプリが持つものだけを書く",
+    "features": ["subscription"],
+    "medicalDisclaimer": false,
+    "noAdsNoTracking": true,
+    "uuidIdentifier": true,
+    "dataCollected": {
+      "ja": [{ "category": "分類", "items": "具体的な項目" }],
+      "en": [{ "category": "Category", "items": "Details" }]
+    },
+    "dataDeletion": {
+      "ja": ["削除の手順を1項目ずつ。サポートページのFAQとポリシーの両方に出る。"],
+      "en": ["One step per entry. Shown both in the support FAQ and in the privacy policy."]
+    }
+  },
+
+  "_comment_notes": "features に書いた機能の説明。書いたものだけがポリシーに節として出る。",
+  "notes": {
+    "export-json": { "ja": "…", "en": "…" }
+  },
+
+  "_comment_faq": "共通FAQ（解約・保存場所・削除）に続けて出る、このアプリ固有のFAQ。省略可。",
+  "faq": {
+    "ja": [{ "q": "質問", "a": "回答" }],
+    "en": [{ "q": "Question", "a": "Answer" }]
+  }
+}

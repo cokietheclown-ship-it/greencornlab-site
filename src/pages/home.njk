@@ -1,0 +1,36 @@
+---
+pagination:
+  data: pages.home
+  size: 1
+  alias: target
+permalink: "/{{ target.lang }}/"
+---
+<h1>{{ t.home.title }}</h1>
+<p class="lead">{{ t.home.lead }}</p>
+
+<section>
+  <h2>{{ t.home.appsHeading }}</h2>
+  <ul class="app-list">
+    {%- for item in pages.apps %}
+    {%- set appLang = lang if lang in item.languages else item.defaultLanguage %}
+    <li class="app-list__item">
+      <h3>{{ item.name | loc(lang) }}</h3>
+      <p class="app-list__links">
+        <a href="/{{ appLang }}/{{ item.slug }}/support/">{{ t.nav.support }}</a>
+        <a href="/{{ appLang }}/{{ item.slug }}/privacy/">{{ t.nav.privacy }}</a>
+      </p>
+    </li>
+    {%- endfor %}
+  </ul>
+</section>
+
+<section>
+  <h2>{{ t.home.contactHeading }}</h2>
+  <p>{{ t.home.contactLead }}</p>
+  <dl class="contact-list">
+    <dt>{{ t.home.contactSupportLabel }}</dt>
+    <dd><a href="mailto:{{ site.email.support }}">{{ site.email.support }}</a></dd>
+    <dt>{{ t.home.contactPrivacyLabel }}</dt>
+    <dd><a href="mailto:{{ site.email.privacy }}">{{ site.email.privacy }}</a></dd>
+  </dl>
+</section>

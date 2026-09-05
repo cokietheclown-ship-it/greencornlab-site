@@ -1,0 +1,12 @@
+<footer class="site-footer">
+  <div class="wrap">
+    <nav class="site-footer__nav">
+      <a href="/{{ lang }}/">{{ t.nav.home }}</a>
+      {%- if app and lang in app.languages %}
+      <a href="/{{ lang }}/{{ app.slug }}/support/">{{ t.nav.support }}</a>
+      <a href="/{{ lang }}/{{ app.slug }}/privacy/">{{ t.nav.privacy }}</a>
+      {%- endif %}
+    </nav>
+    <p class="site-footer__copy">&copy; {{ t.footer.copyright }}</p>
+  </div>
+</footer>

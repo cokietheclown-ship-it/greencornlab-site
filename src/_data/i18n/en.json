@@ -1,0 +1,101 @@
+{
+  "htmlLang": "en",
+  "langName": "English",
+  "otherLangName": "日本語",
+  "nav": {
+    "home": "Home",
+    "support": "Support",
+    "privacy": "Privacy Policy",
+    "skipToContent": "Skip to content"
+  },
+  "home": {
+    "title": "Green Corn Lab",
+    "lead": "Green Corn Lab is the name I develop iOS apps under, as an independent developer. This site hosts the support information and privacy policy for each app.",
+    "appsHeading": "Apps",
+    "contactHeading": "Contact",
+    "contactLead": "For general enquiries, use the address below. For questions about a specific app, please use the address listed on that app's support page.",
+    "contactSupportLabel": "General enquiries",
+    "contactPrivacyLabel": "Privacy enquiries"
+  },
+  "support": {
+    "titleSuffix": "Support",
+    "aboutHeading": "About this app",
+    "contactHeading": "Contact",
+    "contactLead": "For questions, feature requests, or bug reports about {app}, please email the address below. Including your device model, iOS version, and app version helps a great deal when looking into a problem.",
+    "responseTime": "We aim to reply to every enquiry within X business days.",
+    "responseNote": "Replies may take longer over weekends and public holidays, or when an issue needs further investigation.",
+    "faqHeading": "Frequently asked questions",
+    "faq": {
+      "cancelQ": "How do I cancel my subscription?",
+      "cancelA": "Subscriptions are managed in the Settings app on your iPhone. Open Settings, tap your name at the top, tap Subscriptions, select {app}, and then tap Cancel Subscription. Cancelling at least 24 hours before the renewal date prevents the next charge.",
+      "cancelBillingA": "All billing and refunds for subscriptions are handled by Apple through the App Store. We cannot cancel a subscription or issue a refund on your behalf. If you would like a refund, please request it from Apple Support.",
+      "storageQ": "Where is my data stored, and can the developer see it?",
+      "storageA": "Everything you enter is stored only on your device and in your own private iCloud database (CloudKit private database). Nothing is sent to a server run by the developer, and the developer has no way to view your records.",
+      "deletionQ": "How do I delete my data?",
+      "deletionIntro": "You can delete your data in the following ways."
+    },
+    "privacyLinkLead": "For details on how your information is handled, see the ",
+    "privacyLinkTail": "."
+  },
+  "privacy": {
+    "title": "Privacy Policy",
+    "draftBanner": "This document is a draft and will be replaced with the final version once it has been reviewed.",
+    "updated": "Last updated: {date}",
+    "introLead": "{app} (\"the app\") is provided by {operator}.",
+    "introPolicy": "This policy explains what information the app handles and how it is treated.",
+    "policyHeading": "Our approach",
+    "policyLead": "Because the app handles sensitive information about children, it is built around the following principles.",
+    "policyLocal": "Everything you enter is stored only in local storage on your device and in your own private iCloud database (CloudKit private database).",
+    "policyNoServer": "No record you create is ever sent to a server operated by the developer.",
+    "policyNoAds": "The app contains no advertising, no behavioural tracking, and no third-party analytics SDKs.",
+    "collectHeading": "Information the app handles",
+    "collectLead": "The following information is stored on your device and in your iCloud account when you use the app.",
+    "collectColCategory": "Category",
+    "collectColItems": "Details",
+    "storageHeading": "Storage and syncing",
+    "storageLocal": "On-device storage: protected by the standard iOS Data Protection features, which encrypt data according to the lock state of the device.",
+    "storageCloud": "iCloud sync: data syncs only within your own iCloud private database, across devices signed in to the same Apple ID. The developer has no means of accessing it.",
+    "thirdPartyHeading": "Sharing with third parties",
+    "thirdPartyBody": "The developer does not share any information from the app with third parties. As described above, your records are never transmitted to, or collected by, the developer.",
+    "featureHeadings": {
+      "photos": "Attaching photos",
+      "export-json": "Exporting your data",
+      "pdf-report": "PDF reports",
+      "calendar": "Calendar integration"
+    },
+    "billingHeading": "Subscriptions and StoreKit",
+    "billingBody": "{subscription} is processed through Apple's StoreKit framework. Payment details such as card numbers are handled by Apple (the App Store); the developer never receives or stores them.",
+    "childrenHeading": "Information about children",
+    "childrenLead": "The app is designed to be used by a parent, guardian, or support worker on a child's behalf, or together with the child.",
+    "childrenNoAds": "There is no advertising, no behavioural targeting, and no sharing of data with third parties.",
+    "childrenUuid": "A child's name is never used as an identifier. Each profile is managed internally with a randomly generated UUID.",
+    "deletionHeading": "Deleting your information",
+    "disclosureHeading": "Requests for disclosure and correction",
+    "disclosureBody": "Under Japan's Act on the Protection of Personal Information, individuals may request disclosure, correction, or deletion of their personal data. Because your records are never sent to the developer's servers, the developer holds no records that could be disclosed, corrected, or deleted on request. The data on your device and in your iCloud account remains under your control and can be reviewed or deleted at any time.",
+    "inquiryDataHeading": "Information received through enquiries",
+    "inquiryDataBody": "If you contact us by email, your email address and the contents of your message are used solely to reply to you and to investigate the issue you have raised. They are not used for any other purpose and are not shared with third parties.",
+    "medicalHeading": "Medical disclaimer",
+    "medicalBody": "The records and reports produced by the app are notes kept by a parent, guardian, or support worker, and are not intended for medical diagnosis. Always consult a qualified healthcare professional if you need a medical assessment of a child's condition.",
+    "changesHeading": "Changes to this policy",
+    "changesBody": "This policy may change as laws are amended or as features are added to the app. Any significant change will be announced in the app or on this page.",
+    "contactHeading": "Contact",
+    "contactBody": "For questions about privacy in this app, please contact us at the address below.",
+    "contactOperatorLabel": "Provider",
+    "contactEmailLabel": "Email",
+    "gdprHeading": "Information for users in the EEA and the UK",
+    "coppaHeading": "Information for users in the United States (COPPA)"
+  },
+  "fallback": {
+    "title": "Redirecting",
+    "body": "This page is not available in the language you requested. Redirecting you to the default language for this app.",
+    "manualLink": "Tap here if you are not redirected automatically."
+  },
+  "notFound": {
+    "title": "Page not found",
+    "body": "The page you are looking for may have been moved or removed.",
+    "homeLink": "Go to the home page"
+  },
+  "footer": {
+    "copyright": "Green Corn Lab"
+  }
+}

@@ -1,0 +1,32 @@
+---
+permalink: "/index.html"
+---
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ site.name.ja }}</title>
+    <link rel="canonical" href="{{ site.url }}/{{ site.defaultLanguage }}/">
+    <meta http-equiv="refresh" content="0; url=/{{ site.defaultLanguage }}/">
+    <meta name="color-scheme" content="light dark">
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <script>
+      // ブラウザの言語設定を見て振り分ける。判定できない場合は日本語。
+      (function () {
+        var supported = {{ pages.languages | dump | safe }};
+        var fallback = "{{ site.defaultLanguage }}";
+        var langs = navigator.languages || [navigator.language || fallback];
+        var target = fallback;
+        for (var i = 0; i < langs.length; i++) {
+          var code = String(langs[i]).toLowerCase().split("-")[0];
+          if (supported.indexOf(code) !== -1) { target = code; break; }
+        }
+        location.replace("/" + target + "/");
+      })();
+    </script>
+  </head>
+  <body>
+    <p><a href="/ja/">日本語</a> / <a href="/en/">English</a></p>
+  </body>
+</html>

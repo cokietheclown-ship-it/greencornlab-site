@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="{{ t.htmlLang }}">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ title }}</title>
+    {%- if description %}
+    <meta name="description" content="{{ description }}">
+    {%- endif %}
+    {%- if noindex %}
+    <meta name="robots" content="noindex, follow">
+    {%- endif %}
+    {%- if redirectTo %}
+    <meta http-equiv="refresh" content="0; url={{ redirectTo }}">
+    <link rel="canonical" href="{{ site.url }}{{ redirectTo }}">
+    {%- else %}
+    <link rel="canonical" href="{{ site.url }}{{ page.url }}">
+    {%- endif %}
+    {%- for alt in alternates %}
+    <link rel="alternate" hreflang="{{ alt.lang }}" href="{{ site.url }}{{ alt.url }}">
+    {%- endfor %}
+    <meta name="color-scheme" content="light dark">
+    <link rel="stylesheet" href="/assets/css/style.css">
+  </head>
+  <body>
+    <a class="skip-link" href="#main">{{ t.nav.skipToContent }}</a>
+    {% include "partials/header.njk" %}
+    <main id="main" class="wrap">
+      {{ content | safe }}
+    </main>
+    {% include "partials/footer.njk" %}
+  </body>
+</html>

@@ -1,0 +1,53 @@
+{%- set appName = app.name | loc(lang) %}
+<h1>{{ appName }} {{ t.support.titleSuffix }}</h1>
+
+<section>
+  <h2>{{ t.support.aboutHeading }}</h2>
+  <p>{{ app.description | loc(lang) }}</p>
+</section>
+
+<section>
+  <h2>{{ t.support.contactHeading }}</h2>
+  <p>{{ t.support.contactLead | fill({ app: appName }) }}</p>
+  <p class="contact"><a href="mailto:{{ app.email }}">{{ app.email }}</a></p>
+  <p>{{ t.support.responseTime }}</p>
+  <p class="note">{{ t.support.responseNote }}</p>
+</section>
+
+<section>
+  <h2>{{ t.support.faqHeading }}</h2>
+
+  {%- if "subscription" in app.privacy.features %}
+  <h3>{{ t.support.faq.cancelQ }}</h3>
+  <p>{{ t.support.faq.cancelA | fill({ app: appName }) }}</p>
+  <p>{{ t.support.faq.cancelBillingA }}</p>
+  {%- endif %}
+
+  {%- if app.privacy.storage == "cloudkit-private" %}
+  <h3>{{ t.support.faq.storageQ }}</h3>
+  <p>{{ t.support.faq.storageA }}</p>
+  {%- endif %}
+
+  {%- set deletionSteps = app.privacy.dataDeletion | locStrict(lang) %}
+  {%- if deletionSteps %}
+  <h3>{{ t.support.faq.deletionQ }}</h3>
+  <p>{{ t.support.faq.deletionIntro }}</p>
+  <ul>
+    {%- for step in deletionSteps %}
+    <li>{{ step }}</li>
+    {%- endfor %}
+  </ul>
+  {%- endif %}
+
+  {#- アプリ固有のFAQ。データファイルに faq を書けばここに並ぶ #}
+  {%- for item in app.faq | locStrict(lang) %}
+  <h3>{{ item.q }}</h3>
+  <p>{{ item.a }}</p>
+  {%- endfor %}
+
+  {#- 追記したいことがあれば
+      src/_includes/content/apps/<slug>/support-<lang>.njk を置く（無ければ無視される） #}
+  {%- include "content/apps/" + app.slug + "/support-" + lang + ".njk" ignore missing %}
+</section>
+
+<p class="crosslink">{{ t.support.privacyLinkLead }}<a href="/{{ lang }}/{{ app.slug }}/privacy/">{{ t.nav.privacy }}</a>{{ t.support.privacyLinkTail }}</p>

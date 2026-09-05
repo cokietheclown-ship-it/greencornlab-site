@@ -1,0 +1,18 @@
+{
+  "name": {
+    "ja": "Green Corn Lab",
+    "en": "Green Corn Lab"
+  },
+  "domain": "greencornlab.com",
+  "url": "https://greencornlab.com",
+  "operator": {
+    "ja": "Green Corn Lab（運営者：Kenji Kawazoe）",
+    "en": "Green Corn Lab (operated by Kenji Kawazoe)"
+  },
+  "email": {
+    "support": "support@greencornlab.com",
+    "privacy": "privacy@greencornlab.com"
+  },
+  "defaultLanguage": "ja",
+  "privacyDraftBanner": true
+}
