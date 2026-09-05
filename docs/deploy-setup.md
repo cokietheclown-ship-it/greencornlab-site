@@ -1,5 +1,9 @@
 # 公開の手順
 
+> **状況（2026/9/6時点）**: 手順1〜4は完了済み。サイトは https://greencornlab.com で
+> HTTPS配信されています。残るのは手順5以降（草案バナーの解除、App Store ConnectのURL差し替え、
+> 旧サイトの転送）です。
+
 初回だけ必要な作業です。上から順に実行してください。
 **順番が大事です。**公開中の Emoco のサポートURL／プライバシーポリシーURLを、
 新サイトが動く前に切り替えてしまわないようにしています。
@@ -39,6 +43,19 @@ greencornlab.com は Cloudflare でDNSを管理しています（ネームサー
 |---|---|---|---|
 | CNAME | `greencornlab.com`（またはルートを表す `@`） | `cokietheclown-ship-it.github.io` | **DNS only（グレーの雲）** |
 | CNAME | `www` | `cokietheclown-ship-it.github.io` | **DNS only（グレーの雲）** |
+
+> **注意：ルートにパーキングページのCNAMEがある場合**
+> Cloudflare Registrar でドメインを取ると、ルートに
+> `default-page.registrar.cloudflare.com` へのCNAMEが自動で入ります。
+> このレコードはDNS画面から編集・削除できません（「Registrarの設定側で変更してください」
+> というエラーになります）。先に
+> **ドメイン → 登録 → 対象ドメイン → 設定 → 駐車場ページ →「駐車ページを無効にする」**
+> を実行してレコードを消してから、上記のCNAMEを追加してください。
+
+> **メールのレコードは触らないこと**
+> greencornlab.com のメールは iCloud+ のカスタムメールドメインで運用しています。
+> MX 2件（`mx01`/`mx02.mail.icloud.com`）、SPFのTXT、Appleのドメイン確認TXT、
+> `sig1._domainkey` のDKIM CNAME は、変更するとメールが届かなくなります。
 
 - Cloudflare はルートドメインのCNAMEを自動で平坦化（CNAME flattening）するため、
   Aレコードを4つ並べる必要はありません。
