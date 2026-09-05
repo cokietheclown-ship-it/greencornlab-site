@@ -22,7 +22,7 @@
     "aboutHeading": "About this app",
     "contactHeading": "Contact",
     "contactLead": "For questions, feature requests, or bug reports about {app}, please email the address below. Including your device model, iOS version, and app version helps a great deal when looking into a problem.",
-    "responseTime": "We aim to reply to every enquiry within X business days.",
+    "responseTime": "We aim to reply to every enquiry within 5 business days.",
     "responseNote": "Replies may take longer over weekends and public holidays, or when an issue needs further investigation.",
     "faqHeading": "Frequently asked questions",
     "faq": {

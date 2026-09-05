@@ -6,10 +6,12 @@
 
 - [ ] 弁護士等の専門家によるレビュー（特に児童のデータを扱う点）
 - [ ] `src/_data/site.json` の `privacyDraftBanner` を `false` にして、ページ上部の「草案です」バナーを外す
-- [ ] `src/_data/i18n/ja.json` の `support.responseTime` の「◯ 営業日」を実際の日数に置き換える
-- [ ] `src/_data/i18n/en.json` の `support.responseTime` の「X business days」を同じ日数に置き換える
+- [x] `src/_data/i18n/ja.json` の `support.responseTime` を「5営業日以内」に設定済み
+- [x] `src/_data/i18n/en.json` の `support.responseTime` を「within 5 business days」に設定済み
 - [ ] `src/_data/site.json` の `operator`（事業者名の表記）を確定する。現状は「Green Corn Lab（運営者：Kenji Kawazoe）」
-- [ ] メールアドレス3件の受信設定（`support@` / `privacy@` / 各アプリ個別）
+- [x] メールの受信設定（iCloud+ のカスタムメールドメイン。`support@` / `privacy@` / `hello@` を登録し、
+      各アプリ個別のアドレス（`emoco@` など）はキャッチオールで受信する。
+      なお送信元に使えるのは登録済みの3件のみで、キャッチオール宛への返信は `support@` から出る）
 - [ ] App Store Connect のサポートURL・プライバシーポリシーURLを新URLへ更新する
 
 ## 断定できず、確認が必要な記述
