@@ -26,8 +26,8 @@ git push -u origin main
 `.github/workflows/deploy.yml` が main への push で走ります。
 Actions タブでビルドが緑になることを確認してください。
 
-この時点では、まだ `https://cokietheclown-ship-it.github.io/greencornlab-site/` では
-見られません（`src/CNAME` があるため、GitHub は独自ドメイン前提で配信します）。次の手順へ。
+この時点では `https://cokietheclown-ship-it.github.io/greencornlab-site/` で配信されます。
+サブパス配信なのでCSSが当たらず崩れて見えますが、独自ドメインを設定すればルート配信になり直ります。
 
 ## 3. DNS を設定する（Cloudflare）
 
@@ -47,16 +47,28 @@ greencornlab.com は Cloudflare でDNSを管理しています（ネームサー
   有効にできません。
 - 既存のレコードでルートを別のサービスに向けているものがあれば、削除または変更が必要です。
 
-反映後、GitHub の Settings → Pages に `greencornlab.com` が表示され、
-証明書の発行（数分〜1時間程度）が終わったら **Enforce HTTPS** にチェックを入れます。
+## 4. GitHub側にカスタムドメインを登録する
 
-## 4. 新サイトが見られることを確認する
+**DNSを設定したあとに行ってください。**GitHubがDNSを検証するため、先に登録するとエラーになります。
+
+Settings → Pages → 「カスタムドメイン」欄に `greencornlab.com` を入力して「保存」。
+
+> `src/CNAME` を置いてあっても、この登録は自動では行われません。
+> CNAMEファイルが自動反映されるのはブランチ配信のときだけで、
+> GitHub Actions 経由のデプロイでは手動登録が必要です。
+> （逆に、ここで登録するとGitHubが`main`ブランチにCNAMEファイルをコミットしようとしますが、
+> 既にリポジトリにあるため実質的な変更は起きません。）
+
+DNSの検証が通ると「DNS check successful」と表示されます。
+証明書の発行（数分〜1時間程度）が終わったら **HTTPSを強制する（Enforce HTTPS）** にチェックを入れます。
+
+## 5. 新サイトが見られることを確認する
 
 - https://greencornlab.com/ → `/ja/` へ振り分けられる
 - https://greencornlab.com/ja/emoco/support/
 - https://greencornlab.com/ja/emoco/privacy/
 
-## 5. プライバシーポリシーを草案から公開版にする
+## 6. プライバシーポリシーを草案から公開版にする
 
 [../TODO-legal.md](../TODO-legal.md) の「公開前に必ず対応」を片付けます。
 特に以下の2つは、公開前に必ず。
@@ -64,7 +76,7 @@ greencornlab.com は Cloudflare でDNSを管理しています（ネームサー
 - 返信までの目安日数（`◯ 営業日` / `X business days`）を埋める
 - `src/_data/site.json` の `privacyDraftBanner` を `false` にして草案バナーを外す
 
-## 6. App Store Connect のURLを差し替える
+## 7. App Store Connect のURLを差し替える
 
 Emoco の App 情報で、サポートURL・プライバシーポリシーURLを新URLへ更新します。
 
@@ -73,7 +85,7 @@ Emoco の App 情報で、サポートURL・プライバシーポリシーURLを
 | サポートURL | `https://greencornlab.com/ja/emoco/support/` |
 | プライバシーポリシーURL | `https://greencornlab.com/ja/emoco/privacy/` |
 
-## 7. 旧サイトを転送ページに差し替える
+## 8. 旧サイトを転送ページに差し替える
 
 最後に、`emoco-site` リポジトリの2ファイルを転送ページへ差し替えます。
 手順とファイルは [emoco-site-redirects/](emoco-site-redirects/) にあります。

@@ -57,8 +57,9 @@ npm run serve     # http://localhost:8080 で確認
 ## 独自ドメインの設定
 
 `src/CNAME` に `greencornlab.com` を置いてあり、ビルド出力にそのままコピーされます。
-あわせて Cloudflare 側のDNS設定が必要です（ルートとwwwのCNAMEを
-`cokietheclown-ship-it.github.io` へ、Proxyはオフ）。
+ただしGitHub Actions経由のデプロイでは、このファイルだけではカスタムドメインが有効になりません。
+Cloudflare側のDNS設定（ルートとwwwのCNAMEを `cokietheclown-ship-it.github.io` へ、Proxyはオフ）と、
+GitHubのSettings → Pagesでのカスタムドメイン登録の両方が必要です。
 
 手順は [docs/deploy-setup.md](docs/deploy-setup.md) にまとめてあります。
 
