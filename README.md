@@ -57,16 +57,15 @@ npm run serve     # http://localhost:8080 で確認
 ## 独自ドメインの設定
 
 `src/CNAME` に `greencornlab.com` を置いてあり、ビルド出力にそのままコピーされます。
-あわせて DNS 側の設定が必要です。
+あわせて Cloudflare 側のDNS設定が必要です（ルートとwwwのCNAMEを
+`cokietheclown-ship-it.github.io` へ、Proxyはオフ）。
 
-- apex（`greencornlab.com`）: A レコードを GitHub Pages の4つのIPへ
-  （`185.199.108.153` / `185.199.109.153` / `185.199.110.153` / `185.199.111.153`）
-- `www`: CNAME を `<GitHubユーザー名>.github.io` へ
-
-DNSが通ったら、GitHub のリポジトリ設定 → Pages で "Enforce HTTPS" を有効にしてください。
-最新のIPアドレスは GitHub の公式ドキュメントで確認してください。
+手順は [docs/deploy-setup.md](docs/deploy-setup.md) にまとめてあります。
 
 ## デプロイ
 
 `.github/workflows/deploy.yml` が main への push で走ります。
 初回のみ、リポジトリ設定 → Pages → Source を **GitHub Actions** に切り替えてください。
+
+初回の公開手順（リポジトリ作成・DNS・App Store ConnectのURL差し替え・旧サイトの転送）は
+[docs/deploy-setup.md](docs/deploy-setup.md) を参照してください。
