@@ -2,7 +2,9 @@
 {%- set p = app.privacy %}
 <h1>{{ appName }} {{ t.privacy.title }}</h1>
 
-{%- if site.privacyDraftBanner %}
+{#- 「草案です」バナー。アプリ単位で外せる。
+    何も預からないアプリのポリシーにまで草案と書くと、審査で見た人に不安を与える。 #}
+{%- if site.privacyDraftBanner and app.privacy.draftBanner !== false %}
 <p class="banner">{{ t.privacy.draftBanner }}</p>
 {%- endif %}
 
@@ -12,14 +14,18 @@
 <p>{{ app.description | loc(lang) }}</p>
 <p>{{ t.privacy.introPolicy }}</p>
 
+{#- 前置きは、お子さまの情報を預かるアプリかどうかで替える。
+    ゲームのように何も預からないアプリに「機微な情報を扱う」と書くと、事実と合わない。 #}
 <section>
   <h2>{{ t.privacy.policyHeading }}</h2>
-  <p>{{ t.privacy.policyLead }}</p>
+  <p>{{ t.privacy.policyLead if p.childDirected else t.privacy.policyLeadGeneral }}</p>
   <ul>
     {%- if p.storage == "cloudkit-private" %}
     <li>{{ t.privacy.policyLocal }}</li>
-    <li>{{ t.privacy.policyNoServer }}</li>
+    {%- else %}
+    <li>{{ t.privacy.policyLocalOnly }}</li>
     {%- endif %}
+    <li>{{ t.privacy.policyNoServer }}</li>
     {%- if p.noAdsNoTracking %}
     <li>{{ t.privacy.policyNoAds }}</li>
     {%- endif %}
@@ -28,7 +34,7 @@
 
 <section>
   <h2>{{ t.privacy.collectHeading }}</h2>
-  <p>{{ t.privacy.collectLead }}</p>
+  <p>{{ t.privacy.collectLead if p.storage == "cloudkit-private" else t.privacy.collectLeadLocal }}</p>
   <div class="table-scroll">
     <table>
       <thead>
@@ -103,7 +109,7 @@
 {%- if "jp" in p.regions %}
 <section>
   <h2>{{ t.privacy.disclosureHeading }}</h2>
-  <p>{{ t.privacy.disclosureBody }}</p>
+  <p>{{ t.privacy.disclosureBody if p.storage == "cloudkit-private" else t.privacy.disclosureBodyLocal }}</p>
 </section>
 {%- endif %}
 

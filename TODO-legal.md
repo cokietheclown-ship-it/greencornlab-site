@@ -6,6 +6,8 @@
 
 - [ ] 弁護士等の専門家によるレビュー（特に児童のデータを扱う点）
 - [ ] `src/_data/site.json` の `privacyDraftBanner` を `false` にして、ページ上部の「草案です」バナーを外す
+      ※ Yosegi だけは `src/_data/apps/yosegi.json` の `draftBanner: false` で先に外してある(2026-09-08)。
+      記録を一切預からず、iCloud も課金情報も扱わないため。戻すときはその行を消す
 - [x] `src/_data/i18n/ja.json` の `support.responseTime` を「5営業日以内」に設定済み
 - [x] `src/_data/i18n/en.json` の `support.responseTime` を「within 5 business days」に設定済み
 - [ ] `src/_data/site.json` の `operator`（事業者名の表記）を確定する。現状は「Green Corn Lab（運営者：Kenji Kawazoe）」
