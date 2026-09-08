@@ -85,7 +85,7 @@
 {%- if p.childDirected %}
 <section>
   <h2>{{ t.privacy.childrenHeading }}</h2>
-  <p>{{ t.privacy.childrenLead }}</p>
+  <p>{{ t.privacy.childrenLeadSelfPlay if p.childPlaysDirectly else t.privacy.childrenLead }}</p>
   <ul>
     {%- if p.noAdsNoTracking %}
     <li>{{ t.privacy.childrenNoAds }}</li>

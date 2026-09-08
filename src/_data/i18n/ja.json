@@ -64,12 +64,14 @@
       "photos": "写真の添付について",
       "export-json": "データの書き出し（エクスポート）機能について",
       "pdf-report": "レポート（PDF）出力機能について",
-      "calendar": "カレンダー連携機能について"
+      "calendar": "カレンダー連携機能について",
+      "microphone": "音声入力（マイク）について"
     },
     "billingHeading": "課金・StoreKitについて",
     "billingBody": "{subscription}の購入処理は、AppleのStoreKitフレームワークを通じて行われます。クレジットカード情報等のお支払い情報はApple（App Store）が管理し、開発者が取得・保存することはありません。",
     "childrenHeading": "お子さまの情報の取り扱いについて",
     "childrenLead": "本アプリは、保護者・支援者の方がお子さまに代わって、またはお子さまと一緒に記録することを想定しています。",
+    "childrenLeadSelfPlay": "本アプリは、お子さまご自身が遊ぶことを想定しています。氏名・生年月日・連絡先など、お子さまを特定できる情報は一切お尋ねしません。",
     "childrenNoAds": "広告の配信、行動ターゲティング、第三者へのデータ提供は一切行いません。",
     "childrenUuid": "お子さまの氏名を直接の識別子とせず、内部的にはUUID（ランダムな識別子）で各プロフィールを管理しています。",
     "deletionHeading": "情報の削除",

@@ -64,12 +64,14 @@
       "photos": "Attaching photos",
       "export-json": "Exporting your data",
       "pdf-report": "PDF reports",
-      "calendar": "Calendar integration"
+      "calendar": "Calendar integration",
+      "microphone": "Voice input (microphone)"
     },
     "billingHeading": "Subscriptions and StoreKit",
     "billingBody": "{subscription} is processed through Apple's StoreKit framework. Payment details such as card numbers are handled by Apple (the App Store); the developer never receives or stores them.",
     "childrenHeading": "Information about children",
     "childrenLead": "The app is designed to be used by a parent, guardian, or support worker on a child's behalf, or together with the child.",
+    "childrenLeadSelfPlay": "The app is designed to be used by the child directly. It never asks for a name, date of birth, contact details, or any other information that could identify a child.",
     "childrenNoAds": "There is no advertising, no behavioural targeting, and no sharing of data with third parties.",
     "childrenUuid": "A child's name is never used as an identifier. Each profile is managed internally with a randomly generated UUID.",
     "deletionHeading": "Deleting your information",
