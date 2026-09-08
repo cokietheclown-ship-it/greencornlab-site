@@ -48,6 +48,7 @@
     "policyLeadGeneral": "The app is built around the following principles.",
     "policyLocal": "Everything you enter is stored only in local storage on your device and in your own private iCloud database (CloudKit private database).",
     "policyLocalOnly": "Your records are stored only on your device. The app has no networking code, so nothing is ever sent anywhere.",
+    "policyLocalOnlyStore": "Your records are stored only on your device. The app talks to the network only when it asks Apple about a one-time purchase or a restore; your records are never sent.",
     "policyNoServer": "No record you create is ever sent to a server operated by the developer.",
     "policyNoAds": "The app contains no advertising, no behavioural tracking, and no third-party analytics SDKs.",
     "collectHeading": "Information the app handles",

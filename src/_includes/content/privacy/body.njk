@@ -22,6 +22,10 @@
   <ul>
     {%- if p.storage == "cloudkit-private" %}
     <li>{{ t.privacy.policyLocal }}</li>
+    {#- 買い切りだけのために StoreKit を使うアプリは「通信しない」と言い切れない。
+        端末内で完結する点は同じなので、通信する場面だけを書き分ける。 #}
+    {%- elif p.storeKitOnly %}
+    <li>{{ t.privacy.policyLocalOnlyStore }}</li>
     {%- else %}
     <li>{{ t.privacy.policyLocalOnly }}</li>
     {%- endif %}
