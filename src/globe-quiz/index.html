@@ -5,6 +5,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>ブルーマーブル国あて</title>
 <meta name="description" content="NASA ブルーマーブルの衛星画像でできた立体地球儀を回して、国の位置と名前を当てるクイズ。自由に押して国を調べる探索モードつき。">
+<meta name="theme-color" content="#04070e">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="assets/icon-32.png" sizes="32x32" type="image/png">
+<link rel="icon" href="assets/icon-192.png" sizes="192x192" type="image/png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="国あて">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap">
 <style>
@@ -25,6 +34,7 @@ body{
   margin:0; background:var(--void); color:var(--ink);
   font-family:var(--jp); font-size:14px; line-height:1.6;
   overflow:hidden; overscroll-behavior:none; -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation; -webkit-user-select:none; user-select:none;
 }
 button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
 :focus-visible{outline:2px solid var(--ion);outline-offset:2px;border-radius:2px}
@@ -46,7 +56,8 @@ button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
 .num{font-family:var(--mono);font-variant-numeric:tabular-nums}
 
 /* top-left: identity + modes */
-#topleft{top:0;left:0;padding:16px;display:flex;flex-direction:column;gap:14px;max-width:min(420px,72vw)}
+#topleft{top:0;left:0;padding:16px;display:flex;flex-direction:column;gap:14px;max-width:min(420px,72vw);
+  padding-top:max(16px,env(safe-area-inset-top));padding-left:max(16px,env(safe-area-inset-left))}
 .wordmark{display:flex;flex-direction:column;gap:1px}
 .wordmark b{font-family:var(--mono);font-weight:600;font-size:13px;letter-spacing:.28em;color:var(--ink);
   text-shadow:0 1px 10px rgba(2,6,14,.95),0 0 3px rgba(2,6,14,.9)}
@@ -60,7 +71,8 @@ button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
 #modes button:not([aria-pressed="true"]):hover{background:var(--glass-hi);color:var(--ink)}
 
 /* top-right: telemetry / score */
-#topright{top:0;right:0;padding:16px;display:flex;flex-direction:column;align-items:flex-end;gap:10px}
+#topright{top:0;right:0;padding:16px;display:flex;flex-direction:column;align-items:flex-end;gap:10px;
+  padding-top:max(16px,env(safe-area-inset-top));padding-right:max(16px,env(safe-area-inset-right))}
 .readout{background:var(--glass);backdrop-filter:blur(14px);border:1px solid var(--hair);
   border-radius:3px;padding:9px 13px;display:flex;gap:20px;align-items:baseline}
 .readout .cell{display:flex;flex-direction:column;align-items:flex-end;gap:1px}
@@ -75,7 +87,7 @@ button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
 /* ---------- mission card ---------- */
 #card{
   bottom:0;left:50%;transform:translateX(-50%);
-  width:min(600px,calc(100vw - 24px));margin-bottom:40px;
+  width:min(600px,calc(100vw - 24px));margin-bottom:calc(40px + env(safe-area-inset-bottom));
 }
 .panel{
   position:relative;background:var(--glass);backdrop-filter:blur(18px) saturate(1.2);
@@ -175,7 +187,8 @@ button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
 #tip.on{display:block}
 
 /* ---------- telemetry strip ---------- */
-#telem{bottom:0;left:0;right:0;padding:0 16px 9px;display:flex;gap:18px;align-items:center;
+#telem{bottom:0;left:0;right:0;padding:0 max(16px,env(safe-area-inset-right)) 9px max(16px,env(safe-area-inset-left));
+  padding-bottom:calc(9px + env(safe-area-inset-bottom));display:flex;gap:18px;align-items:center;
   font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;color:var(--ion-dim);
   background:linear-gradient(transparent,rgba(2,5,12,.55) 45%,rgba(2,5,12,.92));padding-top:32px;
   text-shadow:0 1px 6px rgba(2,5,12,.9)}
@@ -190,8 +203,10 @@ button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
   display:flex;flex-direction:column;box-shadow:-24px 0 60px -20px #000}
 #settings.on{transform:none}
 #settings header{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;
+  padding-top:max(14px,env(safe-area-inset-top));
   border-bottom:1px solid var(--hair)}
-#settings .body{padding:16px;overflow:auto;display:flex;flex-direction:column;gap:22px}
+#settings .body{padding:16px;padding-bottom:calc(16px + env(safe-area-inset-bottom));
+  overflow:auto;display:flex;flex-direction:column;gap:22px;-webkit-overflow-scrolling:touch}
 .field>.eyebrow{display:block;margin-bottom:8px}
 .chips{display:flex;flex-wrap:wrap;gap:6px}
 .chip{padding:5px 11px;border:1px solid var(--hair);border-radius:99px;font-size:12.5px;color:var(--ink-2)}
@@ -245,6 +260,16 @@ button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
   text-transform:uppercase;margin:0}
 #loader h1{font-family:var(--mono);font-size:14px;font-weight:600;letter-spacing:.3em;margin:0 0 4px}
 
+#install{left:50%;transform:translateX(-50%);bottom:calc(96px + env(safe-area-inset-bottom));
+  width:min(430px,calc(100vw - 20px));z-index:15}
+@media (max-width:760px){
+  #install{top:0;bottom:auto;left:0;right:0;transform:none;width:100%;
+    padding:max(8px,env(safe-area-inset-top)) 8px 0}
+  #install .panel{border-radius:0 0 4px 4px}
+  body.install-on #topleft{padding-top:calc(max(16px,env(safe-area-inset-top)) + 62px)}
+  body.install-on #topright{padding-top:calc(max(16px,env(safe-area-inset-top)) + 62px)}
+}
+#install[hidden]{display:none !important}
 #fatal{position:fixed;z-index:50;inset:0;display:none;place-items:center;padding:28px;background:var(--void)}
 #fatal.on{display:grid}
 #fatal .panel-in{max-width:460px}
@@ -253,13 +278,25 @@ button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
   #topleft{padding:12px;gap:10px}
   #topright{padding:12px}
   .wordmark span{display:none}
-  #card{margin-bottom:34px;width:calc(100vw - 16px)}
+  #card{margin-bottom:calc(30px + env(safe-area-inset-bottom));width:calc(100vw - 16px)}
   .panel-in{padding:13px 14px}
   .q-name{font-size:21px}
   .q-flag{font-size:30px}
   .readout{padding:7px 10px;gap:14px}
   .readout .cell .v{font-size:16px}
   .choices{grid-template-columns:1fr}
+  .facts{grid-template-columns:1fr 1fr}
+  .facts dd{font-size:13px}
+  .info-name h2{font-size:22px}
+}
+@media (max-height:520px){
+  #telem{display:none}
+  #card{margin-bottom:calc(10px + env(safe-area-inset-bottom))}
+  .panel-in{padding:10px 14px}
+  .q-name{font-size:19px}
+  .q-flag{font-size:26px}
+  .facts{display:none}
+  .wordmark{display:none}
 }
 @media (prefers-reduced-motion:reduce){
   *{animation-duration:.001ms !important;transition-duration:.001ms !important}
@@ -352,6 +389,11 @@ button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
         <button class="tg" data-opt="realsun" aria-pressed="false"><span>実時刻の日照</span><span class="sw"></span></button>
       </div>
     </div>
+    <div class="field" id="installField" hidden>
+      <span class="eyebrow">端末に入れる</span>
+      <button class="btn" id="installOpen" style="width:100%">ホーム画面に追加する</button>
+      <p class="count" style="margin:8px 0 0;line-height:1.6">追加すると全画面で開き、通信が無くても遊べます。</p>
+    </div>
     <p class="count" style="line-height:1.7">地形・夜景画像：NASA <i>Blue Marble</i>（パブリックドメイン）／国境データ：Natural Earth</p>
   </div>
 </aside>
@@ -367,6 +409,20 @@ button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
     <p id="loadMsg">衛星画像を受信中</p>
     <div class="bar"><i id="loadBar"></i></div>
   </div>
+</div>
+
+<div class="hud" id="install" hidden>
+  <div class="panel"><div class="panel-in" style="padding:12px 14px">
+    <div style="display:flex;align-items:center;gap:12px">
+      <img src="assets/icon-192.png" alt="" width="38" height="38" style="border-radius:8px;flex:none">
+      <div style="min-width:0">
+        <div style="font-weight:700;font-size:14px">ホーム画面に追加</div>
+        <div id="installHow" style="font-size:12.5px;color:var(--ink-2)"></div>
+      </div>
+      <button class="btn primary" id="installGo" style="margin-left:auto;flex:none">追加</button>
+      <button class="btn ghost" id="installNo" style="flex:none" aria-label="閉じる">✕</button>
+    </div>
+  </div></div>
 </div>
 
 <div id="fatal"><div class="panel"><div class="panel-in">
@@ -398,6 +454,24 @@ const clamp = (v, a, b) => v < a ? a : v > b ? b : v;
 const lerp = (a, b, t) => a + (b - a) * t;
 const shortAngle = d => { d = (d + 180) % 360; return (d < 0 ? d + 360 : d) - 180; };
 const $ = s => document.querySelector(s);
+
+/* スマホは GPU メモリが厳しいので、テクスチャと分割数を落とす */
+const PERF = (() => {
+  const mem = navigator.deviceMemory || 8;
+  const coarse = matchMedia("(pointer: coarse)").matches;
+  const small = Math.min(screen.width, screen.height) <= 820;
+  const low = mem <= 4 || (coarse && small);
+  return { low, maxTex: low ? 2048 : 4096, seg: low ? [160, 80] : [256, 128], dpr: low ? 1.75 : 2 };
+})();
+
+/* 大きすぎる画像は貼る前に縮める */
+function fitImage(img, max) {
+  if (img.width <= max) return img;
+  const c = document.createElement("canvas");
+  c.width = max; c.height = Math.round(img.height * (max / img.width));
+  c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
+  return c;
+}
 
 /* ---------- 行列 ---------- */
 function mat4Perspective(out, fovy, aspect, near, far) {
@@ -584,7 +658,7 @@ void main(){
 /* =========================  地球儀レンダラ  ========================= */
 const Globe = (() => {
   const canvas = $("#gl");
-  let gl, dpr = 1, W = 1, H = 1;
+  let gl, dpr = 1, W = 1, H = 1, lost = false, maxTex = PERF.maxTex;
   const prog = {}, buf = {}, tex = {};
   let sphereIndexCount = 0, borderVertexCount = 0;
   let anisoExt = null, maxAniso = 1;
@@ -690,7 +764,7 @@ const Globe = (() => {
     prog.atmo  = program(VS_SIMPLE, FS_ATMO, ["aPos"]);
     prog.stars = program(VS_QUAD, FS_STARS, ["aPos"]);
 
-    const sph = buildSphere(256, 128);
+    const sph = buildSphere(PERF.seg[0], PERF.seg[1]);
     sphereIndexCount = sph.idx.length;
     buf.pos = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, buf.pos); gl.bufferData(gl.ARRAY_BUFFER, sph.pos, gl.STATIC_DRAW);
     buf.uv  = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, buf.uv);  gl.bufferData(gl.ARRAY_BUFFER, sph.uv, gl.STATIC_DRAW);
@@ -703,17 +777,23 @@ const Globe = (() => {
     buf.quad = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, buf.quad);
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 3,-1, -1,3]), gl.STATIC_DRAW);
 
-    tex.day = makeTexture(images.day);
-    tex.night = makeTexture(images.night);
-    tex.topo = makeTexture(images.topo);
-    tex.water = makeTexture(images.water);
-    tex.clouds = makeTexture(images.clouds);
+    maxTex = Math.min(maxTex, gl.getParameter(gl.MAX_TEXTURE_SIZE));
+    tex.day = makeTexture(fitImage(images.day, maxTex));
+    tex.night = makeTexture(fitImage(images.night, maxTex));
+    tex.topo = makeTexture(fitImage(images.topo, maxTex));
+    tex.water = makeTexture(fitImage(images.water, maxTex));
+    tex.clouds = makeTexture(fitImage(images.clouds, maxTex));
 
     /* 国ハイライト用のオフスクリーン（等距円筒図法） */
     Overlay.init();
     gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
     tex.overlay = makeTexture(Overlay.canvas, { mips: false, wrapS: gl.CLAMP_TO_EDGE });
 
+    canvas.addEventListener("webglcontextlost", e => {
+      e.preventDefault(); lost = true;
+      $("#fatalMsg").textContent = "端末の描画リソースが解放されました。ページを再読み込みしてください。";
+      $("#fatal").classList.add("on");
+    });
     gl.clearColor(0.008, 0.012, 0.03, 1);
     gl.enable(gl.DEPTH_TEST);
     resize();
@@ -728,7 +808,7 @@ const Globe = (() => {
   }
 
   function resize() {
-    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    dpr = Math.min(window.devicePixelRatio || 1, PERF.dpr);
     W = Math.max(1, Math.round(canvas.clientWidth * dpr));
     H = Math.max(1, Math.round(canvas.clientHeight * dpr));
     canvas.width = W; canvas.height = H;
@@ -765,6 +845,7 @@ const Globe = (() => {
   /* ---------- 描画 ---------- */
   let last = performance.now(), fpsAcc = 0, fpsN = 0, fps = 0;
   function frame(now) {
+    if (lost) return;
     const dt = Math.min(0.05, (now - last) / 1000); last = now;
     if (view.spinIdle > 0) view.spinIdle -= dt;
     cloudSpin = (cloudSpin + dt * 0.0016) % 1;
@@ -796,7 +877,7 @@ const Globe = (() => {
     gl.uniformMatrix4fv(p.u.uProj, false, proj); gl.uniformMatrix4fv(p.u.uView, false, viewM);
     gl.uniform1f(p.u.uRadius, 1); gl.uniform3fv(p.u.uSun, S); gl.uniform3fv(p.u.uEye, camPos);
     gl.uniform1f(p.u.uNightAmt, view.night); gl.uniform1f(p.u.uOverlayAmt, 1);
-    gl.uniform1f(p.u.uTexel, 1 / 2048);
+    gl.uniform1f(p.u.uTexel, 1 / Math.min(2048, maxTex));
     bindTex(p, "uDay", tex.day, 0); bindTex(p, "uNight", tex.night, 1);
     bindTex(p, "uTopo", tex.topo, 2); bindTex(p, "uWater", tex.water, 3);
     bindTex(p, "uOverlay", tex.overlay, 4);
@@ -1627,6 +1708,59 @@ const UI = (() => {
     $("#fatalMsg").textContent = (err && err.message) || String(err);
     $("#fatal").classList.add("on");
   }
+})();
+</script>
+
+<script>
+"use strict";
+/* =========================  実機へのインストール  ========================= */
+(function installFlow() {
+  const bundled = !!window.__COUNTRIES__;                       /* 1 ファイル版では出さない */
+  const secure = location.protocol === "https:" || ["localhost", "127.0.0.1"].includes(location.hostname);
+
+  if (!bundled && secure && "serviceWorker" in navigator) {
+    window.addEventListener("load", () => {
+      navigator.serviceWorker.register("sw.js").catch(() => { /* 未対応なら通常のオンライン動作のまま */ });
+    });
+  }
+
+  const installed = matchMedia("(display-mode: standalone)").matches || navigator.standalone === true;
+  if (bundled || installed || !secure) return;
+
+  const box = $("#install"), how = $("#installHow"), go = $("#installGo"), no = $("#installNo");
+  const field = $("#installField"), open = $("#installOpen");
+  const muted = () => { try { return localStorage.getItem("bm.install") === "off"; } catch (e) { return false; } };
+  const mute = () => { try { localStorage.setItem("bm.install", "off"); } catch (e) { /* 保存できないだけ */ } };
+  const ios = /iPad|iPhone|iPod/.test(navigator.userAgent)
+    || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+  let deferred = null;
+  const showBox = on => { box.hidden = !on; document.body.classList.toggle("install-on", on); };
+
+  const arm = (text, canPrompt, delay) => {
+    how.textContent = text;
+    go.hidden = !canPrompt;
+    field.hidden = false;
+    if (!muted()) setTimeout(() => showBox(true), delay);
+  };
+
+  window.addEventListener("beforeinstallprompt", e => {
+    e.preventDefault(); deferred = e;
+    arm("オフラインでも遊べるアプリとして入ります。", true, 2500);
+  });
+  if (ios && matchMedia("(pointer: coarse)").matches) {
+    arm("共有ボタン → 「ホーム画面に追加」", false, 4000);
+  }
+
+  go.onclick = async () => {
+    showBox(false);
+    if (!deferred) return;
+    deferred.prompt();
+    try { await deferred.userChoice; } catch (e) { /* 選択結果は問わない */ }
+    deferred = null; field.hidden = true;
+  };
+  no.onclick = () => { showBox(false); mute(); };
+  open.onclick = () => showBox(true);
+  window.addEventListener("appinstalled", () => { showBox(false); field.hidden = true; mute(); });
 })();
 </script>
 </body>

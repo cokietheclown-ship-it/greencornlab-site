@@ -32,6 +32,11 @@ for (const key of ["day", "night", "topo", "water", "clouds"]) {
   html = html.replace(m[0], `${key}: "${dataURI(m[1])}"`);
 }
 
+// 単体ファイルには assets/ が無いので、そこを指す link は落とす
+html = html
+  .replace(/^\s*<link rel="manifest"[^>]*>\s*$/mi, "")
+  .replace(/^\s*<link rel="(?:apple-touch-)?icon"[^>]*>\s*$/gmi, "");
+
 // 国境データは fetch させず、グローバル変数として先に置く
 const countries = fs.readFileSync(path.join(srcDir, "assets/countries.json"), "utf8");
 html = html.replace("<script>\n\"use strict\";\n/* ====", `<script>window.__COUNTRIES__=${countries};</script>\n<script>\n"use strict";\n/* ====`);
