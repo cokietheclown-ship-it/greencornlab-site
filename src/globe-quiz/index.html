@@ -1,0 +1,1767 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ブルーマーブル国あて</title>
+<meta name="description" content="NASA ブルーマーブルの衛星画像でできた立体地球儀を回して、国の位置と名前を当てるクイズ。自由に押して国を調べる探索モードつき。">
+<meta name="theme-color" content="#04070e">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="assets/icon-32.png" sizes="32x32" type="image/png">
+<link rel="icon" href="assets/icon-192.png" sizes="192x192" type="image/png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="国あて">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap">
+<style>
+:root{
+  --void:#04070e; --void-2:#020409;
+  --glass:rgba(9,20,34,.72); --glass-solid:#0b1524; --glass-hi:rgba(18,36,58,.86);
+  --hair:rgba(120,190,235,.20); --hair-hi:rgba(140,215,255,.45);
+  --ion:#5fd8ff; --ion-dim:#2a7c9e; --ion-deep:#0d3a52;
+  --amber:#ffb65e; --green:#4fe0a0; --coral:#ff6b7a;
+  --ink:#d8e4f2; --ink-2:#93a8c0; --ink-3:#5d738a;
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  --jp:"Zen Kaku Gothic New","Hiragino Sans","Yu Gothic UI","Noto Sans JP",system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+[hidden]{display:none !important}
+html,body{height:100%}
+body{
+  margin:0; background:var(--void); color:var(--ink);
+  font-family:var(--jp); font-size:14px; line-height:1.6;
+  overflow:hidden; overscroll-behavior:none; -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation; -webkit-user-select:none; user-select:none;
+}
+button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
+:focus-visible{outline:2px solid var(--ion);outline-offset:2px;border-radius:2px}
+
+/* ---------- stage ---------- */
+#stage{position:fixed;inset:0}
+#gl{display:block;width:100%;height:100%;touch-action:none;cursor:grab}
+#gl.dragging{cursor:grabbing}
+#gl.picking{cursor:crosshair}
+
+/* ---------- HUD frame ---------- */
+.hud{position:fixed;z-index:10;pointer-events:none}
+.hud>*{pointer-events:auto}
+
+.eyebrow{
+  font-family:var(--mono);font-size:10px;font-weight:500;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--ion-dim)
+}
+.num{font-family:var(--mono);font-variant-numeric:tabular-nums}
+
+/* top-left: identity + modes */
+#topleft{top:0;left:0;padding:16px;display:flex;flex-direction:column;gap:14px;max-width:min(420px,72vw);
+  padding-top:max(16px,env(safe-area-inset-top));padding-left:max(16px,env(safe-area-inset-left))}
+.wordmark{display:flex;flex-direction:column;gap:1px}
+.wordmark b{font-family:var(--mono);font-weight:600;font-size:13px;letter-spacing:.28em;color:var(--ink);
+  text-shadow:0 1px 10px rgba(2,6,14,.95),0 0 3px rgba(2,6,14,.9)}
+.wordmark span{font-size:12px;color:var(--ink-2);letter-spacing:.06em;text-shadow:0 1px 8px rgba(2,6,14,.95)}
+
+#modes{display:flex;gap:0;background:var(--glass);backdrop-filter:blur(14px);
+  border:1px solid var(--hair);border-radius:3px;overflow:hidden;width:max-content}
+#modes button{padding:7px 13px;font-size:12.5px;color:var(--ink-2);position:relative;white-space:nowrap}
+#modes button+button{border-left:1px solid var(--hair)}
+#modes button[aria-pressed="true"]{color:var(--void);background:var(--ion);font-weight:700}
+#modes button:not([aria-pressed="true"]):hover{background:var(--glass-hi);color:var(--ink)}
+
+/* top-right: telemetry / score */
+#topright{top:0;right:0;padding:16px;display:flex;flex-direction:column;align-items:flex-end;gap:10px;
+  padding-top:max(16px,env(safe-area-inset-top));padding-right:max(16px,env(safe-area-inset-right))}
+.readout{background:var(--glass);backdrop-filter:blur(14px);border:1px solid var(--hair);
+  border-radius:3px;padding:9px 13px;display:flex;gap:20px;align-items:baseline}
+.readout .cell{display:flex;flex-direction:column;align-items:flex-end;gap:1px}
+.readout .cell .v{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:19px;font-weight:600;line-height:1.1}
+.readout .cell.score .v{color:var(--ion)}
+.readout .cell.streak .v{color:var(--amber)}
+.iconbtn{width:34px;height:34px;display:grid;place-items:center;background:var(--glass);
+  backdrop-filter:blur(14px);border:1px solid var(--hair);border-radius:3px;color:var(--ink-2)}
+.iconbtn:hover{color:var(--ink);border-color:var(--hair-hi)}
+.iconrow{display:flex;gap:8px}
+
+/* ---------- mission card ---------- */
+#card{
+  bottom:0;left:50%;transform:translateX(-50%);
+  width:min(600px,calc(100vw - 24px));margin-bottom:calc(40px + env(safe-area-inset-bottom));
+}
+.panel{
+  position:relative;background:var(--glass);backdrop-filter:blur(18px) saturate(1.2);
+  border:1px solid var(--hair-hi);border-radius:4px;
+  box-shadow:0 20px 60px -20px rgba(0,0,0,.9), 0 0 0 1px rgba(0,0,0,.35), inset 0 1px 0 rgba(160,220,255,.08);
+}
+/* HUD reticle corners — the one lifted object on the page */
+.panel::before,.panel::after{content:"";position:absolute;width:11px;height:11px;pointer-events:none;
+  border:1px solid var(--ion);opacity:.55}
+.panel::before{top:-1px;left:-1px;border-right:0;border-bottom:0}
+.panel::after{bottom:-1px;right:-1px;border-left:0;border-top:0}
+.panel-in{padding:16px 18px}
+
+.q-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px}
+.q-prompt{display:flex;align-items:center;gap:14px;min-width:0}
+.q-flag{font-size:38px;line-height:1;filter:drop-shadow(0 2px 6px rgba(0,0,0,.6))}
+.q-name{font-size:26px;font-weight:700;letter-spacing:.02em;line-height:1.2;text-wrap:balance}
+.q-sub{font-family:var(--mono);font-size:11px;color:var(--ink-2);letter-spacing:.04em}
+.q-instr{font-size:13px;color:var(--ink-2)}
+
+.progress{height:2px;background:rgba(120,190,235,.14);border-radius:2px;overflow:hidden;margin-top:14px}
+.progress i{display:block;height:100%;background:linear-gradient(90deg,var(--ion-dim),var(--ion));
+  transition:width .45s cubic-bezier(.2,.8,.2,1)}
+
+.choices{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+.choice{display:flex;align-items:center;gap:10px;padding:10px 12px;text-align:left;
+  background:rgba(14,30,48,.6);border:1px solid var(--hair);border-radius:3px;
+  transition:background .15s,border-color .15s,transform .12s}
+.choice:hover:not(:disabled){background:var(--glass-hi);border-color:var(--hair-hi);transform:translateY(-1px)}
+.choice:disabled{cursor:default}
+.choice .k{font-family:var(--mono);font-size:10px;color:var(--ion-dim);border:1px solid var(--hair);
+  border-radius:2px;padding:1px 5px;flex:none}
+.choice .n{font-size:15px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.choice.right{background:rgba(79,224,160,.16);border-color:var(--green)}
+.choice.wrong{background:rgba(255,107,122,.14);border-color:var(--coral)}
+
+.verdict{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.verdict .tag{font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:.14em;
+  padding:3px 9px;border-radius:2px;text-transform:uppercase}
+.verdict.ok .tag{background:rgba(79,224,160,.18);color:var(--green);border:1px solid rgba(79,224,160,.5)}
+.verdict.ng .tag{background:rgba(255,107,122,.16);color:var(--coral);border:1px solid rgba(255,107,122,.45)}
+.verdict .msg{font-size:14px;color:var(--ink-2)}
+.verdict .msg b{color:var(--ink);font-weight:700}
+.verdict .pts{margin-left:auto;font-family:var(--mono);font-weight:600;color:var(--ion)}
+
+.row{display:flex;gap:8px;align-items:center;margin-top:12px;flex-wrap:wrap}
+.btn{padding:9px 16px;border:1px solid var(--hair-hi);border-radius:3px;font-size:13.5px;
+  font-weight:500;color:var(--ink);background:rgba(14,30,48,.55);transition:background .15s,border-color .15s}
+.btn:hover{background:var(--glass-hi)}
+.btn.primary{background:var(--ion);color:#052030;border-color:var(--ion);font-weight:700}
+.btn.primary:hover{background:#8ae6ff}
+.btn.ghost{border-color:transparent;color:var(--ink-2)}
+.btn.ghost:hover{color:var(--ink);background:rgba(255,255,255,.05)}
+.btn .k{font-family:var(--mono);font-size:10px;opacity:.6;margin-left:6px}
+.spacer{margin-left:auto}
+
+/* ---------- explore info ---------- */
+.info-top{display:flex;gap:14px;align-items:flex-start}
+.info-name{min-width:0;flex:1}
+.info-name h2{margin:0;font-size:25px;font-weight:700;line-height:1.2;letter-spacing:.02em}
+.info-name p{margin:2px 0 0;font-family:var(--mono);font-size:12px;color:var(--ink-2);letter-spacing:.03em}
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(108px,1fr));gap:1px;margin-top:14px;
+  background:var(--hair);border:1px solid var(--hair);border-radius:3px;overflow:hidden}
+.facts div{background:rgba(8,18,31,.85);padding:8px 10px}
+.facts dt{font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ion-dim);margin:0}
+.facts dd{margin:2px 0 0;font-size:14px;font-weight:500;font-variant-numeric:tabular-nums;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hint-empty{color:var(--ink-2);font-size:14px}
+.hint-empty b{color:var(--ink)}
+
+/* ---------- search ---------- */
+#search{position:relative;width:100%}
+#search input{width:100%;padding:8px 11px;background:rgba(8,18,31,.8);border:1px solid var(--hair);
+  border-radius:3px;color:var(--ink);font-size:14px;font-family:var(--jp)}
+#search input::placeholder{color:rgba(147,168,192,.55)}
+#search input:focus{outline:none;border-color:var(--ion-dim)}
+#sugg{position:absolute;bottom:calc(100% + 6px);left:0;right:0;background:var(--glass-solid);
+  border:1px solid var(--hair-hi);border-radius:3px;max-height:230px;overflow:auto;display:none;
+  box-shadow:0 14px 40px -12px #000}
+#sugg.on{display:block}
+#sugg button{display:flex;gap:9px;align-items:center;width:100%;padding:7px 11px;text-align:left;font-size:14px}
+#sugg button:hover,#sugg button.sel{background:var(--glass-hi)}
+#sugg .en{font-family:var(--mono);font-size:11px;color:var(--ink-2);margin-left:auto}
+
+/* ---------- globe pin ---------- */
+#pin{position:fixed;z-index:9;transform:translate(-50%,-100%);pointer-events:none;display:none;
+  padding-bottom:16px}
+#pin.on{display:block}
+#pin .lbl{background:var(--glass-solid);border:1px solid var(--hair-hi);border-radius:3px;
+  padding:3px 9px;font-size:13px;font-weight:700;white-space:nowrap;
+  box-shadow:0 6px 20px -6px #000}
+#pin .stem{position:absolute;left:50%;bottom:0;width:1px;height:16px;background:linear-gradient(var(--hair-hi),var(--ion))}
+#pin .dot{position:absolute;left:50%;bottom:-3px;width:7px;height:7px;margin-left:-3.5px;
+  border-radius:50%;background:var(--ion);box-shadow:0 0 10px var(--ion)}
+#tip{position:fixed;z-index:9;transform:translate(12px,-50%);pointer-events:none;display:none;
+  background:var(--glass-solid);border:1px solid var(--hair);border-radius:3px;padding:2px 8px;font-size:13px}
+#tip.on{display:block}
+
+/* ---------- telemetry strip ---------- */
+#telem{bottom:0;left:0;right:0;padding:0 max(16px,env(safe-area-inset-right)) 9px max(16px,env(safe-area-inset-left));
+  padding-bottom:calc(9px + env(safe-area-inset-bottom));display:flex;gap:18px;align-items:center;
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;color:var(--ion-dim);
+  background:linear-gradient(transparent,rgba(2,5,12,.55) 45%,rgba(2,5,12,.92));padding-top:32px;
+  text-shadow:0 1px 6px rgba(2,5,12,.9)}
+#telem b{color:var(--ink-2);font-weight:500}
+#telem .sep{flex:1}
+@media (max-width:720px){#telem .opt{display:none}}
+
+/* ---------- settings drawer ---------- */
+#settings{position:fixed;z-index:20;top:0;right:0;bottom:0;width:min(340px,86vw);
+  background:var(--glass-solid);border-left:1px solid var(--hair-hi);
+  transform:translateX(101%);transition:transform .32s cubic-bezier(.2,.8,.2,1);
+  display:flex;flex-direction:column;box-shadow:-24px 0 60px -20px #000}
+#settings.on{transform:none}
+#settings header{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;
+  padding-top:max(14px,env(safe-area-inset-top));
+  border-bottom:1px solid var(--hair)}
+#settings .body{padding:16px;padding-bottom:calc(16px + env(safe-area-inset-bottom));
+  overflow:auto;display:flex;flex-direction:column;gap:22px;-webkit-overflow-scrolling:touch}
+.field>.eyebrow{display:block;margin-bottom:8px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{padding:5px 11px;border:1px solid var(--hair);border-radius:99px;font-size:12.5px;color:var(--ink-2)}
+.chip[aria-pressed="true"]{background:rgba(95,216,255,.14);border-color:var(--ion-dim);color:var(--ion)}
+.seg{display:flex;border:1px solid var(--hair);border-radius:3px;overflow:hidden}
+.seg button{flex:1;padding:7px 4px;font-size:12.5px;color:var(--ink-2)}
+.seg button+button{border-left:1px solid var(--hair)}
+.seg button[aria-pressed="true"]{background:var(--ion);color:var(--void);font-weight:700}
+.toggles{display:flex;flex-direction:column;gap:2px}
+.tg{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:7px 0;font-size:14px}
+.tg+.tg{border-top:1px solid rgba(120,190,235,.1)}
+.sw{width:38px;height:21px;border-radius:99px;background:rgba(120,190,235,.16);
+  border:1px solid var(--hair);position:relative;flex:none;transition:background .2s}
+.sw::after{content:"";position:absolute;top:2px;left:2px;width:15px;height:15px;border-radius:50%;
+  background:var(--ink-2);transition:transform .2s,background .2s}
+.tg[aria-pressed="true"] .sw{background:rgba(95,216,255,.3);border-color:var(--ion-dim)}
+.tg[aria-pressed="true"] .sw::after{transform:translateX(17px);background:var(--ion)}
+.count{font-family:var(--mono);font-size:12px;color:var(--ink-2)}
+.count b{color:var(--ion)}
+
+/* ---------- result modal ---------- */
+#result{position:fixed;z-index:30;inset:0;display:none;place-items:center;padding:20px;
+  background:rgba(2,5,12,.78);backdrop-filter:blur(6px)}
+#result.on{display:grid}
+#result .panel{width:min(520px,100%);max-height:min(86vh,720px);display:flex;flex-direction:column}
+#result .panel-in{overflow:auto;flex:1;min-height:0}
+.big{display:flex;align-items:flex-end;gap:6px;margin:6px 0 2px}
+.big .v{font-family:var(--mono);font-size:52px;font-weight:600;line-height:.95;color:var(--ion);
+  font-variant-numeric:tabular-nums}
+.big .u{font-family:var(--mono);font-size:12px;color:var(--ink-2);padding-bottom:6px}
+.stat-row{display:flex;gap:26px;margin-top:12px;padding-top:12px;border-top:1px solid var(--hair)}
+.stat-row .cell .v{font-family:var(--mono);font-size:20px;font-weight:600;font-variant-numeric:tabular-nums}
+.missed{margin-top:16px}
+.missed ul{list-style:none;margin:8px 0 0;padding:0;display:flex;flex-direction:column;gap:1px}
+.missed li{display:flex;align-items:center;gap:9px;padding:6px 9px;background:rgba(8,18,31,.7);font-size:13.5px}
+.missed li .en{font-family:var(--mono);font-size:11px;color:var(--ink-2);margin-left:auto}
+.missed li .bad{color:var(--coral);font-size:12px}
+
+/* ---------- loader ---------- */
+#loader{position:fixed;z-index:40;inset:0;display:grid;place-items:center;background:var(--void);
+  transition:opacity .7s ease;text-align:center}
+#loader.off{opacity:0;pointer-events:none}
+#loader .ring{width:74px;height:74px;border-radius:50%;margin:0 auto 20px;
+  background:radial-gradient(circle at 34% 30%,#1b4a6e,#061726 62%,#04070e 100%);
+  box-shadow:0 0 0 1px rgba(95,216,255,.25),0 0 44px -6px rgba(95,216,255,.4);
+  animation:spin 9s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+#loader .bar{width:200px;height:2px;background:rgba(120,190,235,.16);margin:14px auto 0;overflow:hidden}
+#loader .bar i{display:block;height:100%;width:0;background:var(--ion);transition:width .3s}
+#loader p{font-family:var(--mono);font-size:11px;letter-spacing:.18em;color:var(--ion-dim);
+  text-transform:uppercase;margin:0}
+#loader h1{font-family:var(--mono);font-size:14px;font-weight:600;letter-spacing:.3em;margin:0 0 4px}
+
+#install{left:50%;transform:translateX(-50%);bottom:calc(96px + env(safe-area-inset-bottom));
+  width:min(430px,calc(100vw - 20px));z-index:15}
+@media (max-width:760px){
+  #install{top:0;bottom:auto;left:0;right:0;transform:none;width:100%;
+    padding:max(8px,env(safe-area-inset-top)) 8px 0}
+  #install .panel{border-radius:0 0 4px 4px}
+  body.install-on #topleft{padding-top:calc(max(16px,env(safe-area-inset-top)) + 62px)}
+  body.install-on #topright{padding-top:calc(max(16px,env(safe-area-inset-top)) + 62px)}
+}
+#install[hidden]{display:none !important}
+#fatal{position:fixed;z-index:50;inset:0;display:none;place-items:center;padding:28px;background:var(--void)}
+#fatal.on{display:grid}
+#fatal .panel-in{max-width:460px}
+
+@media (max-width:760px){
+  #topleft{padding:12px;gap:10px}
+  #topright{padding:12px}
+  .wordmark span{display:none}
+  #card{margin-bottom:calc(30px + env(safe-area-inset-bottom));width:calc(100vw - 16px)}
+  .panel-in{padding:13px 14px}
+  .q-name{font-size:21px}
+  .q-flag{font-size:30px}
+  .readout{padding:7px 10px;gap:14px}
+  .readout .cell .v{font-size:16px}
+  .choices{grid-template-columns:1fr}
+  .facts{grid-template-columns:1fr 1fr}
+  .facts dd{font-size:13px}
+  .info-name h2{font-size:22px}
+}
+@media (max-height:520px){
+  #telem{display:none}
+  #card{margin-bottom:calc(10px + env(safe-area-inset-bottom))}
+  .panel-in{padding:10px 14px}
+  .q-name{font-size:19px}
+  .q-flag{font-size:26px}
+  .facts{display:none}
+  .wordmark{display:none}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation-duration:.001ms !important;transition-duration:.001ms !important}
+}
+</style>
+</head>
+<body>
+<div id="stage"><canvas id="gl"></canvas></div>
+
+<div class="hud" id="topleft">
+  <div class="wordmark">
+    <b>BLUE MARBLE</b>
+    <span>地球儀で国あてクイズ</span>
+  </div>
+  <div id="modes" role="group" aria-label="モード">
+    <button data-mode="explore" aria-pressed="true">探索</button>
+    <button data-mode="find" aria-pressed="false">場所あて</button>
+    <button data-mode="name" aria-pressed="false">国名あて</button>
+  </div>
+</div>
+
+<div class="hud" id="topright">
+  <div class="readout" id="scorebox" hidden>
+    <div class="cell score"><span class="eyebrow">SCORE</span><span class="v" id="uiScore">0</span></div>
+    <div class="cell streak"><span class="eyebrow">STREAK</span><span class="v" id="uiStreak">0</span></div>
+    <div class="cell"><span class="eyebrow">Q</span><span class="v" id="uiProg">0/10</span></div>
+  </div>
+  <div class="iconrow">
+    <button class="iconbtn" id="btnRandom" title="ランダムな国へ移動" aria-label="ランダムな国へ移動">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3 12a9 9 0 1 0 9-9"/><path d="M3 12h18M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18"/></svg>
+    </button>
+    <button class="iconbtn" id="btnSettings" title="設定" aria-label="設定" aria-expanded="false">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.6 1.6 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.6 1.6 0 0 0-2.7 1.1V21a2 2 0 1 1-4 0v-.1A1.6 1.6 0 0 0 7.9 19.4l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.6 1.6 0 0 0-1.1-2.7H3a2 2 0 1 1 0-4h.1A1.6 1.6 0 0 0 4.6 7.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.6 1.6 0 0 0 2.7-1.1V3a2 2 0 1 1 4 0v.1a1.6 1.6 0 0 0 2.7 1.1l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.6 1.6 0 0 0 1.1 2.7H21a2 2 0 1 1 0 4h-.1a1.6 1.6 0 0 0-1.5 1.3z"/></svg>
+    </button>
+  </div>
+</div>
+
+<div id="pin"><div class="lbl"></div><div class="stem"></div><div class="dot"></div></div>
+<div id="tip"></div>
+
+<div class="hud" id="card">
+  <div class="panel"><div class="panel-in" id="cardBody"></div></div>
+</div>
+
+<div class="hud" id="telem">
+  <span>LAT <b id="tLat">--.--</b></span>
+  <span>LON <b id="tLon">---.--</b></span>
+  <span class="opt">ALT <b id="tAlt">-----</b> km</span>
+  <span class="sep"></span>
+  <span class="opt">SUBSOLAR <b id="tSun">--.--, ---.--</b></span>
+  <span id="tFps"></span>
+</div>
+
+<aside id="settings" aria-label="設定" aria-hidden="true">
+  <header>
+    <span class="eyebrow">MISSION SETUP</span>
+    <button class="iconbtn" id="btnCloseSettings" aria-label="設定を閉じる">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
+  </header>
+  <div class="body">
+    <div class="field">
+      <span class="eyebrow">出題する地域</span>
+      <div class="chips" id="regionChips"></div>
+    </div>
+    <div class="field">
+      <span class="eyebrow">難易度（国の大きさ）</span>
+      <div class="seg" id="diffSeg">
+        <button data-diff="easy" aria-pressed="true">やさしい</button>
+        <button data-diff="normal" aria-pressed="false">ふつう</button>
+        <button data-diff="hard" aria-pressed="false">むずかしい</button>
+      </div>
+      <p class="count" style="margin:8px 0 0">出題プール <b id="poolCount">0</b> か国</p>
+    </div>
+    <div class="field">
+      <span class="eyebrow">1ラウンドの問題数</span>
+      <div class="seg" id="lenSeg">
+        <button data-len="5" aria-pressed="false">5問</button>
+        <button data-len="10" aria-pressed="true">10問</button>
+        <button data-len="20" aria-pressed="false">20問</button>
+      </div>
+    </div>
+    <div class="field">
+      <span class="eyebrow">地球儀の表示</span>
+      <div class="toggles" id="viewToggles">
+        <button class="tg" data-opt="clouds" aria-pressed="true"><span>雲を表示</span><span class="sw"></span></button>
+        <button class="tg" data-opt="night" aria-pressed="true"><span>夜側の都市光</span><span class="sw"></span></button>
+        <button class="tg" data-opt="borders" aria-pressed="true"><span>国境線</span><span class="sw"></span></button>
+        <button class="tg" data-opt="spin" aria-pressed="true"><span>自動回転</span><span class="sw"></span></button>
+        <button class="tg" data-opt="realsun" aria-pressed="false"><span>実時刻の日照</span><span class="sw"></span></button>
+      </div>
+    </div>
+    <div class="field" id="installField" hidden>
+      <span class="eyebrow">端末に入れる</span>
+      <button class="btn" id="installOpen" style="width:100%">ホーム画面に追加する</button>
+      <p class="count" style="margin:8px 0 0;line-height:1.6">追加すると全画面で開き、通信が無くても遊べます。</p>
+    </div>
+    <p class="count" style="line-height:1.7">地形・夜景画像：NASA <i>Blue Marble</i>（パブリックドメイン）／国境データ：Natural Earth</p>
+  </div>
+</aside>
+
+<div id="result" role="dialog" aria-modal="true" aria-label="結果">
+  <div class="panel"><div class="panel-in" id="resultBody"></div></div>
+</div>
+
+<div id="loader">
+  <div>
+    <div class="ring"></div>
+    <h1>BLUE MARBLE</h1>
+    <p id="loadMsg">衛星画像を受信中</p>
+    <div class="bar"><i id="loadBar"></i></div>
+  </div>
+</div>
+
+<div class="hud" id="install" hidden>
+  <div class="panel"><div class="panel-in" style="padding:12px 14px">
+    <div style="display:flex;align-items:center;gap:12px">
+      <img src="assets/icon-192.png" alt="" width="38" height="38" style="border-radius:8px;flex:none">
+      <div style="min-width:0">
+        <div style="font-weight:700;font-size:14px">ホーム画面に追加</div>
+        <div id="installHow" style="font-size:12.5px;color:var(--ink-2)"></div>
+      </div>
+      <button class="btn primary" id="installGo" style="margin-left:auto;flex:none">追加</button>
+      <button class="btn ghost" id="installNo" style="flex:none" aria-label="閉じる">✕</button>
+    </div>
+  </div></div>
+</div>
+
+<div id="fatal"><div class="panel"><div class="panel-in">
+  <span class="eyebrow">SIGNAL LOST</span>
+  <h2 style="margin:6px 0 8px;font-size:20px">地球儀を表示できませんでした</h2>
+  <p id="fatalMsg" style="margin:0;color:var(--ink-2)"></p>
+</div></div></div>
+
+<script>
+"use strict";
+/* =========================================================================
+   ブルーマーブル国あて
+   NASA Blue Marble のテクスチャを素の WebGL で球に貼り、Natural Earth の
+   国境ポリゴンを重ねて「押せる地球儀」にしている。ライブラリ非依存。
+   ========================================================================= */
+
+const ASSETS = {
+  day:    "assets/earth-day.jpg",
+  night:  "assets/earth-night.jpg",
+  topo:   "assets/earth-topo.jpg",
+  water:  "assets/earth-water.jpg",
+  clouds: "assets/earth-clouds.jpg",
+  data:   "assets/countries.json",
+};
+
+const EARTH_KM = 6371;
+const DEG = Math.PI / 180;
+const clamp = (v, a, b) => v < a ? a : v > b ? b : v;
+const lerp = (a, b, t) => a + (b - a) * t;
+const shortAngle = d => { d = (d + 180) % 360; return (d < 0 ? d + 360 : d) - 180; };
+const $ = s => document.querySelector(s);
+
+/* スマホは GPU メモリが厳しいので、テクスチャと分割数を落とす */
+const PERF = (() => {
+  const mem = navigator.deviceMemory || 8;
+  const coarse = matchMedia("(pointer: coarse)").matches;
+  const small = Math.min(screen.width, screen.height) <= 820;
+  const low = mem <= 4 || (coarse && small);
+  return { low, maxTex: low ? 2048 : 4096, seg: low ? [160, 80] : [256, 128], dpr: low ? 1.75 : 2 };
+})();
+
+/* 大きすぎる画像は貼る前に縮める */
+function fitImage(img, max) {
+  if (img.width <= max) return img;
+  const c = document.createElement("canvas");
+  c.width = max; c.height = Math.round(img.height * (max / img.width));
+  c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
+  return c;
+}
+
+/* ---------- 行列 ---------- */
+function mat4Perspective(out, fovy, aspect, near, far) {
+  const f = 1 / Math.tan(fovy / 2), nf = 1 / (near - far);
+  out.set([f / aspect,0,0,0, 0,f,0,0, 0,0,(far + near) * nf,-1, 0,0,2 * far * near * nf,0]);
+  return out;
+}
+function mat4LookAt(out, eye, center, up) {
+  let z0 = eye[0]-center[0], z1 = eye[1]-center[1], z2 = eye[2]-center[2];
+  let l = 1 / Math.hypot(z0, z1, z2); z0*=l; z1*=l; z2*=l;
+  let x0 = up[1]*z2 - up[2]*z1, x1 = up[2]*z0 - up[0]*z2, x2 = up[0]*z1 - up[1]*z0;
+  l = Math.hypot(x0, x1, x2); l = l ? 1/l : 0; x0*=l; x1*=l; x2*=l;
+  const y0 = z1*x2 - z2*x1, y1 = z2*x0 - z0*x2, y2 = z0*x1 - z1*x0;
+  out.set([x0,y0,z0,0, x1,y1,z1,0, x2,y2,z2,0,
+    -(x0*eye[0]+x1*eye[1]+x2*eye[2]), -(y0*eye[0]+y1*eye[1]+y2*eye[2]), -(z0*eye[0]+z1*eye[1]+z2*eye[2]), 1]);
+  return out;
+}
+/* 経緯度 → 単位球上の座標（赤道 0°/0° が +Z を向く） */
+function llToVec(latDeg, lonDeg, r) {
+  const la = latDeg * DEG, lo = lonDeg * DEG, c = Math.cos(la) * (r || 1);
+  return [c * Math.sin(lo), Math.sin(la) * (r || 1), c * Math.cos(lo)];
+}
+const vecToLat = v => Math.asin(clamp(v[1], -1, 1)) / DEG;
+const vecToLon = v => Math.atan2(v[0], v[2]) / DEG;
+
+/* ---------- GLSL ---------- */
+const VS_GLOBE = `
+attribute vec3 aPos; attribute vec2 aUV;
+uniform mat4 uProj, uView; uniform float uRadius;
+varying vec2 vUV; varying vec3 vN; varying vec3 vPos;
+void main(){ vUV = aUV; vN = aPos; vPos = aPos * uRadius;
+  gl_Position = uProj * uView * vec4(vPos, 1.0); }`;
+
+const FS_GLOBE = `
+precision highp float;
+uniform sampler2D uDay, uNight, uTopo, uWater, uOverlay;
+uniform vec3 uSun, uEye;
+uniform float uNightAmt, uOverlayAmt, uTexel;
+varying vec2 vUV; varying vec3 vN; varying vec3 vPos;
+
+void main(){
+  vec3 N = normalize(vN);
+  vec3 V = normalize(uEye - vPos);
+  vec3 L = normalize(uSun);
+
+  /* 起伏マップの傾きから法線を揺らして、山脈の陰影を出す */
+  vec2 tx = vec2(uTexel, uTexel * 2.0);
+  float hL = texture2D(uTopo, vUV - vec2(tx.x, 0.0)).r;
+  float hR = texture2D(uTopo, vUV + vec2(tx.x, 0.0)).r;
+  float hD = texture2D(uTopo, vUV - vec2(0.0, tx.y)).r;
+  float hU = texture2D(uTopo, vUV + vec2(0.0, tx.y)).r;
+  vec3 axis = abs(N.y) > 0.995 ? vec3(0.0, 0.0, 1.0) : vec3(0.0, 1.0, 0.0);
+  vec3 T = normalize(cross(axis, N));
+  vec3 B = cross(N, T);
+  float relief = 1.0 - smoothstep(0.15, 0.55, abs(N.y));   /* 極付近は歪むので弱める */
+  vec3 Nb = normalize(N + (T * (hL - hR) + B * (hD - hU)) * (5.5 * (0.35 + 0.65 * relief)));
+
+  float ndl  = dot(Nb, L);
+  float lit  = smoothstep(-0.13, 0.30, ndl);
+  float geom = smoothstep(-0.10, 0.22, dot(N, L));
+
+  vec3 day   = texture2D(uDay, vUV).rgb;
+  float water = texture2D(uWater, vUV).r;
+
+  /* 海はやや青く沈ませ、陸は少しコントラストを上げる */
+  vec3 sea = day * 1.30 + vec3(0.008, 0.024, 0.055);
+  day = mix(day * 1.05, sea * vec3(0.84, 0.95, 1.12), water * 0.62);
+
+  vec3 col = day * (0.030 + 1.16 * lit);
+
+  /* 海面のスペキュラ（太陽のきらめき） */
+  vec3 H = normalize(L + V);
+  float spec = pow(max(dot(N, H), 0.0), 150.0) * water * geom;
+  col += vec3(1.0, 0.95, 0.85) * spec * 0.55;
+
+  /* 夜側の都市光 */
+  float nf = smoothstep(0.10, -0.14, ndl);
+  col += texture2D(uNight, vUV).rgb * nf * uNightAmt * 1.55;
+
+  /* 大気の縁（表面側の散乱） */
+  float fres = pow(1.0 - max(dot(N, V), 0.0), 3.2);
+  col += vec3(0.24, 0.47, 0.95) * fres * (0.10 + 0.95 * geom) * 0.85;
+
+  /* 国のハイライト（乗算済みアルファ） */
+  vec4 ov = texture2D(uOverlay, vUV) * uOverlayAmt;
+  col = col * (1.0 - ov.a) + ov.rgb;
+  col += ov.rgb * 0.22;
+
+  gl_FragColor = vec4(col, 1.0);
+}`;
+
+const VS_SIMPLE = `
+attribute vec3 aPos;
+uniform mat4 uProj, uView; uniform float uRadius;
+varying vec3 vN; varying vec3 vPos;
+void main(){ vN = aPos; vPos = aPos * uRadius; gl_Position = uProj * uView * vec4(vPos, 1.0); }`;
+
+const FS_LINE = `
+precision mediump float;
+uniform vec3 uSun, uEye, uColor; uniform float uAlpha;
+varying vec3 vN; varying vec3 vPos;
+void main(){
+  vec3 N = normalize(vN);
+  float lit = smoothstep(-0.25, 0.35, dot(N, normalize(uSun)));
+  float rim = smoothstep(0.0, 0.35, dot(N, normalize(uEye - vPos)));
+  gl_FragColor = vec4(uColor, uAlpha * rim * (0.30 + 0.70 * lit));
+}`;
+
+const VS_CLOUD = `
+attribute vec3 aPos; attribute vec2 aUV;
+uniform mat4 uProj, uView; uniform float uRadius, uSpin;
+varying vec2 vUV; varying vec3 vN; varying vec3 vPos;
+void main(){
+  vUV = vec2(aUV.x + uSpin, aUV.y);
+  vN = aPos; vPos = aPos * uRadius;
+  gl_Position = uProj * uView * vec4(vPos, 1.0); }`;
+
+const FS_CLOUD = `
+precision mediump float;
+uniform sampler2D uClouds; uniform vec3 uSun, uEye; uniform float uAmt;
+varying vec2 vUV; varying vec3 vN; varying vec3 vPos;
+void main(){
+  vec3 N = normalize(vN);
+  float a = texture2D(uClouds, vUV).r;
+  a = smoothstep(0.12, 0.85, a) * uAmt;
+  if (a < 0.004) discard;
+  float lit = smoothstep(-0.16, 0.34, dot(N, normalize(uSun)));
+  float edge = smoothstep(0.0, 0.30, dot(N, normalize(uEye - vPos)));
+  vec3 c = mix(vec3(0.10, 0.16, 0.28), vec3(1.0, 0.985, 0.96), lit);
+  gl_FragColor = vec4(c * a * edge, a * edge);
+}`;
+
+/* 大気：球殻を描き、視線と地心の距離（衝突パラメータ）で光らせる */
+const FS_ATMO = `
+precision highp float;
+uniform vec3 uSun, uEye; uniform float uIntensity;
+varying vec3 vPos;
+void main(){
+  vec3 rd = normalize(vPos - uEye);
+  float t = -dot(uEye, rd);
+  vec3 near = uEye + rd * max(t, 0.0);
+  float b = length(near);
+  float rim = exp(-max(b - 1.0, 0.0) * 10.5) * smoothstep(0.870, 1.015, b);
+  float lit = smoothstep(-0.30, 0.32, dot(normalize(near), normalize(uSun)));
+  vec3 col = mix(vec3(0.16, 0.36, 0.85), vec3(0.55, 0.78, 1.0), pow(lit, 2.0));
+  gl_FragColor = vec4(col * rim * lit * uIntensity, 1.0);
+}`;
+
+const VS_QUAD = `
+attribute vec2 aPos; varying vec2 vNDC;
+void main(){ vNDC = aPos; gl_Position = vec4(aPos, 0.999, 1.0); }`;
+
+const FS_STARS = `
+precision highp float;
+varying vec2 vNDC;
+uniform vec3 uFwd, uRight, uUp; uniform vec2 uTan; uniform float uFade;
+float h21(vec2 p){ p = fract(p * vec2(127.31, 311.7)); p += dot(p, p + 34.53); return fract(p.x * p.y); }
+float layer(vec2 uv, float dens, float sz, float thr){
+  vec2 g = floor(uv * dens), f = fract(uv * dens);
+  float h = h21(g);
+  if (h < thr) return 0.0;
+  vec2 p = vec2(h21(g + 3.7), h21(g + 11.3));
+  float d = length(f - p);
+  return smoothstep(sz, 0.0, d) * (0.25 + 0.75 * fract(h * 91.7));
+}
+void main(){
+  vec3 dir = normalize(uFwd + uRight * vNDC.x * uTan.x + uUp * vNDC.y * uTan.y);
+  vec3 a = abs(dir); vec2 uv; float face;
+  if (a.x >= a.y && a.x >= a.z){ uv = dir.zy / a.x; face = 0.0; }
+  else if (a.y >= a.z){ uv = dir.xz / a.y; face = 1.0; }
+  else { uv = dir.xy / a.z; face = 2.0; }
+  uv = uv * 0.5 + 0.5 + face * 13.7 + step(0.0, dir.x + dir.y + dir.z) * 4.1;
+  float s = layer(uv, 90.0, 0.055, 0.9915) * 1.0
+          + layer(uv, 44.0, 0.075, 0.9955) * 1.5
+          + layer(uv, 170.0, 0.040, 0.9955) * 0.6;
+  vec3 col = vec3(0.80, 0.87, 1.0) * s;
+  col += vec3(0.020, 0.030, 0.055) * (1.0 - length(vNDC) * 0.42);   /* 深宇宙のかすかな地色 */
+  gl_FragColor = vec4(col * uFade, 1.0);
+}`;
+</script>
+
+<script>
+"use strict";
+/* =========================  地球儀レンダラ  ========================= */
+const Globe = (() => {
+  const canvas = $("#gl");
+  let gl, dpr = 1, W = 1, H = 1, lost = false, maxTex = PERF.maxTex;
+  const prog = {}, buf = {}, tex = {};
+  let sphereIndexCount = 0, borderVertexCount = 0;
+  let anisoExt = null, maxAniso = 1;
+
+  /* --- 見せ方の状態 --- */
+  const view = {
+    lat: 34, lon: 138, dist: 2.75,          /* 現在値 */
+    tLat: 34, tLon: 138, tDist: 2.75,       /* 目標値（イージングで追う） */
+    spin: true, spinIdle: 0,
+    clouds: 1, night: 1, borders: 1, realSun: false, atmo: 1,
+  };
+  const camPos = [0, 0, 3], proj = new Float32Array(16), viewM = new Float32Array(16);
+  let cloudSpin = 0, sunLat = 12, sunLon = 0;
+
+  /* ---------- WebGL 基礎 ---------- */
+  function shader(type, src) {
+    const s = gl.createShader(type);
+    gl.shaderSource(s, src); gl.compileShader(s);
+    if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(s) + "\n" + src);
+    return s;
+  }
+  function program(vs, fs, attrs) {
+    const p = gl.createProgram();
+    gl.attachShader(p, shader(gl.VERTEX_SHADER, vs));
+    gl.attachShader(p, shader(gl.FRAGMENT_SHADER, fs));
+    attrs.forEach((a, i) => gl.bindAttribLocation(p, i, a));
+    gl.linkProgram(p);
+    if (!gl.getProgramParameter(p, gl.LINK_STATUS)) throw new Error(gl.getProgramInfoLog(p));
+    p.u = new Proxy({}, { get: (c, k) => (k in c ? c[k] : (c[k] = gl.getUniformLocation(p, k))) });
+    return p;
+  }
+  function makeTexture(img, { mips = true, wrapS } = {}) {
+    const t = gl.createTexture();
+    gl.bindTexture(gl.TEXTURE_2D, t);
+    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, img);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, wrapS || gl.REPEAT);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+    if (mips) { gl.generateMipmap(gl.TEXTURE_2D); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR); }
+    else gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+    if (anisoExt) gl.texParameterf(gl.TEXTURE_2D, anisoExt.TEXTURE_MAX_ANISOTROPY_EXT, Math.min(8, maxAniso));
+    return t;
+  }
+
+  /* ---------- ジオメトリ ---------- */
+  function buildSphere(nx, ny) {
+    const pos = new Float32Array((nx + 1) * (ny + 1) * 3);
+    const uv = new Float32Array((nx + 1) * (ny + 1) * 2);
+    let p = 0, q = 0;
+    for (let y = 0; y <= ny; y++) {
+      const v = y / ny, lat = (0.5 - v) * Math.PI;
+      const cy = Math.cos(lat), sy = Math.sin(lat);
+      for (let x = 0; x <= nx; x++) {
+        const u = x / nx, lon = (u - 0.5) * 2 * Math.PI;
+        pos[p++] = cy * Math.sin(lon); pos[p++] = sy; pos[p++] = cy * Math.cos(lon);
+        uv[q++] = u; uv[q++] = v;
+      }
+    }
+    const idx = new Uint16Array(nx * ny * 6);
+    let i = 0;
+    for (let y = 0; y < ny; y++) for (let x = 0; x < nx; x++) {
+      const a = y * (nx + 1) + x, b = a + nx + 1;
+      idx[i++] = a; idx[i++] = b; idx[i++] = a + 1;
+      idx[i++] = a + 1; idx[i++] = b; idx[i++] = b + 1;
+    }
+    return { pos, uv, idx };
+  }
+
+  /* 国境：球面上の線分。日付変更線・極でのクリップ辺は落とす */
+  function buildBorders(countries) {
+    const segs = [];
+    for (const c of countries) {
+      const start = segs.length / 6;
+      for (const poly of c.g) for (const ring of poly) {
+        const n = ring.length / 2;
+        for (let i = 0; i < n; i++) {
+          const j = (i + 1) % n;
+          const lon0 = ring[i * 2], lat0 = ring[i * 2 + 1];
+          const lon1 = ring[j * 2], lat1 = ring[j * 2 + 1];
+          if (Math.abs(lon0) > 179.85 && Math.abs(lon1) > 179.85) continue;
+          if (lat0 < -89.4 && lat1 < -89.4) continue;
+          const a = llToVec(lat0, lon0, 1), b = llToVec(lat1, lon1, 1);
+          segs.push(a[0], a[1], a[2], b[0], b[1], b[2]);
+        }
+      }
+      c._ln = [start, segs.length / 6 - start];
+    }
+    return new Float32Array(segs);
+  }
+
+  /* ---------- 初期化 ---------- */
+  function init(countries, images) {
+    gl = canvas.getContext("webgl2", { antialias: true, alpha: false, powerPreference: "high-performance" })
+      || canvas.getContext("webgl", { antialias: true, alpha: false });
+    if (!gl) throw new Error("このブラウザでは WebGL が使えません。");
+    anisoExt = gl.getExtension("EXT_texture_filter_anisotropic") || gl.getExtension("WEBKIT_EXT_texture_filter_anisotropic");
+    if (anisoExt) maxAniso = gl.getParameter(anisoExt.MAX_TEXTURE_MAX_ANISOTROPY_EXT);
+
+    prog.globe = program(VS_GLOBE, FS_GLOBE, ["aPos", "aUV"]);
+    prog.line  = program(VS_SIMPLE, FS_LINE, ["aPos"]);
+    prog.cloud = program(VS_CLOUD, FS_CLOUD, ["aPos", "aUV"]);
+    prog.atmo  = program(VS_SIMPLE, FS_ATMO, ["aPos"]);
+    prog.stars = program(VS_QUAD, FS_STARS, ["aPos"]);
+
+    const sph = buildSphere(PERF.seg[0], PERF.seg[1]);
+    sphereIndexCount = sph.idx.length;
+    buf.pos = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, buf.pos); gl.bufferData(gl.ARRAY_BUFFER, sph.pos, gl.STATIC_DRAW);
+    buf.uv  = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, buf.uv);  gl.bufferData(gl.ARRAY_BUFFER, sph.uv, gl.STATIC_DRAW);
+    buf.idx = gl.createBuffer(); gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buf.idx); gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, sph.idx, gl.STATIC_DRAW);
+
+    const lines = buildBorders(countries);
+    borderVertexCount = lines.length / 3;
+    buf.line = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, buf.line); gl.bufferData(gl.ARRAY_BUFFER, lines, gl.STATIC_DRAW);
+
+    buf.quad = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, buf.quad);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 3,-1, -1,3]), gl.STATIC_DRAW);
+
+    maxTex = Math.min(maxTex, gl.getParameter(gl.MAX_TEXTURE_SIZE));
+    tex.day = makeTexture(fitImage(images.day, maxTex));
+    tex.night = makeTexture(fitImage(images.night, maxTex));
+    tex.topo = makeTexture(fitImage(images.topo, maxTex));
+    tex.water = makeTexture(fitImage(images.water, maxTex));
+    tex.clouds = makeTexture(fitImage(images.clouds, maxTex));
+
+    /* 国ハイライト用のオフスクリーン（等距円筒図法） */
+    Overlay.init();
+    gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
+    tex.overlay = makeTexture(Overlay.canvas, { mips: false, wrapS: gl.CLAMP_TO_EDGE });
+
+    canvas.addEventListener("webglcontextlost", e => {
+      e.preventDefault(); lost = true;
+      $("#fatalMsg").textContent = "端末の描画リソースが解放されました。ページを再読み込みしてください。";
+      $("#fatal").classList.add("on");
+    });
+    gl.clearColor(0.008, 0.012, 0.03, 1);
+    gl.enable(gl.DEPTH_TEST);
+    resize();
+    window.addEventListener("resize", resize);
+    bindControls();
+  }
+
+  function uploadOverlay() {
+    gl.bindTexture(gl.TEXTURE_2D, tex.overlay);
+    gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, Overlay.canvas);
+  }
+
+  function resize() {
+    dpr = Math.min(window.devicePixelRatio || 1, PERF.dpr);
+    W = Math.max(1, Math.round(canvas.clientWidth * dpr));
+    H = Math.max(1, Math.round(canvas.clientHeight * dpr));
+    canvas.width = W; canvas.height = H;
+  }
+
+  /* ---------- カメラ ---------- */
+  const FOV = 38 * DEG;
+  function updateCamera(dt) {
+    if (view.spin && view.spinIdle <= 0) view.tLon += dt * 2.6;
+    view.lon += shortAngle(view.tLon - view.lon) * Math.min(1, dt * 6.5);
+    view.lat = lerp(view.lat, view.tLat, Math.min(1, dt * 6.5));
+    view.dist = lerp(view.dist, view.tDist, Math.min(1, dt * 6.5));
+    view.lon = ((view.lon + 180) % 360 + 360) % 360 - 180;
+    view.tLon = ((view.tLon + 180) % 360 + 360) % 360 - 180;
+    const p = llToVec(view.lat, view.lon, view.dist);
+    camPos[0] = p[0]; camPos[1] = p[1]; camPos[2] = p[2];
+    mat4Perspective(proj, FOV, W / H, 0.01, 60);
+    mat4LookAt(viewM, camPos, [0, 0, 0], [0, 1, 0]);
+  }
+  function sunDir(now) {
+    if (view.realSun) {
+      const d = now, ms = d.getUTCHours() * 3600 + d.getUTCMinutes() * 60 + d.getUTCSeconds();
+      const doy = (Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate()) - Date.UTC(d.getUTCFullYear(), 0, 0)) / 864e5;
+      sunLat = -23.44 * Math.cos((360 / 365.24) * (doy + 10) * DEG);
+      sunLon = 180 - (ms / 86400) * 360;
+    } else {
+      /* カメラの少し左上から当てて、常に昼側を見せつつ夕暮れの帯を作る */
+      sunLat = clamp(view.lat * 0.35 + 14, -32, 42);
+      sunLon = view.lon - 26;
+    }
+    return llToVec(sunLat, sunLon, 1);
+  }
+
+  /* ---------- 描画 ---------- */
+  let last = performance.now(), fpsAcc = 0, fpsN = 0, fps = 0;
+  function frame(now) {
+    if (lost) return;
+    const dt = Math.min(0.05, (now - last) / 1000); last = now;
+    if (view.spinIdle > 0) view.spinIdle -= dt;
+    cloudSpin = (cloudSpin + dt * 0.0016) % 1;
+    updateCamera(dt);
+    const S = sunDir(new Date());
+
+    gl.viewport(0, 0, W, H);
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+    /* 星空 */
+    gl.disable(gl.DEPTH_TEST); gl.disable(gl.BLEND); gl.disable(gl.CULL_FACE);
+    let p = prog.stars; gl.useProgram(p);
+    const fwd = [-camPos[0] / view.dist, -camPos[1] / view.dist, -camPos[2] / view.dist];
+    let rx = fwd[2], rz = -fwd[0]; const rl = Math.hypot(rx, rz) || 1; rx /= rl; rz /= rl;
+    const right = [rx, 0, rz];
+    const up = [right[1] * fwd[2] - right[2] * fwd[1], right[2] * fwd[0] - right[0] * fwd[2], right[0] * fwd[1] - right[1] * fwd[0]];
+    const ty = Math.tan(FOV / 2);
+    gl.uniform3fv(p.u.uFwd, fwd); gl.uniform3fv(p.u.uRight, right); gl.uniform3fv(p.u.uUp, up);
+    gl.uniform2f(p.u.uTan, ty * (W / H), ty); gl.uniform1f(p.u.uFade, 1);
+    gl.bindBuffer(gl.ARRAY_BUFFER, buf.quad);
+    gl.enableVertexAttribArray(0); gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0);
+    gl.disableVertexAttribArray(1);
+    gl.drawArrays(gl.TRIANGLES, 0, 3);
+    gl.enable(gl.DEPTH_TEST);
+
+    /* 地球本体 */
+    p = prog.globe; gl.useProgram(p);
+    gl.enable(gl.CULL_FACE); gl.cullFace(gl.BACK);
+    gl.uniformMatrix4fv(p.u.uProj, false, proj); gl.uniformMatrix4fv(p.u.uView, false, viewM);
+    gl.uniform1f(p.u.uRadius, 1); gl.uniform3fv(p.u.uSun, S); gl.uniform3fv(p.u.uEye, camPos);
+    gl.uniform1f(p.u.uNightAmt, view.night); gl.uniform1f(p.u.uOverlayAmt, 1);
+    gl.uniform1f(p.u.uTexel, 1 / Math.min(2048, maxTex));
+    bindTex(p, "uDay", tex.day, 0); bindTex(p, "uNight", tex.night, 1);
+    bindTex(p, "uTopo", tex.topo, 2); bindTex(p, "uWater", tex.water, 3);
+    bindTex(p, "uOverlay", tex.overlay, 4);
+    gl.bindBuffer(gl.ARRAY_BUFFER, buf.pos); gl.enableVertexAttribArray(0); gl.vertexAttribPointer(0, 3, gl.FLOAT, false, 0, 0);
+    gl.bindBuffer(gl.ARRAY_BUFFER, buf.uv); gl.enableVertexAttribArray(1); gl.vertexAttribPointer(1, 2, gl.FLOAT, false, 0, 0);
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buf.idx);
+    gl.drawElements(gl.TRIANGLES, sphereIndexCount, gl.UNSIGNED_SHORT, 0);
+
+    /* 国境線と、選択中の国の輪郭 */
+    gl.disableVertexAttribArray(1);
+    gl.enable(gl.BLEND); gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+    gl.depthMask(false);
+    p = prog.line; gl.useProgram(p);
+    gl.uniformMatrix4fv(p.u.uProj, false, proj); gl.uniformMatrix4fv(p.u.uView, false, viewM);
+    gl.uniform3fv(p.u.uSun, S); gl.uniform3fv(p.u.uEye, camPos);
+    gl.bindBuffer(gl.ARRAY_BUFFER, buf.line); gl.enableVertexAttribArray(0); gl.vertexAttribPointer(0, 3, gl.FLOAT, false, 0, 0);
+    if (view.borders) {
+      gl.uniform1f(p.u.uRadius, 1.0018);
+      gl.uniform3f(p.u.uColor, 0.72, 0.86, 1.0); gl.uniform1f(p.u.uAlpha, 0.30);
+      gl.drawArrays(gl.LINES, 0, borderVertexCount);
+    }
+    for (const o of Overlay.outlines) {
+      if (!o.country._ln || !o.country._ln[1]) continue;
+      gl.uniform1f(p.u.uRadius, 1.004);
+      gl.uniform3fv(p.u.uColor, o.line); gl.uniform1f(p.u.uAlpha, o.lineAlpha);
+      gl.drawArrays(gl.LINES, o.country._ln[0] * 2, o.country._ln[1] * 2);
+    }
+
+    /* 雲 */
+    if (view.clouds > 0.001) {
+      p = prog.cloud; gl.useProgram(p);
+      gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+      gl.uniformMatrix4fv(p.u.uProj, false, proj); gl.uniformMatrix4fv(p.u.uView, false, viewM);
+      gl.uniform1f(p.u.uRadius, 1.011); gl.uniform1f(p.u.uSpin, cloudSpin);
+      gl.uniform3fv(p.u.uSun, S); gl.uniform3fv(p.u.uEye, camPos); gl.uniform1f(p.u.uAmt, view.clouds);
+      bindTex(p, "uClouds", tex.clouds, 0);
+      gl.bindBuffer(gl.ARRAY_BUFFER, buf.pos); gl.enableVertexAttribArray(0); gl.vertexAttribPointer(0, 3, gl.FLOAT, false, 0, 0);
+      gl.bindBuffer(gl.ARRAY_BUFFER, buf.uv); gl.enableVertexAttribArray(1); gl.vertexAttribPointer(1, 2, gl.FLOAT, false, 0, 0);
+      gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buf.idx);
+      gl.drawElements(gl.TRIANGLES, sphereIndexCount, gl.UNSIGNED_SHORT, 0);
+      gl.disableVertexAttribArray(1);
+    }
+
+    /* 大気 */
+    p = prog.atmo; gl.useProgram(p);
+    gl.blendFunc(gl.SRC_ALPHA, gl.ONE);
+    gl.uniformMatrix4fv(p.u.uProj, false, proj); gl.uniformMatrix4fv(p.u.uView, false, viewM);
+    gl.uniform1f(p.u.uRadius, 1.35); gl.uniform3fv(p.u.uSun, S); gl.uniform3fv(p.u.uEye, camPos);
+    gl.uniform1f(p.u.uIntensity, 1.15 * view.atmo);
+    gl.bindBuffer(gl.ARRAY_BUFFER, buf.pos); gl.enableVertexAttribArray(0); gl.vertexAttribPointer(0, 3, gl.FLOAT, false, 0, 0);
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buf.idx);
+    gl.drawElements(gl.TRIANGLES, sphereIndexCount, gl.UNSIGNED_SHORT, 0);
+
+    gl.depthMask(true); gl.disable(gl.BLEND);
+
+    fpsAcc += dt; fpsN++;
+    if (fpsAcc > 0.6) { fps = Math.round(fpsN / fpsAcc); fpsAcc = 0; fpsN = 0; }
+    UI.onFrame({ lat: view.lat, lon: view.lon, alt: (view.dist - 1) * EARTH_KM, sunLat, sunLon, fps });
+    requestAnimationFrame(frame);
+  }
+  function bindTex(p, name, t, unit) {
+    gl.activeTexture(gl.TEXTURE0 + unit); gl.bindTexture(gl.TEXTURE_2D, t); gl.uniform1i(p.u[name], unit);
+  }
+
+  /* ---------- 画面座標 → 経緯度 ---------- */
+  function rayAt(clientX, clientY) {
+    const r = canvas.getBoundingClientRect();
+    const ndcX = ((clientX - r.left) / r.width) * 2 - 1;
+    const ndcY = 1 - ((clientY - r.top) / r.height) * 2;
+    const fwd = [-camPos[0] / view.dist, -camPos[1] / view.dist, -camPos[2] / view.dist];
+    let rx = fwd[2], rz = -fwd[0]; const rl = Math.hypot(rx, rz) || 1; rx /= rl; rz /= rl;
+    const right = [rx, 0, rz];
+    const up = [right[1]*fwd[2] - right[2]*fwd[1], right[2]*fwd[0] - right[0]*fwd[2], right[0]*fwd[1] - right[1]*fwd[0]];
+    const ty = Math.tan(FOV / 2), tx = ty * (W / H);
+    const d = [fwd[0] + right[0]*ndcX*tx + up[0]*ndcY*ty,
+               fwd[1] + right[1]*ndcX*tx + up[1]*ndcY*ty,
+               fwd[2] + right[2]*ndcX*tx + up[2]*ndcY*ty];
+    const l = Math.hypot(d[0], d[1], d[2]); d[0]/=l; d[1]/=l; d[2]/=l;
+    const b = camPos[0]*d[0] + camPos[1]*d[1] + camPos[2]*d[2];
+    const c = view.dist * view.dist - 1;
+    const disc = b*b - c;
+    if (disc < 0) return null;
+    const t = -b - Math.sqrt(disc);
+    if (t < 0) return null;
+    const hit = [camPos[0] + d[0]*t, camPos[1] + d[1]*t, camPos[2] + d[2]*t];
+    return { lat: vecToLat(hit), lon: vecToLon(hit) };
+  }
+  /* 経緯度 → 画面座標（地球の裏側なら null） */
+  function project(lat, lon) {
+    const w = llToVec(lat, lon, 1.0);
+    if (w[0]*camPos[0] + w[1]*camPos[1] + w[2]*camPos[2] < 1) return null;
+    const x = viewM[0]*w[0] + viewM[4]*w[1] + viewM[8]*w[2] + viewM[12];
+    const y = viewM[1]*w[0] + viewM[5]*w[1] + viewM[9]*w[2] + viewM[13];
+    const z = viewM[2]*w[0] + viewM[6]*w[1] + viewM[10]*w[2] + viewM[14];
+    const cx = proj[0]*x, cy = proj[5]*y, cw = -z;
+    if (cw <= 0) return null;
+    const r = canvas.getBoundingClientRect();
+    return { x: r.left + (cx/cw * 0.5 + 0.5) * r.width, y: r.top + (0.5 - cy/cw * 0.5) * r.height };
+  }
+
+  /* ---------- 操作 ---------- */
+  function bindControls() {
+    const pointers = new Map();
+    let dragging = false, moved = 0, lastX = 0, lastY = 0, pinch = 0;
+    const idle = () => { view.spinIdle = 3.5; };
+
+    canvas.addEventListener("pointerdown", e => {
+      canvas.setPointerCapture(e.pointerId);
+      pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+      if (pointers.size === 1) { dragging = true; moved = 0; lastX = e.clientX; lastY = e.clientY; canvas.classList.add("dragging"); }
+      if (pointers.size === 2) { const [a, b] = [...pointers.values()]; pinch = Math.hypot(a.x-b.x, a.y-b.y); }
+      idle();
+    });
+    canvas.addEventListener("pointermove", e => {
+      if (pointers.has(e.pointerId)) pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+      if (pointers.size === 2) {
+        const [a, b] = [...pointers.values()], d = Math.hypot(a.x-b.x, a.y-b.y);
+        if (pinch) view.tDist = clamp(view.tDist * (pinch / d), 1.06, 6);
+        pinch = d; idle(); return;
+      }
+      if (dragging) {
+        const dx = e.clientX - lastX, dy = e.clientY - lastY;
+        lastX = e.clientX; lastY = e.clientY; moved += Math.abs(dx) + Math.abs(dy);
+        const k = 0.26 * clamp(view.dist - 0.6, 0.28, 2.4);
+        view.tLon -= dx * k; view.lon -= dx * k;
+        view.tLat = clamp(view.tLat + dy * k, -85, 85); view.lat = clamp(view.lat + dy * k, -85, 85);
+        idle();
+      } else UI.onHover(e.clientX, e.clientY);
+    });
+    const end = e => {
+      pointers.delete(e.pointerId);
+      if (pointers.size < 2) pinch = 0;
+      if (dragging && pointers.size === 0) {
+        dragging = false; canvas.classList.remove("dragging");
+        if (moved < 6) UI.onClick(e.clientX, e.clientY);
+      }
+      idle();
+    };
+    canvas.addEventListener("pointerup", end);
+    canvas.addEventListener("pointercancel", end);
+    canvas.addEventListener("pointerleave", () => UI.onHover(null));
+    canvas.addEventListener("wheel", e => {
+      e.preventDefault();
+      view.tDist = clamp(view.tDist * Math.exp(clamp(e.deltaY, -120, 120) * 0.0016), 1.06, 6);
+      idle();
+    }, { passive: false });
+    window.addEventListener("keydown", e => {
+      if (e.target.tagName === "INPUT") return;
+      const step = 8;
+      if (e.key === "ArrowLeft")  { view.tLon -= step; idle(); }
+      else if (e.key === "ArrowRight") { view.tLon += step; idle(); }
+      else if (e.key === "ArrowUp")    { view.tLat = clamp(view.tLat + step, -85, 85); idle(); }
+      else if (e.key === "ArrowDown")  { view.tLat = clamp(view.tLat - step, -85, 85); idle(); }
+      else return;
+      e.preventDefault();
+    });
+  }
+
+  function flyTo(lat, lon, dist, instant) {
+    view.tLat = clamp(lat, -85, 85);
+    view.tLon = view.lon + shortAngle(lon - view.lon);
+    if (dist) view.tDist = clamp(dist, 1.06, 6);
+    view.spinIdle = 4;
+    if (instant) { view.lat = view.tLat; view.lon = view.tLon; if (dist) view.dist = view.tDist; }
+  }
+
+  return { init, start: () => requestAnimationFrame(t => { last = t; frame(t); }), view, rayAt, project, flyTo, uploadOverlay, get dist(){ return view.dist; } };
+})();
+</script>
+
+<script>
+"use strict";
+/* =========================  国データと当たり判定  ========================= */
+const Countries = (() => {
+  let list = [], byId = new Map();
+
+  function prepare(raw) {
+    list = raw.countries;
+    for (const c of list) {
+      c.rings = [];
+      for (const poly of c.g) {
+        const p = { outer: null, holes: [] };
+        poly.forEach((ring, i) => {
+          let x0 = Infinity, x1 = -Infinity, y0 = Infinity, y1 = -Infinity;
+          for (let k = 0; k < ring.length; k += 2) {
+            if (ring[k] < x0) x0 = ring[k]; if (ring[k] > x1) x1 = ring[k];
+            if (ring[k+1] < y0) y0 = ring[k+1]; if (ring[k+1] > y1) y1 = ring[k+1];
+          }
+          const r = { pts: ring, x0, x1, y0, y1 };
+          if (i === 0) p.outer = r; else p.holes.push(r);
+        });
+        c.rings.push(p);
+      }
+      byId.set(c.i, c);
+    }
+    list.sort((a, b) => b.a - a.a);
+    return list;
+  }
+
+  function inRing(r, lon, lat) {
+    if (lon < r.x0 || lon > r.x1 || lat < r.y0 || lat > r.y1) return false;
+    const p = r.pts, n = p.length;
+    let inside = false;
+    for (let i = 0, j = n - 2; i < n; j = i, i += 2) {
+      const yi = p[i+1], yj = p[j+1];
+      if ((yi > lat) !== (yj > lat)) {
+        const xi = p[i], xj = p[j];
+        if (lon < xi + ((lat - yi) / (yj - yi)) * (xj - xi)) inside = !inside;
+      }
+    }
+    return inside;
+  }
+
+  /* 経緯度を含む国。重なる場合は面積の小さい方を優先する */
+  function at(lat, lon) {
+    let best = null;
+    for (const c of list) {
+      for (const poly of c.rings) {
+        if (!inRing(poly.outer, lon, lat)) continue;
+        let hole = false;
+        for (const h of poly.holes) if (inRing(h, lon, lat)) { hole = true; break; }
+        if (hole) continue;
+        if (!best || c.a < best.a) best = c;
+        break;
+      }
+    }
+    return best;
+  }
+
+  const REGIONS = [
+    ["asia", "アジア"], ["europe", "ヨーロッパ"], ["africa", "アフリカ"],
+    ["namerica", "北・中米"], ["samerica", "南米"], ["oceania", "オセアニア"],
+  ];
+  const DIFF = { easy: 400000, normal: 100000, hard: 0 };
+
+  function pool(regions, diff) {
+    const min = DIFF[diff] ?? 0;
+    return list.filter(c => c.q && c.a >= min && regions.has(c.r));
+  }
+  const search = q => {
+    q = q.trim().toLowerCase();
+    if (!q) return [];
+    return list.filter(c => c.j.toLowerCase().includes(q) || c.e.toLowerCase().includes(q) || c.c.toLowerCase() === q)
+               .slice(0, 8);
+  };
+
+  return { prepare, at, pool, search, REGIONS, get list() { return list; }, byId };
+})();
+
+/* =========================  ハイライト描画  ========================= */
+const Overlay = (() => {
+  const CW = 2048, CH = 1024;
+  const canvas = document.createElement("canvas");
+  canvas.width = CW; canvas.height = CH;
+  const ctx = canvas.getContext("2d", { willReadFrequently: false });
+  let entries = [];
+
+  function init() { ctx.clearRect(0, 0, CW, CH); }
+
+  /* リングを等距円筒に展開。日付変更線をまたぐ形も切れないように巻き戻す */
+  function subpaths(country) {
+    const out = [];
+    let gx0 = Infinity, gx1 = -Infinity;
+    for (const poly of country.g) for (const ring of poly) {
+      const pts = new Float64Array(ring.length);
+      let prevRaw = ring[0], lonU = ring[0];
+      for (let i = 0; i < ring.length; i += 2) {
+        if (i > 0) {
+          let d = ring[i] - prevRaw;
+          if (d > 180) d -= 360; else if (d < -180) d += 360;
+          lonU += d; prevRaw = ring[i];
+        }
+        const x = ((lonU + 180) / 360) * CW, y = ((90 - ring[i+1]) / 180) * CH;
+        pts[i] = x; pts[i+1] = y;
+        if (x < gx0) gx0 = x; if (x > gx1) gx1 = x;
+      }
+      out.push(pts);
+    }
+    const offsets = [0];
+    if (gx1 > CW) offsets.push(-CW);
+    if (gx0 < 0) offsets.push(CW);
+    return { rings: out, offsets };
+  }
+
+  function trace(sp, dx) {
+    ctx.beginPath();
+    for (const pts of sp.rings) {
+      ctx.moveTo(pts[0] + dx, pts[1]);
+      for (let i = 2; i < pts.length; i += 2) ctx.lineTo(pts[i] + dx, pts[i+1]);
+      ctx.closePath();
+    }
+  }
+
+  function set(next) {
+    entries = next || [];
+    ctx.clearRect(0, 0, CW, CH);
+    ctx.lineJoin = "round";
+    for (const e of entries) {
+      const sp = subpaths(e.country);
+      for (const dx of sp.offsets) {
+        trace(sp, dx);
+        ctx.shadowColor = e.glow || e.css;
+        ctx.shadowBlur = e.blur ?? 26;
+        ctx.fillStyle = e.css;
+        ctx.fill("evenodd");
+        ctx.shadowBlur = 0;
+        ctx.fill("evenodd");
+        if (e.stroke) { ctx.strokeStyle = e.stroke; ctx.lineWidth = e.width || 3; ctx.stroke(); }
+      }
+    }
+    Globe.uploadOverlay();
+  }
+
+  return { init, set, canvas, get outlines() { return entries; } };
+})();
+</script>
+
+<script>
+"use strict";
+/* =========================  UI とゲーム進行  ========================= */
+const UI = (() => {
+  const HL = {
+    hover:  { css: "rgba(95,216,255,.16)",  line: [0.37, 0.85, 1.00], lineAlpha: 0.55, blur: 16 },
+    pick:   { css: "rgba(95,216,255,.30)",  line: [0.55, 0.92, 1.00], lineAlpha: 1.00, blur: 30 },
+    target: { css: "rgba(255,182,94,.26)",  line: [1.00, 0.72, 0.37], lineAlpha: 1.00, blur: 34 },
+    right:  { css: "rgba(79,224,160,.32)",  line: [0.31, 0.88, 0.63], lineAlpha: 1.00, blur: 34 },
+    wrong:  { css: "rgba(255,107,122,.28)", line: [1.00, 0.42, 0.48], lineAlpha: 1.00, blur: 30 },
+  };
+  const paint = (...pairs) => Overlay.set(
+    pairs.filter(p => p && p[1]).map(([k, country]) => Object.assign({ country }, HL[k]))
+  );
+
+  const S = {
+    mode: "explore",
+    hover: null, picked: null,
+    settings: {
+      regions: new Set(Countries.REGIONS.map(r => r[0])),
+      diff: "easy", len: 10,
+      clouds: true, night: true, borders: true, spin: true, realsun: false,
+    },
+    quiz: null,
+  };
+
+  /* ---------- 設定の保存 ---------- */
+  function saveSettings() {
+    try {
+      localStorage.setItem("bm.settings", JSON.stringify({ ...S.settings, regions: [...S.settings.regions] }));
+    } catch (e) { /* プライベートモードなどでは保存しないだけ */ }
+  }
+  function loadSettings() {
+    try {
+      const j = JSON.parse(localStorage.getItem("bm.settings") || "null");
+      if (!j) return;
+      if (Array.isArray(j.regions) && j.regions.length) S.settings.regions = new Set(j.regions);
+      for (const k of ["diff", "len", "clouds", "night", "borders", "spin", "realsun"])
+        if (j[k] !== undefined) S.settings[k] = j[k];
+    } catch (e) { /* 壊れた保存値は無視 */ }
+  }
+
+  /* ---------- 小物 ---------- */
+  const fmtArea = a => a >= 1e6 ? (a / 1e4).toFixed(0) + " 万 km²"
+                    : a >= 1e4 ? (a / 1e4).toFixed(1) + " 万 km²"
+                    : a.toLocaleString("ja-JP") + " km²";
+  const fmtLL = (lat, lon) => {
+    const ns = lat >= 0 ? "N" : "S", ew = lon >= 0 ? "E" : "W";
+    return `${Math.abs(lat).toFixed(1)}°${ns} ${Math.abs(lon).toFixed(1)}°${ew}`;
+  };
+  const regionJa = k => (Countries.REGIONS.find(r => r[0] === k) || [, "—"])[1];
+  const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+  const shuffle = a => { for (let i = a.length - 1; i > 0; i--) { const j = Math.random() * (i + 1) | 0; [a[i], a[j]] = [a[j], a[i]]; } return a; };
+
+  /* ---------- テレメトリ ---------- */
+  let hoverLL = null;
+  function onFrame(t) {
+    const ll = hoverLL || { lat: t.lat, lon: t.lon };
+    $("#tLat").textContent = (ll.lat >= 0 ? "+" : "") + ll.lat.toFixed(2);
+    $("#tLon").textContent = (ll.lon >= 0 ? "+" : "") + ll.lon.toFixed(2);
+    $("#tAlt").textContent = Math.round(t.alt).toLocaleString("en-US");
+    $("#tSun").textContent = `${t.sunLat.toFixed(1)}, ${t.sunLon.toFixed(1)}`;
+    $("#tFps").textContent = t.fps ? t.fps + " FPS" : "";
+
+    const pinC = S.mode === "explore" ? S.picked : (S.quiz && S.quiz.reveal);
+    const pin = $("#pin");
+    if (pinC) {
+      const p = Globe.project(pinC.y, pinC.x);
+      if (p) {
+        pin.classList.add("on");
+        pin.style.left = p.x + "px"; pin.style.top = p.y + "px";
+        pin.querySelector(".lbl").textContent = pinC.j;
+      } else pin.classList.remove("on");
+    } else pin.classList.remove("on");
+  }
+
+  /* ---------- 地球儀の入力 ---------- */
+  function onHover(x, y) {
+    if (x == null) { hoverLL = null; setHover(null); $("#tip").classList.remove("on"); return; }
+    const hit = Globe.rayAt(x, y);
+    hoverLL = hit;
+    const quizLocked = S.mode === "name" || (S.quiz && S.quiz.answered);
+    if (!hit || quizLocked) { setHover(null); $("#tip").classList.remove("on"); return; }
+    const c = Countries.at(hit.lat, hit.lon);
+    setHover(c);
+    const tip = $("#tip");
+    if (c && S.mode === "explore") {
+      tip.classList.add("on"); tip.textContent = c.j;
+      tip.style.left = x + "px"; tip.style.top = y + "px";
+    } else tip.classList.remove("on");
+    $("#gl").classList.toggle("picking", S.mode === "find" && !!S.quiz && !S.quiz.answered);
+  }
+  function setHover(c) {
+    if (S.hover === c) return;
+    S.hover = c; repaint();
+  }
+  function onClick(x, y) {
+    const hit = Globe.rayAt(x, y);
+    if (!hit) return;
+    const c = Countries.at(hit.lat, hit.lon);
+    if (S.mode === "find" && S.quiz && !S.quiz.answered) { if (c) answerFind(c); return; }
+    if (S.mode !== "explore") return;
+    select(c);
+  }
+  function select(c) {
+    S.picked = c; S.hover = null; repaint(); renderCard();
+  }
+
+  function repaint() {
+    if (S.quiz && S.quiz.answered) {
+      const q = S.quiz;
+      paint(["right", q.target], ["wrong", q.wrongPick && q.wrongPick !== q.target ? q.wrongPick : null]);
+    } else if (S.quiz && S.mode === "name") {
+      paint(["target", S.quiz.target]);
+    } else if (S.mode === "explore") {
+      paint(["pick", S.picked], ["hover", S.hover !== S.picked ? S.hover : null]);
+    } else {
+      paint(["hover", S.hover]);
+    }
+  }
+
+  /* =========================  クイズ  ========================= */
+  function poolNow() { return Countries.pool(S.settings.regions, S.settings.diff); }
+
+  function startRound() {
+    const pool = poolNow();
+    if (pool.length < 4) { S.quiz = null; renderCard(); return; }
+    const queue = shuffle(pool.slice()).slice(0, Math.min(S.settings.len, pool.length));
+    S.quiz = { queue, i: -1, score: 0, streak: 0, best: 0, right: 0, log: [], t0: performance.now(),
+               target: null, answered: false, wrongPick: null, reveal: null, hint: 0, qt: 0, choices: [] };
+    S.picked = null;
+    nextQuestion();
+  }
+
+  function nextQuestion() {
+    const q = S.quiz;
+    q.i++;
+    if (q.i >= q.queue.length) return finishRound();
+    q.target = q.queue[q.i];
+    q.answered = false; q.wrongPick = null; q.reveal = null; q.hint = 0; q.qt = performance.now();
+    if (S.mode === "name") {
+      const pool = poolNow().filter(c => c !== q.target);
+      const same = shuffle(pool.filter(c => c.r === q.target.r));
+      const rest = shuffle(pool.filter(c => c.r !== q.target.r));
+      q.choices = shuffle([q.target, ...same.slice(0, 3), ...rest].slice(0, 4));
+      Globe.flyTo(q.target.y, q.target.x, zoomFor(q.target));
+    } else {
+      const away = (Math.random() < 0.5 ? -1 : 1) * (102 + Math.random() * 38);
+      Globe.flyTo(q.target.y * 0.2, q.target.x + away, 2.9);
+    }
+    repaint(); renderCard(); renderScore();
+  }
+
+  const zoomFor = c => clamp(1.28 + Math.sqrt(c.a) / 3800, 1.45, 2.9);
+
+  function grade(correct) {
+    const q = S.quiz, sec = (performance.now() - q.qt) / 1000;
+    if (!correct) { q.streak = 0; return 0; }
+    q.right++; q.streak++; q.best = Math.max(q.best, q.streak);
+    const time = Math.max(0, Math.round(60 - sec * 4));
+    const chain = Math.min(q.streak - 1, 5) * 20;
+    return Math.round((100 + time + chain) * (q.hint ? 0.5 : 1));
+  }
+
+  function answerFind(picked) {
+    const q = S.quiz;
+    const ok = picked === q.target;
+    q.answered = true; q.wrongPick = ok ? null : picked; q.reveal = q.target;
+    q.gained = grade(ok); q.score += q.gained;
+    q.log.push({ c: q.target, ok, picked: ok ? null : picked });
+    Globe.flyTo(q.target.y, q.target.x, zoomFor(q.target));
+    repaint(); renderCard(); renderScore();
+  }
+  function answerName(picked) {
+    const q = S.quiz;
+    const ok = picked === q.target;
+    q.answered = true; q.wrongPick = ok ? null : picked; q.reveal = q.target;
+    q.gained = grade(ok); q.score += q.gained;
+    q.log.push({ c: q.target, ok, picked: ok ? null : picked });
+    repaint(); renderCard(); renderScore();
+  }
+  function useHint() {
+    S.quiz.hint = 1; renderCard();
+  }
+  function giveUp() {
+    const q = S.quiz;
+    q.answered = true; q.wrongPick = null; q.reveal = q.target; q.streak = 0; q.gained = 0;
+    q.log.push({ c: q.target, ok: false, picked: null });
+    Globe.flyTo(q.target.y, q.target.x, zoomFor(q.target));
+    repaint(); renderCard(); renderScore();
+  }
+
+  function finishRound() {
+    const q = S.quiz;
+    const secs = Math.round((performance.now() - q.t0) / 1000);
+    const acc = Math.round((q.right / q.queue.length) * 100);
+    const missed = q.log.filter(l => !l.ok);
+    $("#resultBody").innerHTML = `
+      <span class="eyebrow">MISSION REPORT — ${S.mode === "find" ? "場所あて" : "国名あて"}</span>
+      <div class="big"><span class="v">${q.score.toLocaleString("en-US")}</span><span class="u">POINTS</span></div>
+      <div class="stat-row">
+        <div class="cell"><span class="eyebrow">正解</span><div class="v">${q.right}<span style="font-size:13px;color:var(--ink-2)">/${q.queue.length}</span></div></div>
+        <div class="cell"><span class="eyebrow">正答率</span><div class="v">${acc}<span style="font-size:13px;color:var(--ink-2)">%</span></div></div>
+        <div class="cell"><span class="eyebrow">最大連続</span><div class="v" style="color:var(--amber)">${q.best}</div></div>
+        <div class="cell"><span class="eyebrow">所要</span><div class="v">${Math.floor(secs/60)}:${String(secs%60).padStart(2,"0")}</div></div>
+      </div>
+      ${missed.length ? `<div class="missed"><span class="eyebrow">取りこぼした国</span><ul>${
+        missed.map(m => `<li><span>${m.c.f}</span><span>${esc(m.c.j)}</span>${
+          m.picked ? `<span class="bad">→ ${esc(m.picked.j)}と回答</span>` : ""}<span class="en">${esc(m.c.e)}</span></li>`).join("")
+      }</ul></div>` : `<p style="margin:16px 0 0;color:var(--green)">全問正解。文句なしです。</p>`}
+      <div class="row">
+        <button class="btn primary" id="rAgain">もう一度</button>
+        <button class="btn" id="rReview">結果を見ながら地球儀へ</button>
+        <button class="btn ghost spacer" id="rExplore">探索モードへ</button>
+      </div>`;
+    $("#result").classList.add("on");
+    $("#rAgain").onclick = () => { $("#result").classList.remove("on"); startRound(); };
+    $("#rReview").onclick = () => { $("#result").classList.remove("on"); };
+    $("#rExplore").onclick = () => { $("#result").classList.remove("on"); setMode("explore"); };
+    $("#rAgain").focus();
+  }
+
+  /* =========================  カードの描画  ========================= */
+  function renderScore() {
+    const box = $("#scorebox"), q = S.quiz;
+    box.hidden = !(q && S.mode !== "explore");
+    if (box.hidden) return;
+    $("#uiScore").textContent = q.score.toLocaleString("en-US");
+    $("#uiStreak").textContent = q.streak;
+    $("#uiProg").textContent = `${Math.min(q.i + 1, q.queue.length)}/${q.queue.length}`;
+  }
+
+  function renderCard() {
+    const el = $("#cardBody");
+    if (S.mode === "explore") return renderExplore(el);
+    const q = S.quiz;
+    if (!q) {
+      el.innerHTML = `<span class="eyebrow">NO TARGETS</span>
+        <p class="hint-empty" style="margin:6px 0 0">この条件だと出題できる国が足りません。設定で地域か難易度を広げてください。</p>
+        <div class="row"><button class="btn primary" id="openSet">設定をひらく</button></div>`;
+      $("#openSet").onclick = () => toggleSettings(true);
+      return;
+    }
+    const pct = ((q.i + (q.answered ? 1 : 0)) / q.queue.length) * 100;
+    const head = `<div class="q-head">
+        <span class="eyebrow">MISSION ${String(q.i + 1).padStart(2, "0")} / ${String(q.queue.length).padStart(2, "0")}</span>
+        <span class="eyebrow" style="color:var(--ink-2)">${S.mode === "find" ? "地球儀を押して答える" : "4つから選ぶ"}</span>
+      </div>`;
+
+    if (S.mode === "find") {
+      el.innerHTML = head + (q.answered ? verdictHTML(q) : `
+        <div class="q-prompt">
+          <span class="q-flag">${q.target.f || "🏳"}</span>
+          <div>
+            <div class="q-name">${esc(q.target.j)} <span style="font-size:15px;color:var(--ink-2);font-weight:400">はどこ？</span></div>
+            <div class="q-sub">${q.hint ? `${regionJa(q.target.r)} · ${esc(q.target.s)} · ${esc(q.target.e)}` : "地球儀を回して、その国を押してください"}</div>
+          </div>
+        </div>
+        <div class="row">
+          ${q.hint ? "" : `<button class="btn ghost" id="bHint">ヒント（得点は半分）</button>`}
+          <button class="btn ghost spacer" id="bGive">わからない</button>
+        </div>`) +
+        `<div class="progress"><i style="width:${pct}%"></i></div>`;
+      if ($("#bHint")) $("#bHint").onclick = useHint;
+      if ($("#bGive")) $("#bGive").onclick = giveUp;
+    } else {
+      el.innerHTML = head + (q.answered ? verdictHTML(q) : `
+        <div class="q-prompt">
+          <span class="q-flag">📍</span>
+          <div>
+            <div class="q-name">光っている国はどこ？</div>
+            <div class="q-sub">${regionJa(q.target.r)}のどこか · 地球儀は自由に回せます</div>
+          </div>
+        </div>`) +
+        `<div class="choices">${q.choices.map((c, i) => {
+          let cls = "";
+          if (q.answered) cls = c === q.target ? " right" : (c === q.wrongPick ? " wrong" : "");
+          return `<button class="choice${cls}" data-i="${i}"${q.answered ? " disabled" : ""}>
+            <span class="k">${i + 1}</span><span>${c.f || "🏳"}</span><span class="n">${esc(c.j)}</span></button>`;
+        }).join("")}</div>
+        <div class="progress"><i style="width:${pct}%"></i></div>`;
+      el.querySelectorAll(".choice").forEach(b => {
+        b.onclick = () => answerName(q.choices[+b.dataset.i]);
+      });
+    }
+    if (q.answered) {
+      const nx = $("#bNext"); if (nx) nx.onclick = nextQuestion;
+    }
+  }
+
+  function verdictHTML(q) {
+    const ok = q.log[q.log.length - 1].ok;
+    const gave = q.wrongPick === null && !ok;
+    return `<div class="verdict ${ok ? "ok" : "ng"}">
+        <span class="tag">${ok ? "正解" : "不正解"}</span>
+        <span class="msg">${ok
+          ? `<b>${esc(q.target.j)}</b>（${esc(q.target.e)}）`
+          : gave ? `正解は <b>${esc(q.target.j)}</b>` : `正解は <b>${esc(q.target.j)}</b> ／ 押したのは ${esc(q.wrongPick.j)}`}</span>
+        ${q.gained ? `<span class="pts">+${q.gained}</span>` : ""}
+      </div>
+      <dl class="facts">
+        <div><dt>首都</dt><dd>${esc(q.target.p || "—")}</dd></div>
+        <div><dt>地域</dt><dd>${regionJa(q.target.r)}</dd></div>
+        <div><dt>面積</dt><dd>${fmtArea(q.target.a)}</dd></div>
+        <div><dt>座標</dt><dd class="num">${fmtLL(q.target.y, q.target.x)}</dd></div>
+      </dl>
+      <div class="row"><button class="btn primary" id="bNext">${q.i + 1 >= q.queue.length ? "結果を見る" : "次の問題"}<span class="k">SPACE</span></button></div>`;
+  }
+
+  function renderExplore(el) {
+    const c = S.picked;
+    el.innerHTML = c ? `
+      <div class="info-top">
+        <span class="q-flag">${c.f || "🏳"}</span>
+        <div class="info-name">
+          <h2>${esc(c.j)}</h2>
+          <p>${esc(c.e)}${c.c ? " · " + esc(c.c) : ""}</p>
+        </div>
+        <button class="btn ghost" id="bClear" aria-label="選択を解除">✕</button>
+      </div>
+      <dl class="facts">
+        <div><dt>首都</dt><dd>${esc(c.p || "—")}</dd></div>
+        <div><dt>地域</dt><dd>${regionJa(c.r)}</dd></div>
+        <div><dt>面積</dt><dd>${fmtArea(c.a)}</dd></div>
+        <div><dt>座標</dt><dd class="num">${fmtLL(c.y, c.x)}</dd></div>
+      </dl>
+      <div class="row">
+        <button class="btn" id="bZoom">この国に寄る</button>
+        <button class="btn ghost" id="bWide">引いて見る</button>
+      </div>
+      <div class="row" style="margin-top:10px">${searchHTML()}</div>`
+    : `<span class="eyebrow">EXPLORE</span>
+      <p class="hint-empty" style="margin:6px 0 12px">地球儀を回して、気になる国を<b>押して</b>みてください。名前・首都・面積が出ます。<br>クイズは左上の「場所あて」「国名あて」から。</p>
+      ${searchHTML()}`;
+    wireSearch();
+    if ($("#bClear")) $("#bClear").onclick = () => select(null);
+    if ($("#bZoom")) $("#bZoom").onclick = () => Globe.flyTo(c.y, c.x, zoomFor(c));
+    if ($("#bWide")) $("#bWide").onclick = () => Globe.flyTo(c.y, c.x, 3.2);
+  }
+
+  const searchHTML = () => `<div id="search">
+      <input id="qsearch" type="search" placeholder="国名で探す（例：ペルー / Peru）" autocomplete="off" aria-label="国名で探す">
+      <div id="sugg" role="listbox"></div>
+    </div>`;
+
+  function wireSearch() {
+    const inp = $("#qsearch"); if (!inp) return;
+    const box = $("#sugg");
+    let items = [], sel = -1;
+    const close = () => { box.classList.remove("on"); box.innerHTML = ""; items = []; sel = -1; };
+    const go = c => { close(); inp.value = ""; select(c); Globe.flyTo(c.y, c.x, zoomFor(c)); };
+    inp.oninput = () => {
+      items = Countries.search(inp.value); sel = -1;
+      if (!items.length) return close();
+      box.innerHTML = items.map((c, i) => `<button role="option" data-i="${i}"><span>${c.f || "🏳"}</span><span>${esc(c.j)}</span><span class="en">${esc(c.e)}</span></button>`).join("");
+      box.classList.add("on");
+      box.querySelectorAll("button").forEach(b => b.onclick = () => go(items[+b.dataset.i]));
+    };
+    inp.onkeydown = e => {
+      if (!items.length) return;
+      if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+        e.preventDefault();
+        sel = (sel + (e.key === "ArrowDown" ? 1 : items.length - 1)) % items.length;
+        box.querySelectorAll("button").forEach((b, i) => b.classList.toggle("sel", i === sel));
+      } else if (e.key === "Enter") { e.preventDefault(); go(items[sel < 0 ? 0 : sel]); }
+      else if (e.key === "Escape") close();
+    };
+    inp.onblur = () => setTimeout(close, 140);
+  }
+
+  /* =========================  モードと設定  ========================= */
+  function setMode(m) {
+    S.mode = m;
+    document.querySelectorAll("#modes button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.mode === m)));
+    $("#gl").classList.remove("picking");
+    if (m === "explore") { S.quiz = null; Globe.view.tDist = Math.max(Globe.view.tDist, 2.4); }
+    else startRound();
+    repaint(); renderCard(); renderScore();
+  }
+
+  function toggleSettings(on) {
+    const d = $("#settings");
+    const next = on === undefined ? !d.classList.contains("on") : on;
+    d.classList.toggle("on", next);
+    d.setAttribute("aria-hidden", String(!next));
+    $("#btnSettings").setAttribute("aria-expanded", String(next));
+  }
+
+  function syncSettingsUI() {
+    $("#regionChips").innerHTML = Countries.REGIONS.map(([k, ja]) =>
+      `<button class="chip" data-region="${k}" aria-pressed="${S.settings.regions.has(k)}">${ja}</button>`).join("");
+    $("#regionChips").querySelectorAll("button").forEach(b => b.onclick = () => {
+      const k = b.dataset.region;
+      if (S.settings.regions.has(k)) { if (S.settings.regions.size > 1) S.settings.regions.delete(k); }
+      else S.settings.regions.add(k);
+      b.setAttribute("aria-pressed", String(S.settings.regions.has(k)));
+      afterSettings();
+    });
+    document.querySelectorAll("#diffSeg button").forEach(b => {
+      b.setAttribute("aria-pressed", String(b.dataset.diff === S.settings.diff));
+      b.onclick = () => { S.settings.diff = b.dataset.diff;
+        document.querySelectorAll("#diffSeg button").forEach(x => x.setAttribute("aria-pressed", String(x === b)));
+        afterSettings(); };
+    });
+    document.querySelectorAll("#lenSeg button").forEach(b => {
+      b.setAttribute("aria-pressed", String(+b.dataset.len === S.settings.len));
+      b.onclick = () => { S.settings.len = +b.dataset.len;
+        document.querySelectorAll("#lenSeg button").forEach(x => x.setAttribute("aria-pressed", String(x === b)));
+        afterSettings(); };
+    });
+    document.querySelectorAll("#viewToggles .tg").forEach(b => {
+      const k = b.dataset.opt;
+      b.setAttribute("aria-pressed", String(!!S.settings[k]));
+      b.onclick = () => { S.settings[k] = !S.settings[k]; b.setAttribute("aria-pressed", String(S.settings[k])); applyView(); saveSettings(); };
+    });
+    $("#poolCount").textContent = poolNow().length;
+  }
+  function afterSettings() {
+    $("#poolCount").textContent = poolNow().length;
+    saveSettings();
+    if (S.mode !== "explore") startRound();
+  }
+  function applyView() {
+    const v = Globe.view, s = S.settings;
+    v.clouds = s.clouds ? 1 : 0;
+    v.night = s.night ? 1 : 0;
+    v.borders = s.borders ? 1 : 0;
+    v.spin = s.spin;
+    v.realSun = s.realsun;
+  }
+
+  /* =========================  起動  ========================= */
+  function boot() {
+    loadSettings();
+    applyView();
+    syncSettingsUI();
+
+    document.querySelectorAll("#modes button").forEach(b => b.onclick = () => setMode(b.dataset.mode));
+    $("#btnSettings").onclick = () => toggleSettings();
+    $("#btnCloseSettings").onclick = () => toggleSettings(false);
+    $("#btnRandom").onclick = () => {
+      const l = Countries.list.filter(c => c.q);
+      const c = l[Math.random() * l.length | 0];
+      if (S.mode !== "explore") setMode("explore");
+      select(c); Globe.flyTo(c.y, c.x, zoomFor(c));
+    };
+    window.addEventListener("keydown", e => {
+      if (e.target.tagName === "INPUT") return;
+      if (e.key === "Escape") { toggleSettings(false); $("#result").classList.remove("on"); return; }
+      const q = S.quiz;
+      if (!q) return;
+      if ((e.key === " " || e.key === "Enter") && q.answered && !$("#result").classList.contains("on")) {
+        e.preventDefault(); nextQuestion(); return;
+      }
+      if (S.mode === "name" && !q.answered && /^[1-4]$/.test(e.key)) {
+        const c = q.choices[+e.key - 1]; if (c) answerName(c);
+      }
+    });
+
+    /* 最初の一画面：日本を選んだ探索モードから始める */
+    const jp = Countries.byId.get("392") || Countries.list[0];
+    S.picked = jp;
+    Globe.flyTo(jp.y, jp.x, 2.35, true);
+    repaint(); renderCard(); renderScore();
+  }
+
+  return { boot, onFrame, onHover, onClick, setMode };
+})();
+
+/* =========================  ローダ  ========================= */
+(async function main() {
+  const bar = $("#loadBar"), msg = $("#loadMsg");
+  const steps = [["day", "衛星画像を受信中"], ["night", "夜間光を受信中"], ["topo", "地形データを展開中"],
+                 ["water", "海域マスクを展開中"], ["clouds", "雲量を取得中"]];
+  let done = 0;
+  const total = steps.length + 1;
+  const tick = label => { done++; bar.style.width = (done / total * 100) + "%"; if (label) msg.textContent = label; };
+
+  function loadImage(src) {
+    return new Promise((res, rej) => {
+      const im = new Image();
+      im.onload = () => res(im);
+      im.onerror = () => rej(new Error("画像を読み込めませんでした: " + src));
+      im.src = src;
+    });
+  }
+
+  try {
+    msg.textContent = "国境データを展開中";
+    const raw = window.__COUNTRIES__ || await (await fetch(ASSETS.data)).json();
+    Countries.prepare(raw);
+    tick();
+
+    const images = {};
+    for (const [key, label] of steps) {
+      msg.textContent = label;
+      images[key] = await loadImage(ASSETS[key]);
+      tick();
+    }
+    msg.textContent = "軌道投入";
+    Globe.init(Countries.list, images);
+    UI.boot();
+    Globe.start();
+    requestAnimationFrame(() => {
+      $("#loader").classList.add("off");
+      setTimeout(() => $("#loader").remove(), 800);
+    });
+  } catch (err) {
+    console.error(err);
+    $("#loader").remove();
+    $("#fatalMsg").textContent = (err && err.message) || String(err);
+    $("#fatal").classList.add("on");
+  }
+})();
+</script>
+
+<script>
+"use strict";
+/* =========================  実機へのインストール  ========================= */
+(function installFlow() {
+  const bundled = !!window.__COUNTRIES__;                       /* 1 ファイル版では出さない */
+  const secure = location.protocol === "https:" || ["localhost", "127.0.0.1"].includes(location.hostname);
+
+  if (!bundled && secure && "serviceWorker" in navigator) {
+    window.addEventListener("load", () => {
+      navigator.serviceWorker.register("sw.js").catch(() => { /* 未対応なら通常のオンライン動作のまま */ });
+    });
+  }
+
+  const installed = matchMedia("(display-mode: standalone)").matches || navigator.standalone === true;
+  if (bundled || installed || !secure) return;
+
+  const box = $("#install"), how = $("#installHow"), go = $("#installGo"), no = $("#installNo");
+  const field = $("#installField"), open = $("#installOpen");
+  const muted = () => { try { return localStorage.getItem("bm.install") === "off"; } catch (e) { return false; } };
+  const mute = () => { try { localStorage.setItem("bm.install", "off"); } catch (e) { /* 保存できないだけ */ } };
+  const ios = /iPad|iPhone|iPod/.test(navigator.userAgent)
+    || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+  let deferred = null;
+  const showBox = on => { box.hidden = !on; document.body.classList.toggle("install-on", on); };
+
+  const arm = (text, canPrompt, delay) => {
+    how.textContent = text;
+    go.hidden = !canPrompt;
+    field.hidden = false;
+    if (!muted()) setTimeout(() => showBox(true), delay);
+  };
+
+  window.addEventListener("beforeinstallprompt", e => {
+    e.preventDefault(); deferred = e;
+    arm("オフラインでも遊べるアプリとして入ります。", true, 2500);
+  });
+  if (ios && matchMedia("(pointer: coarse)").matches) {
+    arm("共有ボタン → 「ホーム画面に追加」", false, 4000);
+  }
+
+  go.onclick = async () => {
+    showBox(false);
+    if (!deferred) return;
+    deferred.prompt();
+    try { await deferred.userChoice; } catch (e) { /* 選択結果は問わない */ }
+    deferred = null; field.hidden = true;
+  };
+  no.onclick = () => { showBox(false); mute(); };
+  open.onclick = () => showBox(true);
+  window.addEventListener("appinstalled", () => { showBox(false); field.hidden = true; mute(); });
+})();
+</script>
+</body>
+</html>

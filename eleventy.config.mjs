@@ -1,5 +1,8 @@
 export default function (eleventyConfig) {
   eleventyConfig.addPassthroughCopy({ "src/assets": "assets" });
+  // 地球儀クイズは素の HTML/JS。テンプレート解釈させず、そのまま配る。
+  eleventyConfig.ignores.add("src/globe-quiz/**");
+  eleventyConfig.addPassthroughCopy("src/globe-quiz");
   eleventyConfig.addPassthroughCopy("src/CNAME");
   eleventyConfig.addPassthroughCopy("src/.nojekyll");
 
