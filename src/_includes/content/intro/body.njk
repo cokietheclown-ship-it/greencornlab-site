@@ -1,0 +1,58 @@
+{#- アプリの紹介ページ。App Store の外に置く、唯一の入口。
+    本文はすべて src/_data/apps/<slug>.json の intro に入っている。
+    intro を書いたアプリだけこのページが生成される（pages.js 参照）。 #}
+{%- set appName = app.name | loc(lang) %}
+{%- set intro = app.intro | locStrict(lang) %}
+
+<article class="intro">
+  <h1>{{ intro.title }}</h1>
+  <p class="intro__tagline">{{ intro.tagline }}</p>
+
+  {%- for para in intro.lead %}
+  <p class="lead">{{ para }}</p>
+  {%- endfor %}
+
+  {%- if app.appStoreUrl %}
+  <p class="intro__cta">
+    <a class="button" href="{{ app.appStoreUrl }}">{{ t.intro.download | fill({ app: appName }) }}</a>
+  </p>
+  {%- endif %}
+  {%- if intro.price %}
+  <p class="note">{{ intro.price }}</p>
+  {%- endif %}
+
+  {%- for section in intro.sections %}
+  <section>
+    <h2>{{ section.heading }}</h2>
+    {%- for para in section.body %}
+    <p>{{ para }}</p>
+    {%- endfor %}
+    {%- if section.list %}
+    <ul>
+      {%- for item in section.list %}
+      <li>{{ item }}</li>
+      {%- endfor %}
+    </ul>
+    {%- endif %}
+  </section>
+  {%- endfor %}
+
+  {%- if app.appStoreUrl %}
+  <section>
+    <h2>{{ t.intro.downloadHeading }}</h2>
+    <p>{{ t.intro.downloadLead | fill({ app: appName, platform: app.platform }) }}</p>
+    <p class="intro__cta">
+      <a class="button" href="{{ app.appStoreUrl }}">{{ t.intro.download | fill({ app: appName }) }}</a>
+    </p>
+  </section>
+  {%- endif %}
+
+  {%- if intro.disclaimer %}
+  <p class="note">{{ intro.disclaimer }}</p>
+  {%- endif %}
+
+  <p class="crosslink">
+    <a href="/{{ lang }}/{{ app.slug }}/support/">{{ t.nav.support }}</a>
+    <a href="/{{ lang }}/{{ app.slug }}/privacy/">{{ t.nav.privacy }}</a>
+  </p>
+</article>

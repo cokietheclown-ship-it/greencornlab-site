@@ -17,6 +17,11 @@
     "contactSupportLabel": "全般のお問い合わせ",
     "contactPrivacyLabel": "プライバシーに関するお問い合わせ"
   },
+  "intro": {
+    "download": "App Store で {app} を入手（無料）",
+    "downloadHeading": "ダウンロード",
+    "downloadLead": "{app} は {platform} 向けのアプリです。App Store から無料で入手できます。"
+  },
   "support": {
     "titleSuffix": "サポート",
     "aboutHeading": "このアプリについて",

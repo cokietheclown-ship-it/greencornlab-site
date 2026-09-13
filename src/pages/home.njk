@@ -13,8 +13,15 @@ permalink: "/{{ target.lang }}/"
   <ul class="app-list">
     {%- for item in pages.apps %}
     {%- set appLang = lang if lang in item.languages else item.defaultLanguage %}
+    {%- set itemIntro = item.intro[appLang] %}
     <li class="app-list__item">
-      <h3>{{ item.name | loc(lang) }}</h3>
+      <h3>
+        {%- if itemIntro %}<a href="/{{ appLang }}/{{ item.slug }}/">{{ item.name | loc(lang) }}</a>
+        {%- else %}{{ item.name | loc(lang) }}{% endif %}
+      </h3>
+      {%- if itemIntro %}
+      <p class="app-list__blurb">{{ itemIntro.tagline }}</p>
+      {%- endif %}
       <p class="app-list__links">
         <a href="/{{ appLang }}/{{ item.slug }}/support/">{{ t.nav.support }}</a>
         <a href="/{{ appLang }}/{{ item.slug }}/privacy/">{{ t.nav.privacy }}</a>

@@ -17,6 +17,11 @@
     "contactSupportLabel": "General enquiries",
     "contactPrivacyLabel": "Privacy enquiries"
   },
+  "intro": {
+    "download": "Get {app} on the App Store (free)",
+    "downloadHeading": "Download",
+    "downloadLead": "{app} is an app for {platform}. It is available on the App Store for free."
+  },
   "support": {
     "titleSuffix": "Support",
     "aboutHeading": "About this app",

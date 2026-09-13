@@ -56,10 +56,19 @@ export default async function () {
     )
   );
 
+  // 紹介ページは任意。JSON に intro を書いたアプリ・書いた言語だけ生成する。
+  // サポートとポリシーは全アプリに必要だが、紹介文は書けたものから順に増やしたいため。
+  const intro = apps.flatMap((app) =>
+    app.languages
+      .filter((lang) => app.intro?.[lang])
+      .map((lang) => ({ app, lang, kind: "intro" }))
+  );
+
   return {
     languages: ALL_LANGS,
     home: ALL_LANGS.map((lang) => ({ lang, kind: "home" })),
     apps,
+    intro,
     support: targets("support"),
     privacy: targets("privacy"),
     fallbacks

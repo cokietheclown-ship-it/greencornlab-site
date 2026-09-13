@@ -23,6 +23,8 @@ export default {
       const t = data.t;
       const name = data.app ? loc(data.app.name, data.lang) : "";
       switch (data.kind) {
+        // 紹介ページだけは検索結果に出す前提なので、屋号を足さず JSON の見出しをそのまま使う
+        case "intro": return loc(data.app.intro, data.lang).title;
         case "support": return `${name} ${t.support.titleSuffix} | ${loc(data.site.name, data.lang)}`;
         case "privacy": return `${name} ${t.privacy.title} | ${loc(data.site.name, data.lang)}`;
         case "fallback": return t.fallback.title;
@@ -33,6 +35,7 @@ export default {
 
     description: (data) => {
       switch (data.kind) {
+        case "intro": return loc(data.app.intro, data.lang).summary;
         case "support": return loc(data.app.description, data.lang);
         case "privacy": return `${loc(data.app.name, data.lang)} ${data.t.privacy.title}`;
         case "home": return data.t.home.lead;
@@ -51,6 +54,11 @@ export default {
     alternates: (data) => {
       if (data.kind === "home") {
         return data.pages.languages.map((lang) => ({ lang, url: `/${lang}/` }));
+      }
+      if (data.kind === "intro") {
+        return data.app.languages
+          .filter((lang) => data.app.intro?.[lang])
+          .map((lang) => ({ lang, url: `/${lang}/${data.app.slug}/` }));
       }
       if (data.kind === "support" || data.kind === "privacy") {
         return data.app.languages.map((lang) => ({
