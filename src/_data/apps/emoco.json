@@ -81,6 +81,8 @@
     "regions": [
       "jp"
     ],
+    "_comment_draftBanner": "配信中のアプリの公式ポリシーが「草案です」と自称している状態は、リスクを減らさずに、開発者が内容を保証していないと読ませてしまう。本文の記述はアプリの実際の挙動として正確なので、バナーは外して運用中の文書として置く。専門家レビュー（特に児童データの扱い）と法的整理の確認は TODO-legal.md に残っており、改訂は「本ポリシーの変更」節で行う。",
+    "draftBanner": false,
     "childDirected": true,
     "storage": "cloudkit-private",
     "features": [
