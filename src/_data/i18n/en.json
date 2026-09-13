@@ -10,7 +10,7 @@
   },
   "home": {
     "title": "Green Corn Lab",
-    "lead": "Green Corn Lab is the name I develop iOS apps under, as an independent developer. No advertising, and no data collected beyond what an app actually needs.",
+    "lead": "Green Corn Lab is the name I develop iOS apps under, as an independent developer. I move back and forth between things to play — puzzles, action, apps children learn from — and small tools for life at home: what to cook, splitting a bill, keeping track of a child's week.",
     "appsHeading": "Apps",
     "contactHeading": "Contact",
     "contactLead": "For general enquiries, use the address below. For questions about a specific app, please use the address listed on that app's support page.",
@@ -26,17 +26,17 @@
     "navSoon": "In development",
     "navContact": "Contact",
     "stickers": [
-      "No ads",
-      "No tracking",
-      "Your data stays yours"
+      "Play",
+      "Learn",
+      "Everyday"
     ],
     "stance": [
-      "No advertising, ever — whether or not you pay for anything",
-      "No behavioural tracking and no third-party analytics",
-      "Records stay on your device or in your own iCloud. The developer cannot see them",
-      "Most of the apps have no networking at all, so they work in airplane mode"
+      "Some of them ship with no asset files at all. The screens are drawn in code and the sound is synthesised as it plays",
+      "Games with stages are played all the way through by a machine first, to make sure every one of them can actually be finished",
+      "Many started from something we needed at home: what to cook tonight, splitting a bill after a trip, which clothes still fit",
+      "Whatever one app teaches me goes into the next one"
     ],
-    "heroLine": "No advertising, and no data collected beyond what an app actually needs.",
+    "heroLine": "Games to play, and small tools for the house. iOS apps, built by one person.",
     "latestBadge": "Latest",
     "shelfNote": "All of these are on the Japanese App Store."
   },
