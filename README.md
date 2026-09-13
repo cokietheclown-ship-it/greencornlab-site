@@ -73,9 +73,21 @@ GitHubのSettings → Pagesでのカスタムドメイン登録の両方が必�
 
 ## 画像とロゴ
 
-- `src/assets/brand/logo-source.png` … 支給されたロゴの原本
-- `tools/make-brand.py` … 原本から、ヘッダー用の横組みロゴ（ライト／ダーク用の2色）、
-  ファビコン・OG画像用の正方形マークを書き出す。`python3 tools/make-brand.py` で再生成できる
+- `src/assets/brand/logo-variants-source.png` … 支給されたロゴ一式の原本
+- `tools/make-brand.py` … 原本から7種類を切り出し、透過して書き出す。
+  `python3 tools/make-brand.py` で再生成できる
+
+| 書き出すもの | 使う場所 |
+|---|---|
+| `wordline-green.png` / `wordline-cream.png` | ヘッダー（ライト／ダークで切替） |
+| `lockup-color.png` / `lockup-cream.png` | 横組み2行。トップのヒーローは抜き版 |
+| `stamp-color.png` / `stamp-cream.png` | 丸いスタンプ。お問い合わせの封緘として |
+| `mark-color.png` | とうもろこし単体 |
+| `mark-1024/512/180/32.png` | ファビコン・apple-touch-icon・OG画像（角丸の緑アイコン） |
+
+配色はロゴ一式から採った実際の色です。
+濃緑 `#16442b` / 中緑 `#1e6137` / クリーム `#f4f3eb` / 黒 `#262624` / とうもろこし色 `#c9d45e`。
+
 - `src/assets/apps/<slug>/icon-192.png` `icon-512.png` … 各アプリのアイコン
 - `src/assets/apps/<slug>/screenshot-N.jpg` … App Store に登録済みのスクリーンショット（幅600px）
 
@@ -96,6 +108,9 @@ GitHubのSettings → Pagesでのカスタムドメイン登録の両方が必�
 CSSが主体で、JavaScriptは `src/assets/js/enhance.js`（約3.5KB）だけです。
 
 - **紙のざらつき** … `body::after` にSVGノイズを薄く重ねる（CSSのみ）
+- **トップページの色面と破れた境目** … `.punk` の中だけに効く。セクションごとに背景色が変わり、
+  境目は `clip-path` でギザギザに裂ける。網点も重ねている。アプリの各ページには影響しない
+- **見出しの書体** … Zen Antique（Google Fonts）。トップページでしか読み込まない
 - **アプリごとの色** … `tools/extract-app-colors.py` が各アイコンから代表色を抜き出し、
   `src/_data/appColors.json` に書き出す。紹介ページのヒーローの下地に使う。
   アイコンを差し替えたら再実行してください
