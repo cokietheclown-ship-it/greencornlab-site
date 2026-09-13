@@ -185,5 +185,18 @@
         }
       ]
     }
-  }
+  },
+  "tags": {
+    "ja": [
+      "おでかけ",
+      "割り勘",
+      "精算"
+    ],
+    "en": [
+      "Travel",
+      "Split the bill",
+      "Settle up"
+    ]
+  },
+  "releasedOn": "2026-09-11"
 }

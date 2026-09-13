@@ -167,5 +167,18 @@
       "en": "Health & Fitness"
     },
     "url": "https://apps.apple.com/jp/app/id6806486963"
-  }
+  },
+  "tags": {
+    "ja": [
+      "子育て",
+      "きろく",
+      "月額"
+    ],
+    "en": [
+      "Parenting",
+      "Journal",
+      "Subscription"
+    ]
+  },
+  "releasedOn": "2026-09-01"
 }

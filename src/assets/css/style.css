@@ -400,17 +400,51 @@ body::after {
   --swash: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 16' preserveAspectRatio='none'%3E%3Cpath d='M3 12.6C48 9.4 96 7.6 150 7.2c48-.4 96 .2 147-2.4-8 4.2-26 5.6-52 6.4-44 1.4-96 1.2-148 1.8-34 .4-66 1.2-94 2.2z'/%3E%3C/svg%3E");
 }
 
-/* ── ヒーロー ───────────────────────────────────── */
-.punk .hero { padding: 3rem 0 4.25rem; text-align: center; }
-.punk .hero__logo { width: min(20rem, 80%); height: auto; }
+/* ── ヒーロー（大看板）───────────────────────────
+   ロゴ画像ではなく屋号を文字で組み、画面幅いっぱいに張る。
+   幅は SVG の textLength で決めているので、書体の読み込み前後で
+   はみ出したり余ったりしない。 */
+.punk .hero { padding: 2.25rem 0 3.5rem; text-align: center; }
 .punk .hero__stamp { width: 5.5rem; height: auto; margin: 0 auto 1.25rem; display: block; opacity: .92; }
 .punk .hero__sub {
-  margin: 1.1rem 0 1.35rem;
-  font-size: .9rem; font-weight: 600; letter-spacing: .18em;
-  color: rgba(244, 243, 235, .85);
+  margin: 0 0 1rem;
+  font-size: .82rem; font-weight: 600; letter-spacing: .2em;
+  color: rgba(244, 243, 235, .8);
 }
-.punk .hero__nav { margin: 0 0 1.5rem; font-size: .92rem; }
+
+.punk .hero__type {
+  /* .wrap の外へ出して画面幅いっぱいに使う */
+  margin: 0 calc(50% - 50vw) 1.2rem;
+  width: 100vw;
+  line-height: 0;
+}
+.punk .hero__type svg {
+  width: calc(100% - 1.5rem);
+  height: auto;
+  margin: 0 auto;
+}
+.punk .hero__type text {
+  font-family: "Zen Antique", "Hiragino Mincho ProN", "Yu Mincho", serif;
+  fill: currentColor;
+}
+.punk .hero__type .hero__type-wide { display: none; }
+.punk .hero__type .hero__type-tall { display: block; }
+
+.punk .hero__line {
+  margin: 0 auto 1.5rem;
+  max-width: 30rem;
+  font-size: 1rem; line-height: 1.9;
+  color: rgba(244, 243, 235, .92);
+}
+.punk .hero__nav { margin: 1.5rem 0 0; font-size: .92rem; }
 .punk .hero__nav a { margin: 0 .55rem; text-underline-offset: .25em; }
+
+/* 読み上げにだけ残す */
+.vh {
+  position: absolute; width: 1px; height: 1px;
+  margin: -1px; padding: 0; overflow: hidden;
+  clip-path: inset(50%); white-space: nowrap;
+}
 
 /* ── ステッカー ─────────────────────────────────── */
 .punk .stickers { display: flex; flex-wrap: wrap; gap: .55rem; justify-content: center; margin: 0; padding: 0; list-style: none; }
@@ -437,6 +471,80 @@ body::after {
   content: "■"; position: absolute; left: 0; top: 0; color: var(--green-mid); font-size: .8em;
 }
 
+/* ── 棚（公開中のアプリ）─────────────────────────
+   画面写真が主役。アイコンと名前だけの一覧では、
+   スクロールして止まってもらえなかった。 */
+.punk #apps > .wrap { max-width: 62rem; }
+.punk .shelf__note { margin: -.6rem 0 1.5rem; font-size: .92rem; opacity: .75; }
+
+.punk .shelf {
+  list-style: none; margin: 0; padding: 0;
+  display: grid; gap: 1.2rem;
+  grid-template-columns: 1fr;
+}
+.punk .shelf__card {
+  position: relative;
+  display: flex; flex-direction: column;
+  background: var(--cream);
+  border: 2px solid var(--ink);
+  border-radius: 3px;
+  box-shadow: 5px 5px 0 var(--ink);
+  overflow: hidden;
+}
+/* 画面写真は縦長なので、アプリ自身の色を地に敷いて上半分だけ見せる */
+.punk .shelf__shot {
+  aspect-ratio: 4 / 3;
+  background: var(--tint, var(--paper-2));
+  border-bottom: 2px solid var(--ink);
+  display: flex; justify-content: center; align-items: flex-start;
+  padding-top: .9rem;
+  overflow: hidden;
+}
+.punk .shelf__shot img {
+  width: 46%; height: auto; flex: 0 0 auto;
+  border-radius: 9px 9px 0 0;
+  border: 1px solid rgba(0, 0, 0, .22);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, .22);
+}
+.punk .shelf__shot .shelf__shot--icon {
+  width: 34%; align-self: center; margin: auto 0;
+  border-radius: 18%; box-shadow: 0 6px 16px rgba(0, 0, 0, .22);
+}
+.punk .shelf__body {
+  flex: 1; padding: .9rem 1rem 1.1rem;
+  display: flex; flex-direction: column; gap: .4rem;
+}
+.punk .shelf__name { margin: 0; font-size: 1.1rem; line-height: 1.4; }
+.punk .shelf__name a { color: var(--ink); text-decoration: none; }
+.punk .shelf__name a:hover { text-decoration: underline; }
+/* カードのどこを押しても詳細へ。App Store のリンクだけ上に出す */
+.punk .shelf__name a::after { content: ""; position: absolute; inset: 0; z-index: 1; }
+.punk .shelf__tagline { margin: 0; font-size: .92rem; line-height: 1.7; color: #4c5a4e; }
+.punk .shelf__tags {
+  list-style: none; margin: 0; padding: 0;
+  display: flex; flex-wrap: wrap; gap: .35rem;
+}
+.punk .shelf__tags li {
+  font-size: .74rem; letter-spacing: .04em; line-height: 1.6;
+  padding: .08rem .5rem;
+  border: 1px solid currentColor; border-radius: 20px;
+  color: #5c6a5d;
+}
+.punk .shelf__tags--quiet li { color: rgba(244, 243, 235, .75); }
+.punk .shelf__store { position: relative; z-index: 2; margin: .55rem 0 0; padding-top: .1rem; font-size: .92rem; }
+.punk .shelf__tags { margin-top: auto; padding-top: .2rem; }
+.punk .shelf__store a { white-space: nowrap; }
+.punk .badge--new {
+  background: var(--corn); color: var(--green);
+  vertical-align: .12em;
+}
+@media (hover: hover) {
+  .punk .shelf__card { transition: transform .18s ease, box-shadow .18s ease; }
+  .punk .shelf__card:hover { transform: translate(-2px, -2px); box-shadow: 8px 8px 0 var(--ink); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .punk .shelf__card { transition: none; }
+}
 /* ── アプリのカード ─────────────────────────────── */
 .punk .app-grid { gap: 1rem; }
 .punk .app-card {
@@ -474,10 +582,12 @@ body::after {
 
 @media (min-width: 40rem) {
   .punk .blk { padding: 4.25rem 0 4.75rem; }
-  .punk .hero { padding: 4rem 0 5.5rem; }
-  .punk .hero__logo { width: min(25rem, 70%); }
+  .punk .hero { padding: 3rem 0 4.5rem; }
   .punk .hero__stamp { width: 6.5rem; }
   .punk .dh { font-size: 2.1rem; }
+  .punk .hero__type .hero__type-wide { display: block; }
+  .punk .hero__type .hero__type-tall { display: none; }
+  .punk .shelf { grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
 }
 
 @media (prefers-reduced-motion: reduce) {

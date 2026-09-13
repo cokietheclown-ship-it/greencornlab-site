@@ -96,5 +96,17 @@
     "en": "A side-scrolling action game where a ninja runs from roof to roof."
   },
   "icon": true,
-  "screenshots": 0
+  "screenshots": 0,
+  "tags": {
+    "ja": [
+      "ゲーム",
+      "アクション",
+      "買い切り"
+    ],
+    "en": [
+      "Games",
+      "Action",
+      "One-time purchase"
+    ]
+  }
 }

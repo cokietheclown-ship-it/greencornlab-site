@@ -155,5 +155,18 @@
         }
       ]
     }
-  }
+  },
+  "tags": {
+    "ja": [
+      "ゲーム",
+      "パズル",
+      "買い切り"
+    ],
+    "en": [
+      "Games",
+      "Puzzle",
+      "One-time purchase"
+    ]
+  },
+  "releasedOn": "2026-09-11"
 }

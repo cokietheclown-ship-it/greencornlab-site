@@ -35,7 +35,10 @@
       "No behavioural tracking and no third-party analytics",
       "Records stay on your device or in your own iCloud. The developer cannot see them",
       "Most of the apps have no networking at all, so they work in airplane mode"
-    ]
+    ],
+    "heroLine": "No advertising, and no data collected beyond what an app actually needs.",
+    "latestBadge": "Latest",
+    "shelfNote": "All of these are on the Japanese App Store."
   },
   "intro": {
     "download": "Get {app} on the App Store (free)",

@@ -95,5 +95,17 @@
     "en": "A learning app where carousel unicorns bring the questions round."
   },
   "icon": true,
-  "screenshots": 0
+  "screenshots": 0,
+  "tags": {
+    "ja": [
+      "学習",
+      "こども",
+      "買い切り"
+    ],
+    "en": [
+      "Learning",
+      "Kids",
+      "One-time purchase"
+    ]
+  }
 }

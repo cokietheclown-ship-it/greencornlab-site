@@ -8,61 +8,84 @@ bodyClass: "punk"
 ---
 <div class="punk">
 
+  {#- 屋号は画像のロゴではなく文字で組み、画面幅いっぱいに張る。
+      真下がすぐ棚になるので、About より先に「作っているもの」が目に入る。 -#}
   <section class="blk blk--green hero" style="--next: var(--paper)">
     <div class="wrap">
-      <img class="hero__logo" src="/assets/brand/lockup-cream.png" alt="" width="900" height="395">
-      <h1 class="hero__title">{{ t.home.title }}</h1>
       <p class="hero__sub">{{ t.home.heroSub }}</p>
+      {#- 屋号を画面幅ちょうどに張る。textLength で幅を決めているので、
+          書体が読み込まれる前でも後でも、はみ出さず、余りもしない。 -#}
+      <h1 class="hero__type">
+        <span class="vh">{{ t.home.title }}</span>
+        <svg class="hero__type-wide" viewBox="0 0 1200 172" role="presentation" focusable="false" aria-hidden="true">
+          <text x="10" y="132" font-size="150" textLength="1180" lengthAdjust="spacing">GREEN CORN LAB</text>
+        </svg>
+        <svg class="hero__type-tall" viewBox="0 0 700 262" role="presentation" focusable="false" aria-hidden="true">
+          <text x="5" y="100" font-size="112" textLength="690" lengthAdjust="spacing">GREEN CORN</text>
+          <text x="5" y="232" font-size="112" textLength="690" lengthAdjust="spacing">LAB</text>
+        </svg>
+      </h1>
+      <p class="hero__line">{{ t.home.heroLine }}</p>
       <ul class="stickers">
         {%- for s in t.home.stickers %}
         <li class="sticker">{{ s }}</li>
         {%- endfor %}
       </ul>
       <p class="hero__nav">
-        <a href="#about">{{ t.home.navAbout }}</a>
         <a href="#apps">{{ t.home.navApps }}</a>
+        <a href="#about">{{ t.home.navAbout }}</a>
         {%- if pages.comingSoon.length %}<a href="#soon">{{ t.home.navSoon }}</a>{% endif %}
         <a href="#contact">{{ t.home.navContact }}</a>
       </p>
     </div>
   </section>
 
-  <section class="blk blk--paper" id="about" style="--next: var(--paper-2)">
+  {#- 棚。画面写真が主役で、名前とタグはその下に添える。 -#}
+  <section class="blk blk--paper" id="apps" style="--next: var(--paper-2)">
+    <div class="wrap">
+      <h2 class="dh">{{ t.home.releasedHeading }}</h2>
+      <p class="shelf__note">{{ t.home.shelfNote }}</p>
+      <ul class="shelf">
+        {%- for item in pages.released %}
+        {%- set appLang = lang if lang in item.languages else item.defaultLanguage %}
+        {%- set c = appColors[item.slug] %}
+        <li class="shelf__card"{% if c %} style="--tint: {{ c.tintLight }}"{% endif %}>
+          <div class="shelf__shot">
+            {%- if item.screenshots %}
+            <img src="/assets/apps/{{ item.slug }}/screenshot-1.jpg" alt="" width="1320" height="2868" loading="lazy">
+            {%- else %}
+            <img class="shelf__shot--icon" src="/assets/apps/{{ item.slug }}/icon-192.png" alt="" width="192" height="192" loading="lazy">
+            {%- endif %}
+          </div>
+          <div class="shelf__body">
+            <h3 class="shelf__name">
+              <a href="/{{ appLang }}/{{ item.slug }}/">{{ item.name | loc(lang) }}</a>
+              {%- if item.slug == pages.newest %} <span class="badge badge--new">{{ t.home.latestBadge }}</span>{% endif %}
+            </h3>
+            <p class="shelf__tagline">{{ item.tagline | loc(lang) }}</p>
+            {%- set tags = item.tags | locStrict(lang) %}
+            {%- if tags %}
+            <ul class="shelf__tags">
+              {%- for tag in tags %}<li>{{ tag }}</li>{% endfor %}
+            </ul>
+            {%- endif %}
+            {%- if item.appStoreUrl %}
+            <p class="shelf__store"><a href="{{ item.appStoreUrl | storeLink('gcl_home') }}">{{ t.app.openStore }}</a></p>
+            {%- endif %}
+          </div>
+        </li>
+        {%- endfor %}
+      </ul>
+    </div>
+  </section>
+
+  <section class="blk blk--paper2" id="about" style="--next: var(--ink)">
     <div class="wrap">
       <h2 class="dh">{{ t.home.aboutHeading }}</h2>
       <p class="big">{{ t.home.lead }}</p>
       <ul class="stance">
         {%- for item in t.home.stance %}
         <li data-reveal>{{ item }}</li>
-        {%- endfor %}
-      </ul>
-    </div>
-  </section>
-
-  <section class="blk blk--paper2" id="apps" style="--next: var(--ink)">
-    <div class="wrap">
-      <h2 class="dh">{{ t.home.releasedHeading }}</h2>
-      <ul class="app-grid">
-        {%- for item in pages.released %}
-        {%- set appLang = lang if lang in item.languages else item.defaultLanguage %}
-        <li class="app-card" data-reveal>
-          <a class="app-card__icon" href="/{{ appLang }}/{{ item.slug }}/" tabindex="-1" aria-hidden="true">
-            <img src="/assets/apps/{{ item.slug }}/icon-192.png" alt="" width="72" height="72" loading="lazy">
-          </a>
-          <div class="app-card__body">
-            <h3 class="app-card__name"><a href="/{{ appLang }}/{{ item.slug }}/">{{ item.name | loc(lang) }}</a></h3>
-            <p class="app-card__tagline">{{ item.tagline | loc(lang) }}</p>
-            {%- if item.appStore %}
-            <p class="app-card__meta">{{ item.appStore.category | loc(lang) }} ・ {{ item.platform }}</p>
-            {%- endif %}
-            <p class="app-card__links">
-              <a href="/{{ appLang }}/{{ item.slug }}/">{{ t.app.viewDetail }}</a>
-              {%- if item.appStoreUrl %}
-              <a href="{{ item.appStoreUrl | storeLink('gcl_home') }}">{{ t.app.openStore }}</a>
-              {%- endif %}
-            </p>
-          </div>
-        </li>
         {%- endfor %}
       </ul>
     </div>
@@ -82,6 +105,12 @@ bodyClass: "punk"
           <div class="app-card__body">
             <h3 class="app-card__name">{{ item.name | loc(lang) }} <span class="badge">{{ t.app.comingSoonBadge }}</span></h3>
             <p class="app-card__tagline">{{ item.tagline | loc(lang) }}</p>
+            {%- set tags = item.tags | locStrict(lang) %}
+            {%- if tags %}
+            <ul class="shelf__tags shelf__tags--quiet">
+              {%- for tag in tags %}<li>{{ tag }}</li>{% endfor %}
+            </ul>
+            {%- endif %}
           </div>
         </li>
         {%- endfor %}

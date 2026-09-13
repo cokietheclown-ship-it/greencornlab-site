@@ -195,5 +195,18 @@
         }
       ]
     }
-  }
+  },
+  "tags": {
+    "ja": [
+      "くらし",
+      "献立",
+      "買い切り"
+    ],
+    "en": [
+      "Home",
+      "Meal planning",
+      "One-time purchase"
+    ]
+  },
+  "releasedOn": "2026-09-10"
 }

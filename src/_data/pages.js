@@ -72,11 +72,21 @@ export default async function () {
     ...targets("privacy").map((t) => ({ url: `/${t.lang}/${t.app.slug}/privacy/`, priority: "0.3" }))
   ];
 
+  // 棚は新しい順に並べる。日付が無いものは後ろへ。
+  const released = apps
+    .filter((a) => a.status === "released")
+    .sort((a, b) => (b.releasedOn ?? "").localeCompare(a.releasedOn ?? ""));
+
+  // 「最新」の印は、いちばん新しい1本だけに付ける。
+  // 公開から日が浅いものすべてに付けると、全部に付いて何も言っていないのと同じになる。
+  const newest = released[0]?.releasedOn ? released[0].slug : null;
+
   return {
     languages: ALL_LANGS,
     home: ALL_LANGS.map((lang) => ({ lang, kind: "home" })),
     apps,
-    released: apps.filter((a) => a.status === "released"),
+    released,
+    newest,
     comingSoon: apps.filter((a) => a.status !== "released"),
     intro,
     sitemapUrls,
