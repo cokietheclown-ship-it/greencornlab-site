@@ -414,21 +414,17 @@ body::after {
 
 .punk .hero__type {
   /* .wrap の外へ出して画面幅いっぱいに使う */
-  margin: 0 calc(50% - 50vw) 1.2rem;
+  margin: 0 calc(50% - 50vw) 1.3rem;
   width: 100vw;
   line-height: 0;
 }
-.punk .hero__type svg {
-  width: calc(100% - 1.5rem);
+/* ロゴは 700px 幅の原寸。引き伸ばしすぎると版の粒が眠くなるので上限を置く */
+.punk .hero__type img {
+  display: block;
+  width: min(100% - 2rem, 50rem);
   height: auto;
   margin: 0 auto;
 }
-.punk .hero__type text {
-  font-family: "Zen Antique", "Hiragino Mincho ProN", "Yu Mincho", serif;
-  fill: currentColor;
-}
-.punk .hero__type .hero__type-wide { display: none; }
-.punk .hero__type .hero__type-tall { display: block; }
 
 .punk .hero__line {
   margin: 0 auto 1.5rem;
@@ -439,12 +435,6 @@ body::after {
 .punk .hero__nav { margin: 1.5rem 0 0; font-size: .92rem; }
 .punk .hero__nav a { margin: 0 .55rem; text-underline-offset: .25em; }
 
-/* 読み上げにだけ残す */
-.vh {
-  position: absolute; width: 1px; height: 1px;
-  margin: -1px; padding: 0; overflow: hidden;
-  clip-path: inset(50%); white-space: nowrap;
-}
 
 /* ── ステッカー ─────────────────────────────────── */
 .punk .stickers { display: flex; flex-wrap: wrap; gap: .55rem; justify-content: center; margin: 0; padding: 0; list-style: none; }
@@ -585,8 +575,6 @@ body::after {
   .punk .hero { padding: 3rem 0 4.5rem; }
   .punk .hero__stamp { width: 6.5rem; }
   .punk .dh { font-size: 2.1rem; }
-  .punk .hero__type .hero__type-wide { display: block; }
-  .punk .hero__type .hero__type-tall { display: none; }
   .punk .shelf { grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
 }
 

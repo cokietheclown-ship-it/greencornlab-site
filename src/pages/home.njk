@@ -13,17 +13,9 @@ bodyClass: "punk"
   <section class="blk blk--green hero" style="--next: var(--paper)">
     <div class="wrap">
       <p class="hero__sub">{{ t.home.heroSub }}</p>
-      {#- 屋号を画面幅ちょうどに張る。textLength で幅を決めているので、
-          書体が読み込まれる前でも後でも、はみ出さず、余りもしない。 -#}
+      {#- 一行版のロゴ（角を丸めた抜き版）。横に長いので、大看板の幅にそのまま乗る。 -#}
       <h1 class="hero__type">
-        <span class="vh">{{ t.home.title }}</span>
-        <svg class="hero__type-wide" viewBox="0 0 1200 172" role="presentation" focusable="false" aria-hidden="true">
-          <text x="10" y="132" font-size="150" textLength="1180" lengthAdjust="spacing">GREEN CORN LAB</text>
-        </svg>
-        <svg class="hero__type-tall" viewBox="0 0 700 262" role="presentation" focusable="false" aria-hidden="true">
-          <text x="5" y="100" font-size="112" textLength="690" lengthAdjust="spacing">GREEN CORN</text>
-          <text x="5" y="232" font-size="112" textLength="690" lengthAdjust="spacing">LAB</text>
-        </svg>
+        <img src="/assets/brand/wordline-cream.png" alt="{{ t.home.title }}" width="700" height="234">
       </h1>
       <p class="hero__line">{{ t.home.heroLine }}</p>
       <ul class="stickers">
