@@ -18,7 +18,24 @@
     "contactPrivacyLabel": "プライバシーに関するお問い合わせ",
     "releasedHeading": "公開中のアプリ",
     "comingSoonHeading": "準備中",
-    "comingSoonNote": "現在つくっているアプリです。公開までもうしばらくお待ちください。"
+    "comingSoonNote": "現在つくっているアプリです。公開までもうしばらくお待ちください。",
+    "heroSub": "個人開発 / iOS アプリ",
+    "aboutHeading": "つくっているもの",
+    "navAbout": "About",
+    "navApps": "アプリ",
+    "navSoon": "準備中",
+    "navContact": "連絡先",
+    "stickers": [
+      "広告なし",
+      "追跡なし",
+      "データは手元に"
+    ],
+    "stance": [
+      "広告は一切表示しません。買っても買わなくても出ません",
+      "行動追跡も、第三者のアクセス解析も入れていません",
+      "記録は端末の中か、ご自身のiCloudにだけ置きます。開発者は中身を見られません",
+      "多くは通信を行う機能そのものがないので、機内モードでも動きます"
+    ]
   },
   "intro": {
     "download": "App Store で {app} を入手（無料）",

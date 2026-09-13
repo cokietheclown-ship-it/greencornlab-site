@@ -18,7 +18,24 @@
     "contactPrivacyLabel": "Privacy enquiries",
     "releasedHeading": "Published apps",
     "comingSoonHeading": "In development",
-    "comingSoonNote": "These are the apps I am working on now."
+    "comingSoonNote": "These are the apps I am working on now.",
+    "heroSub": "Independent developer / iOS apps",
+    "aboutHeading": "What I build",
+    "navAbout": "About",
+    "navApps": "Apps",
+    "navSoon": "In development",
+    "navContact": "Contact",
+    "stickers": [
+      "No ads",
+      "No tracking",
+      "Your data stays yours"
+    ],
+    "stance": [
+      "No advertising, ever — whether or not you pay for anything",
+      "No behavioural tracking and no third-party analytics",
+      "Records stay on your device or in your own iCloud. The developer cannot see them",
+      "Most of the apps have no networking at all, so they work in airplane mode"
+    ]
   },
   "intro": {
     "download": "Get {app} on the App Store (free)",

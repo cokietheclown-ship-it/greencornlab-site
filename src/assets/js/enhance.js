@@ -15,7 +15,7 @@
         e.target.classList.add("is-in");
         io.unobserve(e.target);
       });
-    }, { rootMargin: "0px 0px -8% 0px", threshold: 0.05 });
+    }, { rootMargin: "0px 0px 12% 0px", threshold: 0.01 });   // 画面に入る少し手前で出し始める
     targets.forEach(function (el) { io.observe(el); });
   }
 

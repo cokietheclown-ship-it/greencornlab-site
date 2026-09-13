@@ -3,15 +3,15 @@
    クライアントJSは使わない。 */
 
 :root {
-  --bg: #f8f3e7;
-  --surface: #fffdf6;
-  --surface-2: #f1ebdc;
-  --hero-bg: #efe7d4;
-  --text: #1b1a17;
-  --muted: #5e5a51;
-  --accent: #2c6b4f;
-  --accent-hover: #1d4e38;
-  --border: #e2dac7;
+  --bg: #f5f3ea;
+  --surface: #fffefa;
+  --surface-2: #eae7d8;
+  --hero-bg: #e8e5d6;
+  --text: #1d2420;
+  --muted: #5b635c;
+  --accent: #1e6137;
+  --accent-hover: #16442b;
+  --border: #ddd9c8;
   --shadow: 0 1px 2px rgba(30, 40, 35, .05), 0 6px 16px rgba(30, 40, 35, .05);
 
   --banner-bg: #fdf6e3;
@@ -21,15 +21,15 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg: #161512;
-    --surface: #1e1d19;
-    --surface-2: #24231e;
-    --hero-bg: #1f1e19;
-    --text: #ece7da;
-    --muted: #a8a396;
-    --accent: #8cc4a3;
-    --accent-hover: #abd6bc;
-    --border: #322f27;
+    --bg: #11170f;
+    --surface: #18201a;
+    --surface-2: #1e271f;
+    --hero-bg: #16442b;
+    --text: #e8ece4;
+    --muted: #9daa9f;
+    --accent: #8fc9a4;
+    --accent-hover: #b0dcc0;
+    --border: #2a352c;
     --shadow: none;
 
     --banner-bg: #26231a;
@@ -288,10 +288,10 @@ body::after {
 }
 
 /* スクロールで現れる。JSが動いているときだけ隠す */
-.js-anim [data-reveal] { opacity: 0; transform: translateY(14px); }
+.js-anim [data-reveal] { opacity: 0; transform: translateY(10px); }
 .js-anim [data-reveal].is-in {
   opacity: 1; transform: none;
-  transition: opacity .55s ease, transform .55s cubic-bezier(.2, .7, .3, 1);
+  transition: opacity .4s ease, transform .4s cubic-bezier(.2, .7, .3, 1);
 }
 .js-anim .app-grid > [data-reveal]:nth-child(2).is-in { transition-delay: .06s; }
 .js-anim .app-grid > [data-reveal]:nth-child(3).is-in { transition-delay: .12s; }
@@ -325,3 +325,161 @@ body::after {
 
 /* キーボード操作でスクロール位置が飛ばないように */
 .shots__list:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+
+
+/* ══ トップページ（屋号のホーム）════════════════════
+   色面で区切り、境目を破った紙のギザギザにする。
+   網点とインクの荒れで、コピー機で刷った紙面に寄せる。
+   この節はすべて .punk の中だけに効く。アプリの各ページには影響しない。 */
+
+.punk {
+  --ink: #262624;
+  --green: #16442b;
+  --green-mid: #1e6137;
+  --paper: #f4f3eb;
+  --paper-2: #e7e5d6;
+  --corn: #c9d45e;
+  --cream: #f4f3eb;
+}
+
+.punk .blk {
+  position: relative;
+  padding: 3.25rem 0 3.75rem;
+  isolation: isolate;
+}
+/* 破れた境目。次のセクションの色が上に食い込む */
+.punk .blk[style*="--next"]::after {
+  content: "";
+  position: absolute; left: 0; right: 0; bottom: -1px;
+  height: 18px; background: var(--next);
+  clip-path: polygon(0 100%, 3.51% 11.8%, 7.93% 5.7%, 12.03% 28.5%, 14.79% 39.6%, 17.50% 33.8%, 20.29% 7.1%, 24.08% 64.5%, 27.03% 17.4%, 31.38% 73.9%, 35.60% 30.9%, 40.93% 3.6%, 45.94% 22.6%, 48.94% 9.2%, 52.41% 63.7%, 55.51% 45.4%, 59.90% 29.0%, 64.03% 4.9%, 66.80% 16.1%, 71.31% 33.4%, 74.79% 45.7%, 78.65% 23.4%, 83.48% 54.5%, 86.76% 44.8%, 90.83% 68.3%, 95.48% 22.5%, 100.00% 9.2%, 100% 100%);
+  z-index: 2;
+}
+/* 網点。紙面を刷ったような粒を全面に薄く重ねる */
+.punk .blk::before {
+  content: "";
+  position: absolute; inset: 0; z-index: 0; pointer-events: none;
+  background-image: radial-gradient(currentColor 1px, transparent 1.15px);
+  background-size: 7px 7px;
+  opacity: .07;
+}
+.punk .blk > * { position: relative; z-index: 1; }
+
+.punk .blk--green  { background: var(--green);   color: var(--cream); }
+.punk .blk--paper  { background: var(--paper);   color: var(--ink); }
+.punk .blk--paper2 { background: var(--paper-2); color: var(--ink); }
+.punk .blk--ink    { background: var(--ink);     color: var(--cream); }
+
+.punk .blk--green a, .punk .blk--ink a { color: inherit; }
+
+/* ── 見出し ─────────────────────────────────────── */
+.punk .dh {
+  display: inline-block;
+  margin: 0 0 1.4rem;
+  padding: 0;
+  border: 0;
+  font-family: "Zen Antique", "Hiragino Mincho ProN", "Yu Mincho", serif;
+  font-size: 1.7rem;
+  font-weight: 400;
+  line-height: 1.3;
+  letter-spacing: .01em;
+  transform: rotate(-1.2deg);
+}
+/* ロゴの筆致に合わせた手描きの下線 */
+.punk .dh::after {
+  content: "";
+  display: block;
+  height: .34em;
+  margin-top: .1em;
+  background: currentColor;
+  -webkit-mask-image: var(--swash); mask-image: var(--swash);
+  -webkit-mask-size: 100% 100%;   mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat;  mask-repeat: no-repeat;
+}
+.punk {
+  --swash: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 16' preserveAspectRatio='none'%3E%3Cpath d='M3 12.6C48 9.4 96 7.6 150 7.2c48-.4 96 .2 147-2.4-8 4.2-26 5.6-52 6.4-44 1.4-96 1.2-148 1.8-34 .4-66 1.2-94 2.2z'/%3E%3C/svg%3E");
+}
+
+/* ── ヒーロー ───────────────────────────────────── */
+.punk .hero { padding: 3rem 0 4.25rem; text-align: center; }
+.punk .hero__logo { width: min(20rem, 80%); height: auto; }
+.punk .hero__stamp { width: 5.5rem; height: auto; margin: 0 auto 1.25rem; display: block; opacity: .92; }
+.punk .hero__sub {
+  margin: 1.1rem 0 1.35rem;
+  font-size: .9rem; font-weight: 600; letter-spacing: .18em;
+  color: rgba(244, 243, 235, .85);
+}
+.punk .hero__nav { margin: 0 0 1.5rem; font-size: .92rem; }
+.punk .hero__nav a { margin: 0 .55rem; text-underline-offset: .25em; }
+
+/* ── ステッカー ─────────────────────────────────── */
+.punk .stickers { display: flex; flex-wrap: wrap; gap: .55rem; justify-content: center; margin: 0; padding: 0; list-style: none; }
+.punk .sticker {
+  display: inline-block; margin: 0; padding: .3rem .85rem;
+  background: var(--cream); color: var(--ink);
+  border: 2px solid var(--ink); border-radius: 2px;
+  font-weight: 700; font-size: .86rem; line-height: 1.5;
+  box-shadow: 3px 3px 0 rgba(0,0,0,.35);
+}
+.punk .sticker:nth-child(2n) { background: var(--corn); color: var(--green); transform: rotate(1.8deg); }
+.punk .sticker:nth-child(3n) { transform: rotate(-2.2deg); }
+
+/* ── 本文 ───────────────────────────────────────── */
+.punk .blk p { max-width: 34rem; }
+.punk .hero p, .punk .blk--red p, .punk .blk--ink p { margin-left: auto; margin-right: auto; }
+.punk .big { font-size: 1.05rem; line-height: 1.9; }
+
+.punk .stance { list-style: none; padding: 0; margin: 1.5rem 0 0; }
+.punk .stance li {
+  margin: 0 0 .7rem; padding-left: 1.6rem; position: relative;
+}
+.punk .stance li::before {
+  content: "■"; position: absolute; left: 0; top: 0; color: var(--green-mid); font-size: .8em;
+}
+
+/* ── アプリのカード ─────────────────────────────── */
+.punk .app-grid { gap: 1rem; }
+.punk .app-card {
+  background: var(--cream);
+  border: 2px solid var(--ink);
+  border-radius: 3px;
+  box-shadow: 5px 5px 0 var(--ink);
+}
+.punk .app-card__name a { color: var(--ink); }
+.punk .app-card__icon img { border-radius: 12px; border: 1px solid rgba(0,0,0,.15); }
+@media (hover: hover) {
+  .punk .app-card:not(.app-card--quiet):hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 8px 8px 0 var(--ink);
+    border-color: var(--ink);
+  }
+}
+.punk .app-card--quiet {
+  background: rgba(244, 243, 235, .1);
+  border-color: var(--cream);
+  box-shadow: 5px 5px 0 rgba(0,0,0,.28);
+  color: var(--cream);
+}
+.punk .app-card--quiet .app-card__tagline { color: rgba(244,243,235,.8); }
+.punk .badge {
+  background: var(--cream); color: var(--ink);
+  border: 2px solid var(--ink); border-radius: 2px;
+  transform: rotate(-3deg); display: inline-block;
+  padding: .05rem .45rem; font-size: .7rem;
+}
+
+/* ── 連絡先 ─────────────────────────────────────── */
+.punk .contact-list dt { color: rgba(244,243,235,.6); }
+.punk .contact-list dd a { color: var(--cream); }
+
+@media (min-width: 40rem) {
+  .punk .blk { padding: 4.25rem 0 4.75rem; }
+  .punk .hero { padding: 4rem 0 5.5rem; }
+  .punk .hero__logo { width: min(25rem, 70%); }
+  .punk .hero__stamp { width: 6.5rem; }
+  .punk .dh { font-size: 2.1rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .punk .app-card { transition: none; }
+}

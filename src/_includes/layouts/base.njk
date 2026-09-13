@@ -42,6 +42,12 @@
     <link rel="icon" href="/assets/brand/mark-32.png" sizes="32x32">
     <link rel="icon" href="/assets/brand/mark-512.png" sizes="512x512">
     <link rel="apple-touch-icon" href="/assets/brand/mark-180.png">
+    {#- 見出し用の書体。トップページでしか使わないので、そこだけ読み込む #}
+    {%- if kind == "home" %}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Antique&display=swap">
+    {%- endif %}
     <link rel="stylesheet" href="/assets/css/style.css?v={{ assets.cssVersion }}">
     {#- 描画前に印を付けておき、登場アニメーションのちらつきを防ぐ。
         4秒経っても enhance.js が動かなければ、印を外して内容を必ず表示する。 #}
