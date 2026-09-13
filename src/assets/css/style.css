@@ -81,6 +81,8 @@ a:hover, a:focus { color: var(--accent-hover); }
   font-weight: 600; text-decoration: none; color: var(--text); letter-spacing: .01em;
 }
 .site-header__brand img { display: block; width: auto; height: 27px; }
+/* とうもろこし単体は縦長なので、一行ロゴより少し背を高くしないと小さく見える */
+.site-header__brand--mark img { height: 32px; }
 .lang-switch { font-size: .9rem; }
 .lang-switch a { margin-left: .75rem; }
 
@@ -224,6 +226,7 @@ hr { border: 0; border-top: 1px solid var(--border); margin: 2rem 0; }
   .hero__inner { padding-top: 3.25rem; padding-bottom: 3.25rem; }
   .hero__logo { width: min(24rem, 80%); }
   .site-header__brand img { height: 31px; }
+  .site-header__brand--mark img { height: 36px; }
   .app-grid { grid-template-columns: repeat(2, 1fr); }
   .app-card__icon img { width: 72px; height: 72px; border-radius: 17px; }
   .app-hero__icon { width: 112px; height: 112px; border-radius: 25px; }

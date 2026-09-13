@@ -67,6 +67,25 @@ print("stamp-cream ", save_rgba(b, f"{OUT}/stamp-cream.png", 520, flat=CREAM))
 b = trimmed(BOXES["mark"])
 print("mark        ", save_rgba(b, f"{OUT}/mark-color.png", 360))
 
+# 濃い背景に置くための、クリームで抜いたマーク。
+# 色版を単色で塗りつぶすと粒が潰れて塊になるので、
+# 角丸タイル（濃緑の地にクリームのとうもろこし）のほうから抜く。
+# タイルの外側は紙の色なので、先に内側へ寄せてから地の緑との距離をアルファにする。
+x0, y0, x1, y1 = trimmed(BOXES["appicon"], thr=0.2)
+inset = round(min(x1 - x0, y1 - y0) * 0.14)
+tile = a[y0 + inset:y1 - inset, x0 + inset:x1 - inset]
+ink = np.clip(np.linalg.norm(tile - np.array(GREEN_DEEP, dtype=np.float32), axis=2) / 110.0, 0, 1)
+# 版の紙目のぶん、地の全面にわずかな値が残る。そのままだと濃い背景の上で
+# 四角い靄になって出るので、下側を切り落としてから伸ばし直す。
+ink = np.clip((ink - 0.22) / 0.78, 0, 1)
+ys, xs = np.where(ink > 0.35)
+sub = ink[ys.min():ys.max() + 1, xs.min():xs.max() + 1]
+flat = np.dstack([np.full(sub.shape, c, np.uint8) for c in CREAM] + [(sub * 255).astype(np.uint8)])
+mark_cream = Image.fromarray(flat, "RGBA")
+mark_cream = mark_cream.resize((360, round(360 * mark_cream.height / mark_cream.width)), Image.LANCZOS)
+mark_cream.save(f"{OUT}/mark-cream.png")
+print("mark-cream  ", mark_cream.size)
+
 # アプリアイコン（角丸の緑地）。ファビコンとOG画像に使う
 x0, y0, x1, y1 = trimmed(BOXES["appicon"], thr=0.2)
 # 角丸の緑地いっぱいに使う。余白を足すとファビコンで小さく見えるため
