@@ -10,12 +10,15 @@
   },
   "home": {
     "title": "Green Corn Lab",
-    "lead": "Green Corn Lab は、iOS向けのアプリを個人で開発している屋号です。このサイトでは、各アプリのサポート情報とプライバシーポリシーを公開しています。",
+    "lead": "Green Corn Lab は、iOS向けのアプリを個人で開発している屋号です。広告を入れず、必要以上のデータを集めない。そういうアプリだけを作っています。",
     "appsHeading": "アプリ",
     "contactHeading": "お問い合わせ",
     "contactLead": "アプリ全般に関するお問い合わせは、下記までご連絡ください。個別のアプリについてのお問い合わせは、各アプリのサポートページに記載の窓口をご利用ください。",
     "contactSupportLabel": "全般のお問い合わせ",
-    "contactPrivacyLabel": "プライバシーに関するお問い合わせ"
+    "contactPrivacyLabel": "プライバシーに関するお問い合わせ",
+    "releasedHeading": "公開中のアプリ",
+    "comingSoonHeading": "準備中",
+    "comingSoonNote": "現在つくっているアプリです。公開までもうしばらくお待ちください。"
   },
   "intro": {
     "download": "App Store で {app} を入手（無料）",
@@ -109,5 +112,16 @@
   },
   "footer": {
     "copyright": "Green Corn Lab"
+  },
+  "app": {
+    "openStore": "App Store で見る",
+    "viewDetail": "詳しく見る",
+    "comingSoonBadge": "準備中",
+    "screenshotsHeading": "画面",
+    "screenshotAlt": "{app} の画面 {n}",
+    "categoryLabel": "カテゴリ",
+    "platformLabel": "対応",
+    "iconAlt": "{app} のアイコン",
+    "getOnStore": "App Store で入手（無料）"
   }
 }

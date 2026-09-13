@@ -19,13 +19,70 @@
     {%- for alt in alternates %}
     <link rel="alternate" hreflang="{{ alt.lang }}" href="{{ site.url }}{{ alt.url }}">
     {%- endfor %}
+
+    {#- SNS に貼られたときのカード #}
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="{{ site.name | loc(lang) }}">
+    <meta property="og:title" content="{{ title }}">
+    {%- if description %}
+    <meta property="og:description" content="{{ description }}">
+    {%- endif %}
+    <meta property="og:url" content="{{ site.url }}{{ page.url }}">
+    <meta property="og:image" content="{{ site.url }}{{ ogImage }}">
+    <meta property="og:locale" content="{% if lang == 'ja' %}ja_JP{% else %}en_US{% endif %}">
+    <meta name="twitter:card" content="summary">
+
+    {#- iPhone で開いた人に App Store への案内を出す #}
+    {%- if smartBannerId %}
+    <meta name="apple-itunes-app" content="app-id={{ smartBannerId }}">
+    {%- endif %}
+
     <meta name="color-scheme" content="light dark">
+    <meta name="theme-color" content="#224a38">
+    <link rel="icon" href="/assets/brand/mark-32.png" sizes="32x32">
+    <link rel="icon" href="/assets/brand/mark-512.png" sizes="512x512">
+    <link rel="apple-touch-icon" href="/assets/brand/mark-180.png">
     <link rel="stylesheet" href="/assets/css/style.css">
+
+    {#- 構造化データ #}
+    {%- if kind == "home" %}
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "{{ site.name | loc(lang) }}",
+      "url": "{{ site.url }}/{{ lang }}/",
+      "logo": "{{ site.url }}/assets/brand/mark-512.png",
+      "email": "{{ site.email.support }}"
+    }
+    </script>
+    {%- elif kind == "intro" %}
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "{{ app.name | loc(lang) }}",
+      "description": "{{ description }}",
+      "url": "{{ site.url }}{{ page.url }}",
+      "image": "{{ site.url }}/assets/apps/{{ app.slug }}/icon-512.png",
+      "operatingSystem": "iOS",
+      {%- if app.appStore %}
+      "applicationCategory": "{{ app.appStore.category.en }}",
+      "installUrl": "{{ app.appStore.url }}",
+      {%- endif %}
+      "author": {
+        "@type": "Organization",
+        "name": "{{ site.name | loc(lang) }}",
+        "url": "{{ site.url }}/{{ lang }}/"
+      }
+    }
+    </script>
+    {%- endif %}
   </head>
   <body>
     <a class="skip-link" href="#main">{{ t.nav.skipToContent }}</a>
     {% include "partials/header.njk" %}
-    <main id="main" class="wrap">
+    <main id="main" class="{% if kind == 'home' or kind == 'intro' %}main--full{% else %}wrap{% endif %}">
       {{ content | safe }}
     </main>
     {% include "partials/footer.njk" %}

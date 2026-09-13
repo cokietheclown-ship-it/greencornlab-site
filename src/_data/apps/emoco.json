@@ -152,5 +152,20 @@
         "a": "PDFレポートの出力時にマスキングオプションを用意しています。名前をイニシャル表示にする、生年月日を非表示にする、といった設定が可能です。"
       }
     ]
+  },
+  "status": "released",
+  "tagline": {
+    "ja": "ことばにならない気持ちに、かたちを。",
+    "en": "A shape for feelings that words can't reach."
+  },
+  "icon": true,
+  "screenshots": 7,
+  "appStore": {
+    "id": 6806486963,
+    "category": {
+      "ja": "ヘルスケア/フィットネス",
+      "en": "Health & Fitness"
+    },
+    "url": "https://apps.apple.com/jp/app/id6806486963"
   }
 }

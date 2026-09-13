@@ -10,12 +10,15 @@
   },
   "home": {
     "title": "Green Corn Lab",
-    "lead": "Green Corn Lab is the name I develop iOS apps under, as an independent developer. This site hosts the support information and privacy policy for each app.",
+    "lead": "Green Corn Lab is the name I develop iOS apps under, as an independent developer. No advertising, and no data collected beyond what an app actually needs.",
     "appsHeading": "Apps",
     "contactHeading": "Contact",
     "contactLead": "For general enquiries, use the address below. For questions about a specific app, please use the address listed on that app's support page.",
     "contactSupportLabel": "General enquiries",
-    "contactPrivacyLabel": "Privacy enquiries"
+    "contactPrivacyLabel": "Privacy enquiries",
+    "releasedHeading": "Published apps",
+    "comingSoonHeading": "In development",
+    "comingSoonNote": "These are the apps I am working on now."
   },
   "intro": {
     "download": "Get {app} on the App Store (free)",
@@ -109,5 +112,16 @@
   },
   "footer": {
     "copyright": "Green Corn Lab"
+  },
+  "app": {
+    "openStore": "View on the App Store",
+    "viewDetail": "Learn more",
+    "comingSoonBadge": "Coming soon",
+    "screenshotsHeading": "Screens",
+    "screenshotAlt": "{app} screen {n}",
+    "categoryLabel": "Category",
+    "platformLabel": "Platform",
+    "iconAlt": "{app} app icon",
+    "getOnStore": "Get it on the App Store (free)"
   }
 }

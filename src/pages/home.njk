@@ -5,39 +5,73 @@ pagination:
   alias: target
 permalink: "/{{ target.lang }}/"
 ---
-<h1>{{ t.home.title }}</h1>
-<p class="lead">{{ t.home.lead }}</p>
+<div class="hero">
+  <div class="wrap hero__inner">
+    <picture>
+      <source srcset="/assets/brand/logo-cream-1200.png" media="(prefers-color-scheme: dark)">
+      <img class="hero__logo" src="/assets/brand/logo-ink-1200.png" alt="" width="1200" height="396">
+    </picture>
+    <h1 class="hero__title">{{ t.home.title }}</h1>
+    <p class="hero__lead">{{ t.home.lead }}</p>
+  </div>
+</div>
 
-<section>
-  <h2>{{ t.home.appsHeading }}</h2>
-  <ul class="app-list">
-    {%- for item in pages.apps %}
-    {%- set appLang = lang if lang in item.languages else item.defaultLanguage %}
-    {%- set itemIntro = item.intro[appLang] %}
-    <li class="app-list__item">
-      <h3>
-        {%- if itemIntro %}<a href="/{{ appLang }}/{{ item.slug }}/">{{ item.name | loc(lang) }}</a>
-        {%- else %}{{ item.name | loc(lang) }}{% endif %}
-      </h3>
-      {%- if itemIntro %}
-      <p class="app-list__blurb">{{ itemIntro.tagline }}</p>
-      {%- endif %}
-      <p class="app-list__links">
-        <a href="/{{ appLang }}/{{ item.slug }}/support/">{{ t.nav.support }}</a>
-        <a href="/{{ appLang }}/{{ item.slug }}/privacy/">{{ t.nav.privacy }}</a>
-      </p>
-    </li>
-    {%- endfor %}
-  </ul>
-</section>
+<div class="wrap">
+  <section>
+    <h2>{{ t.home.releasedHeading }}</h2>
+    <ul class="app-grid">
+      {%- for item in pages.released %}
+      {%- set appLang = lang if lang in item.languages else item.defaultLanguage %}
+      <li class="app-card">
+        <a class="app-card__icon" href="/{{ appLang }}/{{ item.slug }}/" tabindex="-1" aria-hidden="true">
+          <img src="/assets/apps/{{ item.slug }}/icon-192.png" alt="" width="72" height="72" loading="lazy">
+        </a>
+        <div class="app-card__body">
+          <h3 class="app-card__name"><a href="/{{ appLang }}/{{ item.slug }}/">{{ item.name | loc(lang) }}</a></h3>
+          <p class="app-card__tagline">{{ item.tagline | loc(lang) }}</p>
+          {%- if item.appStore %}
+          <p class="app-card__meta">{{ item.appStore.category | loc(lang) }} ・ {{ item.platform }}</p>
+          {%- endif %}
+          <p class="app-card__links">
+            <a href="/{{ appLang }}/{{ item.slug }}/">{{ t.app.viewDetail }}</a>
+            {%- if item.appStoreUrl %}
+            <a href="{{ item.appStoreUrl | storeLink('gcl_home') }}">{{ t.app.openStore }}</a>
+            {%- endif %}
+          </p>
+        </div>
+      </li>
+      {%- endfor %}
+    </ul>
+  </section>
 
-<section>
-  <h2>{{ t.home.contactHeading }}</h2>
-  <p>{{ t.home.contactLead }}</p>
-  <dl class="contact-list">
-    <dt>{{ t.home.contactSupportLabel }}</dt>
-    <dd><a href="mailto:{{ site.email.support }}">{{ site.email.support }}</a></dd>
-    <dt>{{ t.home.contactPrivacyLabel }}</dt>
-    <dd><a href="mailto:{{ site.email.privacy }}">{{ site.email.privacy }}</a></dd>
-  </dl>
-</section>
+  {%- if pages.comingSoon.length %}
+  <section>
+    <h2>{{ t.home.comingSoonHeading }}</h2>
+    <p class="note">{{ t.home.comingSoonNote }}</p>
+    <ul class="app-grid app-grid--quiet">
+      {%- for item in pages.comingSoon %}
+      <li class="app-card app-card--quiet">
+        <span class="app-card__icon">
+          <img src="/assets/apps/{{ item.slug }}/icon-192.png" alt="" width="72" height="72" loading="lazy">
+        </span>
+        <div class="app-card__body">
+          <h3 class="app-card__name">{{ item.name | loc(lang) }} <span class="badge">{{ t.app.comingSoonBadge }}</span></h3>
+          <p class="app-card__tagline">{{ item.tagline | loc(lang) }}</p>
+        </div>
+      </li>
+      {%- endfor %}
+    </ul>
+  </section>
+  {%- endif %}
+
+  <section>
+    <h2>{{ t.home.contactHeading }}</h2>
+    <p>{{ t.home.contactLead }}</p>
+    <dl class="contact-list">
+      <dt>{{ t.home.contactSupportLabel }}</dt>
+      <dd><a href="mailto:{{ site.email.support }}">{{ site.email.support }}</a></dd>
+      <dt>{{ t.home.contactPrivacyLabel }}</dt>
+      <dd><a href="mailto:{{ site.email.privacy }}">{{ site.email.privacy }}</a></dd>
+    </dl>
+  </section>
+</div>

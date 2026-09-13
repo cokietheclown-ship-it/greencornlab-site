@@ -1,6 +1,11 @@
 <header class="site-header">
   <div class="wrap site-header__inner">
-    <a class="site-header__brand" href="/{{ lang }}/">{{ site.name | loc(lang) }}</a>
+    <a class="site-header__brand" href="/{{ lang }}/">
+      <picture>
+        <source srcset="/assets/brand/logo-cream-1200.png" media="(prefers-color-scheme: dark)">
+        <img src="/assets/brand/logo-ink-1200.png" alt="{{ site.name | loc(lang) }}">
+      </picture>
+    </a>
     {%- set others = [] %}
     {%- for alt in alternates %}
       {%- if alt.lang != lang %}{% set others = (others.push(alt), others) %}{% endif %}

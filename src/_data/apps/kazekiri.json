@@ -1,18 +1,26 @@
 {
   "slug": "kazekiri",
-  "name": { "ja": "Kazekiri", "en": "Kazekiri" },
+  "name": {
+    "ja": "Kazekiri",
+    "en": "Kazekiri"
+  },
   "platform": "iOS",
-  "languages": ["ja"],
+  "languages": [
+    "ja"
+  ],
   "defaultLanguage": "ja",
   "email": "kazekiri@greencornlab.com",
-  "policyUpdated": { "ja": "2026年9月8日", "en": "September 8, 2026" },
-
+  "policyUpdated": {
+    "ja": "2026年9月8日",
+    "en": "September 8, 2026"
+  },
   "description": {
     "ja": "忍者が屋根から屋根へ走り続ける、横向きのアクションゲームです。全300ステージあり、前のステージをクリアすると次が開きます。広告は一切表示しません。通信を行う機能を持たないため、機内モードでも遊べます。"
   },
-
   "privacy": {
-    "regions": ["jp"],
+    "regions": [
+      "jp"
+    ],
     "_comment_draftBanner": "記録を一切預からないアプリなので、草案バナーは出さない。戻すときはこの行を消す。",
     "draftBanner": false,
     "childDirected": false,
@@ -45,9 +53,7 @@
       ]
     }
   },
-
   "notes": {},
-
   "faq": {
     "ja": [
       {
@@ -83,5 +89,12 @@
         "a": "道中に落ちているお守りを拾うと、仕掛けに当たったとき一度だけ身代わりになります。難しさのご意見はメールでお寄せいただけると助かります。"
       }
     ]
-  }
+  },
+  "status": "coming-soon",
+  "tagline": {
+    "ja": "忍者が屋根から屋根へ走り続ける、横向きのアクションゲーム。",
+    "en": "A side-scrolling action game where a ninja runs from roof to roof."
+  },
+  "icon": true,
+  "screenshots": 0
 }

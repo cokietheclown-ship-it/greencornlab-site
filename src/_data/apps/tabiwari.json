@@ -1,22 +1,33 @@
 {
   "slug": "tabiwari",
-  "name": { "ja": "TabiWari", "en": "TabiWari" },
+  "name": {
+    "ja": "TabiWari",
+    "en": "TabiWari"
+  },
   "platform": "iOS",
-  "languages": ["ja"],
+  "languages": [
+    "ja"
+  ],
   "defaultLanguage": "ja",
   "email": "tabiwari@greencornlab.com",
-  "policyUpdated": { "ja": "2026年9月9日", "en": "September 9, 2026" },
-
+  "policyUpdated": {
+    "ja": "2026年9月9日",
+    "en": "September 9, 2026"
+  },
   "description": {
     "ja": "旅行や飲み会の立替を、大人・子ども・お酒の有無や幹事などの役割まで加味して1円まで自動で割り、送金を最少の回数にまとめるアプリです。日ごとの行程はそのまま配れる旅のしおりに、写真は旅のアルバムになります。広告は一切表示しません。"
   },
-
   "privacy": {
-    "regions": ["jp"],
+    "regions": [
+      "jp"
+    ],
     "draftBanner": false,
     "childDirected": false,
     "storage": "cloudkit-private",
-    "features": ["photos", "pdf-report"],
+    "features": [
+      "photos",
+      "pdf-report"
+    ],
     "medicalDisclaimer": false,
     "noAdsNoTracking": true,
     "uuidIdentifier": false,
@@ -52,12 +63,14 @@
       ]
     }
   },
-
   "notes": {
-    "photos": { "ja": "行程や明細に写真を追加できます。追加のときはiOSの写真選択画面が表示され、本アプリが受け取るのはご利用者がその場で選んだ写真だけです。写真ライブラリへのアクセス許可もカメラの使用許可も求めません。受け取った写真は端末内と、ご利用者ご自身のiCloudにのみ保存されます。位置情報を含む写真であっても、その情報を取り出して利用することはありません。" },
-    "pdf-report": { "ja": "旅のしおりと旅のアルバムを、画像（JPEG）とPDFで書き出して配れます。書き出しはご利用者の操作でその都度行われ、生成されたファイルは端末内に作られたあと、iOSの共有画面から送り先をご自身で選んでいただきます。開発者のサーバーを経由することはありません。" }
+    "photos": {
+      "ja": "行程や明細に写真を追加できます。追加のときはiOSの写真選択画面が表示され、本アプリが受け取るのはご利用者がその場で選んだ写真だけです。写真ライブラリへのアクセス許可もカメラの使用許可も求めません。受け取った写真は端末内と、ご利用者ご自身のiCloudにのみ保存されます。位置情報を含む写真であっても、その情報を取り出して利用することはありません。"
+    },
+    "pdf-report": {
+      "ja": "旅のしおりと旅のアルバムを、画像（JPEG）とPDFで書き出して配れます。書き出しはご利用者の操作でその都度行われ、生成されたファイルは端末内に作られたあと、iOSの共有画面から送り先をご自身で選んでいただきます。開発者のサーバーを経由することはありません。"
+    }
   },
-
   "faq": {
     "ja": [
       {
@@ -77,5 +90,21 @@
         "a": "旅行ごとに通貨を選べます。現地通貨のまま記録して、そのまま割ります。レートを入れておくと、精算の合計に円のめやすが添います。レートは手で入れる形です（為替情報を取りに行かないため、自動では取得しません）。"
       }
     ]
-  }
+  },
+  "status": "released",
+  "tagline": {
+    "ja": "旅行や飲み会の立替を1円まで自動で割り、送金を最少の回数に。",
+    "en": "Split shared travel costs to the last yen, with the fewest transfers."
+  },
+  "icon": true,
+  "screenshots": 6,
+  "appStore": {
+    "id": 6810052506,
+    "category": {
+      "ja": "旅行",
+      "en": "Travel"
+    },
+    "url": "https://apps.apple.com/jp/app/id6810052506"
+  },
+  "appStoreUrl": "https://apps.apple.com/jp/app/id6810052506"
 }

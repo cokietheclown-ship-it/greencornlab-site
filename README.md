@@ -70,3 +70,23 @@ GitHubのSettings → Pagesでのカスタムドメイン登録の両方が必�
 
 初回の公開手順（リポジトリ作成・DNS・App Store ConnectのURL差し替え・旧サイトの転送）は
 [docs/deploy-setup.md](docs/deploy-setup.md) を参照してください。
+
+## 画像とロゴ
+
+- `src/assets/brand/logo-source.png` … 支給されたロゴの原本
+- `tools/make-brand.py` … 原本から、ヘッダー用の横組みロゴ（ライト／ダーク用の2色）、
+  ファビコン・OG画像用の正方形マークを書き出す。`python3 tools/make-brand.py` で再生成できる
+- `src/assets/apps/<slug>/icon-192.png` `icon-512.png` … 各アプリのアイコン
+- `src/assets/apps/<slug>/screenshot-N.jpg` … App Store に登録済みのスクリーンショット（幅600px）
+
+アプリを追加するときは、アイコンとスクリーンショットも同じ場所に置き、
+データファイルの `icon` と `screenshots`（枚数）を設定してください。
+
+## SEO まわり
+
+- `/sitemap.xml` と `/robots.txt` は `src/sitemap.njk` `src/robots.njk` から生成されます
+- OGP・Twitterカード・構造化データ（JSON-LD）は `src/_includes/layouts/base.njk` にまとめてあります
+- App Store へのリンクには `storeLink` フィルタでキャンペーントークン（`ct=`）が付きます。
+  どのページ経由でストアに飛んだかが App Store Connect の App Analytics で確認できます
+- iPhone で開いたときの App Store 案内バナー（スマートアプリバナー）は、
+  データファイルに `appStore.id` があるアプリのページに出ます

@@ -56,19 +56,30 @@ export default async function () {
     )
   );
 
-  // 紹介ページは任意。JSON に intro を書いたアプリ・書いた言語だけ生成する。
-  // サポートとポリシーは全アプリに必要だが、紹介文は書けたものから順に増やしたいため。
+  // 紹介ページは、公開中のアプリには必ず生成する（App Store への入口になるため）。
+  // 未公開のアプリは、intro の本文を書いたときだけ生成する。
   const intro = apps.flatMap((app) =>
     app.languages
-      .filter((lang) => app.intro?.[lang])
+      .filter((lang) => app.status === "released" || app.intro?.[lang])
       .map((lang) => ({ app, lang, kind: "intro" }))
   );
+
+  // sitemap.xml に載せるURL。フォールバック・404・言語振り分けは載せない。
+  const sitemapUrls = [
+    ...ALL_LANGS.map((lang) => ({ url: `/${lang}/`, priority: "1.0" })),
+    ...intro.map((t) => ({ url: `/${t.lang}/${t.app.slug}/`, priority: "0.9" })),
+    ...targets("support").map((t) => ({ url: `/${t.lang}/${t.app.slug}/support/`, priority: "0.5" })),
+    ...targets("privacy").map((t) => ({ url: `/${t.lang}/${t.app.slug}/privacy/`, priority: "0.3" }))
+  ];
 
   return {
     languages: ALL_LANGS,
     home: ALL_LANGS.map((lang) => ({ lang, kind: "home" })),
     apps,
+    released: apps.filter((a) => a.status === "released"),
+    comingSoon: apps.filter((a) => a.status !== "released"),
     intro,
+    sitemapUrls,
     support: targets("support"),
     privacy: targets("privacy"),
     fallbacks

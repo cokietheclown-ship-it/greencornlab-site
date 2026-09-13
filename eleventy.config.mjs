@@ -26,6 +26,14 @@ export default function (eleventyConfig) {
     return str.replace(/\{(\w+)\}/g, (m, key) => (vars && vars[key] !== undefined ? vars[key] : m));
   });
 
+  // App Store リンクにキャンペーントークンを付ける。
+  // どのページ経由でストアに飛んだかが App Store Connect の App Analytics で見える。
+  eleventyConfig.addFilter("storeLink", (url, campaign) => {
+    if (!url) return "";
+    const sep = url.includes("?") ? "&" : "?";
+    return `${url}${sep}ct=${encodeURIComponent(campaign)}`;
+  });
+
   return {
     dir: {
       input: "src",

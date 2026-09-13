@@ -1,24 +1,34 @@
 {
   "slug": "kurukuru",
-  "name": { "ja": "くるくるユニコーン", "en": "Kurukuru Unicorn" },
+  "name": {
+    "ja": "くるくるユニコーン",
+    "en": "Kurukuru Unicorn"
+  },
   "platform": "iOS",
-  "languages": ["ja"],
+  "languages": [
+    "ja"
+  ],
   "defaultLanguage": "ja",
   "email": "kurukuru@greencornlab.com",
-  "policyUpdated": { "ja": "2026年9月8日", "en": "September 8, 2026" },
-
+  "policyUpdated": {
+    "ja": "2026年9月8日",
+    "en": "September 8, 2026"
+  },
   "description": {
     "ja": "メリーゴーランドのユニコーンが問題を背負って回ってくる、5〜10歳向けの学習アプリです。さんすう・こくご・えいご・ちずの4教科と、とけいのよみかたを全34ステージで練習できます。広告は一切表示しません。通信を行う機能を持たないため、機内モードでも遊べます。"
   },
-
   "privacy": {
-    "regions": ["jp"],
+    "regions": [
+      "jp"
+    ],
     "_comment_draftBanner": "記録を一切預からないアプリなので、草案バナーは出さない。戻すときはこの行を消す。",
     "draftBanner": false,
     "childDirected": true,
     "childPlaysDirectly": true,
     "storage": "local",
-    "features": ["microphone"],
+    "features": [
+      "microphone"
+    ],
     "medicalDisclaimer": false,
     "noAdsNoTracking": true,
     "uuidIdentifier": false,
@@ -46,13 +56,11 @@
       ]
     }
   },
-
   "notes": {
     "microphone": {
       "ja": "答えを声で入力できる任意の機能があります。マイクのボタンを押したときだけ録音を始め、離れた画面では動きません。音声から数字への変換は、端末の中だけで完結する認識（オンデバイス音声認識）に限定しており、声の内容を開発者や第三者のサーバーへ送ることはありません。認識した結果は数字として画面に表示するだけで、音声そのものも、変換後の文字列も保存しません。マイクの利用は端末の「設定」からいつでも取り消せます。取り消してもマイク以外の遊び方（電卓と4つの選択肢）はそのまま使えます。"
     }
   },
-
   "faq": {
     "ja": [
       {
@@ -80,5 +88,12 @@
         "a": "遊べます。通信を行う機能を持たないため、機内モードでもすべてのステージが動きます。BGMと効果音も端末の中で合成しており、あとから何かを読み込むことはありません。"
       }
     ]
-  }
+  },
+  "status": "coming-soon",
+  "tagline": {
+    "ja": "メリーゴーランドのユニコーンが問題を背負って回ってくる学習アプリ。",
+    "en": "A learning app where carousel unicorns bring the questions round."
+  },
+  "icon": true,
+  "screenshots": 0
 }

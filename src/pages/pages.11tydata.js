@@ -23,8 +23,13 @@ export default {
       const t = data.t;
       const name = data.app ? loc(data.app.name, data.lang) : "";
       switch (data.kind) {
-        // 紹介ページだけは検索結果に出す前提なので、屋号を足さず JSON の見出しをそのまま使う
-        case "intro": return loc(data.app.intro, data.lang).title;
+        // 紹介ページだけは検索結果に出す前提なので、屋号を足さず JSON の見出しをそのまま使う。
+        // 紹介文がまだ無いアプリは、アプリ名とキャッチコピーで組み立てる。
+        case "intro": {
+          const intro = loc(data.app.intro, data.lang);
+          if (intro?.title) return intro.title;
+          return `${name} － ${loc(data.app.tagline, data.lang).replace(/[。.]$/, "")}`;
+        }
         case "support": return `${name} ${t.support.titleSuffix} | ${loc(data.site.name, data.lang)}`;
         case "privacy": return `${name} ${t.privacy.title} | ${loc(data.site.name, data.lang)}`;
         case "fallback": return t.fallback.title;
@@ -35,13 +40,25 @@ export default {
 
     description: (data) => {
       switch (data.kind) {
-        case "intro": return loc(data.app.intro, data.lang).summary;
+        case "intro": {
+          const intro = loc(data.app.intro, data.lang);
+          return intro?.summary ?? loc(data.app.description, data.lang);
+        }
         case "support": return loc(data.app.description, data.lang);
         case "privacy": return `${loc(data.app.name, data.lang)} ${data.t.privacy.title}`;
         case "home": return data.t.home.lead;
         default: return "";
       }
     },
+
+    // SNS に貼られたときのカード画像。アプリのページはそのアプリのアイコンを使う。
+    ogImage: (data) =>
+      data.app?.icon
+        ? `/assets/apps/${data.app.slug}/icon-512.png`
+        : "/assets/brand/mark-512.png",
+
+    // iPhone で開いたときに App Store への案内バナーを出す
+    smartBannerId: (data) => data.app?.appStore?.id ?? null,
 
     // 未対応言語のURLは既定言語へ送り、検索エンジンには載せない
     redirectTo: (data) =>
@@ -57,7 +74,7 @@ export default {
       }
       if (data.kind === "intro") {
         return data.app.languages
-          .filter((lang) => data.app.intro?.[lang])
+          .filter((lang) => data.app.status === "released" || data.app.intro?.[lang])
           .map((lang) => ({ lang, url: `/${lang}/${data.app.slug}/` }));
       }
       if (data.kind === "support" || data.kind === "privacy") {

@@ -1,23 +1,33 @@
 {
   "slug": "yosegi",
-  "name": { "ja": "Yosegi", "en": "Yosegi" },
+  "name": {
+    "ja": "Yosegi",
+    "en": "Yosegi"
+  },
   "platform": "iOS",
-  "languages": ["ja"],
+  "languages": [
+    "ja"
+  ],
   "defaultLanguage": "ja",
   "email": "yosegi@greencornlab.com",
-  "policyUpdated": { "ja": "2026年9月8日", "en": "September 8, 2026" },
-
+  "policyUpdated": {
+    "ja": "2026年9月8日",
+    "en": "September 8, 2026"
+  },
   "description": {
     "ja": "木のブロックを盤に置いて、行や列を埋めて消していく和風のパズルです。遊び方は7つあり、広告は一切表示しません。通信を行う機能を持たないため、機内モードでも遊べます。"
   },
-
   "privacy": {
-    "regions": ["jp"],
+    "regions": [
+      "jp"
+    ],
     "_comment_draftBanner": "記録を一切預からないアプリなので、草案バナーは出さない。戻すときはこの行を消す。",
     "draftBanner": false,
     "childDirected": false,
     "storage": "local",
-    "features": ["calendar"],
+    "features": [
+      "calendar"
+    ],
     "medicalDisclaimer": false,
     "noAdsNoTracking": true,
     "uuidIdentifier": false,
@@ -49,11 +59,11 @@
       ]
     }
   },
-
   "notes": {
-    "calendar": { "ja": "その日の記録を、端末の標準カレンダー（EventKit）へ終日の予定として書き出せる任意の機能があります。求める権限は書き込みのみで、予定表を読み取る権限は一切求めません。自動では書き出さず、カレンダー画面で1日ずつ選んだときだけ追加します。書き出し先は、ご利用者ご自身が端末の「設定」アプリで既定にしているカレンダーです。本アプリが独自にサーバーへ送信することはありませんが、既定のカレンダーとしてGoogleカレンダー等の外部アカウントを選んでいる場合、その予定は当該アカウントの提供元にも同期されます。これは各アカウント提供元のプライバシーポリシーが適用される範囲です。" }
+    "calendar": {
+      "ja": "その日の記録を、端末の標準カレンダー（EventKit）へ終日の予定として書き出せる任意の機能があります。求める権限は書き込みのみで、予定表を読み取る権限は一切求めません。自動では書き出さず、カレンダー画面で1日ずつ選んだときだけ追加します。書き出し先は、ご利用者ご自身が端末の「設定」アプリで既定にしているカレンダーです。本アプリが独自にサーバーへ送信することはありませんが、既定のカレンダーとしてGoogleカレンダー等の外部アカウントを選んでいる場合、その予定は当該アカウントの提供元にも同期されます。これは各アカウント提供元のプライバシーポリシーが適用される範囲です。"
+    }
   },
-
   "faq": {
     "ja": [
       {
@@ -69,5 +79,21 @@
         "a": "遊べます。通信を行う機能を持たないため、機内モードでもすべてのモードが動きます。BGMと効果音も端末の中で合成しており、あとから何かを読み込むことはありません。"
       }
     ]
-  }
+  },
+  "status": "released",
+  "tagline": {
+    "ja": "木のブロックを置いて、行や列を埋めて消す和風のパズル。",
+    "en": "Place wooden blocks, fill rows and columns, watch them clear."
+  },
+  "icon": true,
+  "screenshots": 6,
+  "appStore": {
+    "id": 6809600556,
+    "category": {
+      "ja": "ゲーム",
+      "en": "Games"
+    },
+    "url": "https://apps.apple.com/jp/app/id6809600556"
+  },
+  "appStoreUrl": "https://apps.apple.com/jp/app/id6809600556"
 }
