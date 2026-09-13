@@ -1,11 +1,4 @@
 {
-  "emoco": {
-    "base": "#eccfb2",
-    "tintLight": "#f6eee0",
-    "edgeLight": "#f3e5d3",
-    "tintDark": "#342f28",
-    "edgeDark": "#63584c"
-  },
   "kazekiri": {
     "base": "#292e3d",
     "tintLight": "#dbd7cf",
@@ -26,6 +19,13 @@
     "edgeLight": "#faebb7",
     "tintDark": "#36311e",
     "edgeDark": "#695d31"
+  },
+  "kyounosora": {
+    "base": "#eccfb2",
+    "tintLight": "#f6eee0",
+    "edgeLight": "#f3e5d3",
+    "tintDark": "#342f28",
+    "edgeDark": "#63584c"
   },
   "tabiwari": {
     "base": "#fed83f",
