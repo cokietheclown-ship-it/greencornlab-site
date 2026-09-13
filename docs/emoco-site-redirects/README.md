@@ -7,8 +7,12 @@
 
 | 現在のURL | 転送先 |
 |---|---|
-| `https://cokietheclown-ship-it.github.io/emoco-site/support.html` | `https://greencornlab.com/ja/emoco/support/` |
-| `https://cokietheclown-ship-it.github.io/emoco-site/privacy-policy.html` | `https://greencornlab.com/ja/emoco/privacy/` |
+| `https://cokietheclown-ship-it.github.io/emoco-site/support.html` | `https://greencornlab.com/ja/kyounosora/support/` |
+| `https://cokietheclown-ship-it.github.io/emoco-site/privacy-policy.html` | `https://greencornlab.com/ja/kyounosora/privacy/` |
+
+**転送先はアプリの slug で決まる。** 2026-09-13 に「きもちのわ」を「きょうのそら」へ改名したとき
+slug も `emoco` → `kyounosora` に変えたので、それまでの `/ja/emoco/...` は**いま 404 になっている**。
+この2ファイルもその時点で古くなっていた（同日に直した）。**次に名前を変えるときは、ここも直す。**
 
 ## 手順
 
