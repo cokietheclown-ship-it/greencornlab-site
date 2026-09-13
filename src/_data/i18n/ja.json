@@ -122,6 +122,8 @@
     "categoryLabel": "カテゴリ",
     "platformLabel": "対応",
     "iconAlt": "{app} のアイコン",
-    "getOnStore": "App Store で入手（無料）"
+    "getOnStore": "App Store で入手（無料）",
+    "prevShot": "前の画面",
+    "nextShot": "次の画面"
   }
 }

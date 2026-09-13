@@ -122,6 +122,8 @@
     "categoryLabel": "Category",
     "platformLabel": "Platform",
     "iconAlt": "{app} app icon",
-    "getOnStore": "Get it on the App Store (free)"
+    "getOnStore": "Get it on the App Store (free)",
+    "prevShot": "Previous screen",
+    "nextShot": "Next screen"
   }
 }

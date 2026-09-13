@@ -1,0 +1,44 @@
+{
+  "emoco": {
+    "base": "#eccfb2",
+    "tintLight": "#f6eee0",
+    "edgeLight": "#f3e5d3",
+    "tintDark": "#342f28",
+    "edgeDark": "#63584c"
+  },
+  "kazekiri": {
+    "base": "#292e3d",
+    "tintLight": "#dbd7cf",
+    "edgeLight": "#a9a8a6",
+    "tintDark": "#191818",
+    "edgeDark": "#1d1e21"
+  },
+  "kondateloop": {
+    "base": "#e3602b",
+    "tintLight": "#f5decd",
+    "edgeLight": "#f0bba0",
+    "tintDark": "#332016",
+    "edgeDark": "#60301b"
+  },
+  "kurukuru": {
+    "base": "#fdde68",
+    "tintLight": "#f9f0d5",
+    "edgeLight": "#faebb7",
+    "tintDark": "#36311e",
+    "edgeDark": "#695d31"
+  },
+  "tabiwari": {
+    "base": "#fed83f",
+    "tintLight": "#f9efcf",
+    "edgeLight": "#fae9a7",
+    "tintDark": "#363018",
+    "edgeDark": "#6a5b22"
+  },
+  "yosegi": {
+    "base": "#298c96",
+    "tintLight": "#dbe5dc",
+    "edgeLight": "#a9ccc8",
+    "tintDark": "#192624",
+    "edgeDark": "#1d4042"
+  }
+}

@@ -90,3 +90,21 @@ GitHubのSettings → Pagesでのカスタムドメイン登録の両方が必�
   どのページ経由でストアに飛んだかが App Store Connect の App Analytics で確認できます
 - iPhone で開いたときの App Store 案内バナー（スマートアプリバナー）は、
   データファイルに `appStore.id` があるアプリのページに出ます
+
+## 視覚効果
+
+CSSが主体で、JavaScriptは `src/assets/js/enhance.js`（約3.5KB）だけです。
+
+- **紙のざらつき** … `body::after` にSVGノイズを薄く重ねる（CSSのみ）
+- **アプリごとの色** … `tools/extract-app-colors.py` が各アイコンから代表色を抜き出し、
+  `src/_data/appColors.json` に書き出す。紹介ページのヒーローの下地に使う。
+  アイコンを差し替えたら再実行してください
+- **スクロールで現れる** … `data-reveal` を付けた要素。JavaScriptが動いているときだけ隠れる
+- **スクリーンショットのページ送り** … ドットと矢印をJavaScriptで組み立てる
+
+JavaScriptが動かない場合の扱い:
+
+- `<head>` の小さなスクリプトが `js-anim` を付け、4秒経っても `enhance.js` が動かなければ外す。
+  つまり読み込みに失敗しても内容は必ず表示される
+- OSの「視差効果を減らす」設定が有効なときは、そもそもアニメーションを使わない
+- ページ送りのドットと矢印は、JavaScriptが無ければ表示されない（横スクロールはそのまま使える）

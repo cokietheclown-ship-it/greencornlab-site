@@ -240,3 +240,88 @@ hr { border: 0; border-top: 1px solid var(--border); margin: 2rem 0; }
   body { background: #fff; color: #000; }
   a { color: #000; }
 }
+
+/* ══ 視覚効果 ═══════════════════════════════════════
+   紙の質感、スクロールでの登場、ページ送り。
+   OSの「視差効果を減らす」設定を尊重し、JSが無くても内容は読める。 */
+
+/* 紙のざらつき。全面に薄く重ねる */
+body::after {
+  content: "";
+  position: fixed; inset: 0; z-index: 60; pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+  opacity: .04; mix-blend-mode: multiply;
+}
+@media (prefers-color-scheme: dark) {
+  body::after { opacity: .05; mix-blend-mode: screen; }
+}
+
+/* アプリごとの色。アイコンから抜き出した色を下地に薄く敷く */
+.app-hero[style*="--tint"] { background: var(--tint-light); }
+@media (prefers-color-scheme: dark) {
+  .app-hero[style*="--tint"] { background: var(--tint-dark); }
+}
+
+/* カードの反応 */
+.app-card { transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease; }
+@media (hover: hover) {
+  .app-card:not(.app-card--quiet):hover {
+    transform: translateY(-2px);
+    border-color: var(--edge-light, var(--border));
+    box-shadow: 0 2px 4px rgba(40, 34, 20, .06), 0 14px 28px rgba(40, 34, 20, .09);
+  }
+}
+.app-card:not(.app-card--quiet):active { transform: translateY(0); }
+@media (prefers-color-scheme: dark) {
+  @media (hover: hover) {
+    .app-card:not(.app-card--quiet):hover { border-color: var(--edge-dark, var(--border)); box-shadow: none; }
+  }
+}
+
+/* ロゴがインクを置くように現れる */
+@media (prefers-reduced-motion: no-preference) {
+  .hero__logo { animation: ink-in .75s cubic-bezier(.2, .7, .3, 1) both; }
+  @keyframes ink-in {
+    from { opacity: 0; transform: translateY(7px) scale(.985); filter: blur(2.5px); }
+    to   { opacity: 1; transform: none; filter: none; }
+  }
+}
+
+/* スクロールで現れる。JSが動いているときだけ隠す */
+.js-anim [data-reveal] { opacity: 0; transform: translateY(14px); }
+.js-anim [data-reveal].is-in {
+  opacity: 1; transform: none;
+  transition: opacity .55s ease, transform .55s cubic-bezier(.2, .7, .3, 1);
+}
+.js-anim .app-grid > [data-reveal]:nth-child(2).is-in { transition-delay: .06s; }
+.js-anim .app-grid > [data-reveal]:nth-child(3).is-in { transition-delay: .12s; }
+.js-anim .app-grid > [data-reveal]:nth-child(4).is-in { transition-delay: .18s; }
+@media (prefers-reduced-motion: reduce) {
+  .js-anim [data-reveal] { opacity: 1; transform: none; transition: none; }
+}
+
+/* スクリーンショットのページ送り */
+.shots__nav { display: none; }
+.js-ready .shots__nav {
+  display: flex; align-items: center; justify-content: center; gap: .75rem;
+  margin-top: -.25rem;
+}
+.shots__arrow {
+  width: 2.1rem; height: 2.1rem; padding: 0;
+  border: 1px solid var(--border); border-radius: 999px;
+  background: var(--surface); color: var(--text);
+  font: inherit; line-height: 1; cursor: pointer;
+}
+.shots__arrow::before { content: "‹"; font-size: 1.3rem; }
+.shots__arrow--next::before { content: "›"; }
+.shots__arrow:hover { border-color: var(--accent); color: var(--accent); }
+.shots__dots { display: flex; gap: .4rem; }
+.shots__dot {
+  width: .5rem; height: .5rem; padding: 0;
+  border: 0; border-radius: 999px; background: var(--border);
+  cursor: pointer; transition: background .2s ease, transform .2s ease;
+}
+.shots__dot.is-current { background: var(--accent); transform: scale(1.25); }
+
+/* キーボード操作でスクロール位置が飛ばないように */
+.shots__list:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }

@@ -4,7 +4,8 @@
 {%- set appName = app.name | loc(lang) %}
 {%- set intro = app.intro | locStrict(lang) %}
 
-<div class="app-hero">
+{%- set c = appColors[app.slug] %}
+<div class="app-hero"{% if c %} style="--tint-light: {{ c.tintLight }}; --tint-dark: {{ c.tintDark }}"{% endif %}>
   <div class="wrap app-hero__inner">
     <img class="app-hero__icon" src="/assets/apps/{{ app.slug }}/icon-512.png"
          alt="{{ t.app.iconAlt | fill({ app: appName }) }}" width="112" height="112">
@@ -38,7 +39,7 @@
     {%- endif %}
 
     {%- if app.screenshots %}
-    <section class="shots">
+    <section class="shots" data-reveal data-prev="{{ t.app.prevShot }}" data-next="{{ t.app.nextShot }}">
       <h2>{{ t.app.screenshotsHeading }}</h2>
       <ul class="shots__list">
         {%- for n in range(1, app.screenshots + 1) %}
@@ -53,7 +54,7 @@
     {%- endif %}
 
     {%- for section in intro.sections if intro %}
-    <section>
+    <section data-reveal>
       <h2>{{ section.heading }}</h2>
       {%- for para in section.body %}
       <p>{{ para }}</p>
@@ -69,11 +70,11 @@
     {%- endfor %}
 
     {%- if app.appStoreUrl %}
-    <section class="cta-block">
+    <section class="cta-block" data-reveal>
       <h2>{{ t.intro.downloadHeading }}</h2>
       <p>{{ t.intro.downloadLead | fill({ app: appName, platform: app.platform }) }}</p>
       <p class="app-hero__cta">
-        <a class="button" href="{{ app.appStoreUrl | storeLink('gcl_intro_foot_' + app.slug) }}">{{ t.intro.download | fill({ app: appName }) }}</a>
+        <a class="button" href="{{ app.appStoreUrl | storeLink('gcl_intro_foot_' + app.slug) }}">{{ t.app.getOnStore }}</a>
       </p>
     </section>
     {%- endif %}

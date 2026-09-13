@@ -22,7 +22,7 @@ permalink: "/{{ target.lang }}/"
     <ul class="app-grid">
       {%- for item in pages.released %}
       {%- set appLang = lang if lang in item.languages else item.defaultLanguage %}
-      <li class="app-card">
+      <li class="app-card" data-reveal>
         <a class="app-card__icon" href="/{{ appLang }}/{{ item.slug }}/" tabindex="-1" aria-hidden="true">
           <img src="/assets/apps/{{ item.slug }}/icon-192.png" alt="" width="72" height="72" loading="lazy">
         </a>
@@ -50,7 +50,7 @@ permalink: "/{{ target.lang }}/"
     <p class="note">{{ t.home.comingSoonNote }}</p>
     <ul class="app-grid app-grid--quiet">
       {%- for item in pages.comingSoon %}
-      <li class="app-card app-card--quiet">
+      <li class="app-card app-card--quiet" data-reveal>
         <span class="app-card__icon">
           <img src="/assets/apps/{{ item.slug }}/icon-192.png" alt="" width="72" height="72" loading="lazy">
         </span>

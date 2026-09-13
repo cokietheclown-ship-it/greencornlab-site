@@ -43,6 +43,16 @@
     <link rel="icon" href="/assets/brand/mark-512.png" sizes="512x512">
     <link rel="apple-touch-icon" href="/assets/brand/mark-180.png">
     <link rel="stylesheet" href="/assets/css/style.css?v={{ assets.cssVersion }}">
+    {#- 描画前に印を付けておき、登場アニメーションのちらつきを防ぐ。
+        4秒経っても enhance.js が動かなければ、印を外して内容を必ず表示する。 #}
+    <script>
+      (function(d){var r=d.documentElement;
+        if(!('IntersectionObserver' in window)) return;
+        if(matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        r.classList.add('js-anim');
+        setTimeout(function(){if(!r.classList.contains('js-ready'))r.classList.remove('js-anim');},4000);
+      })(document);
+    </script>
 
     {#- 構造化データ #}
     {%- if kind == "home" %}
@@ -86,5 +96,6 @@
       {{ content | safe }}
     </main>
     {% include "partials/footer.njk" %}
+    <script src="/assets/js/enhance.js?v={{ assets.cssVersion }}" defer></script>
   </body>
 </html>
