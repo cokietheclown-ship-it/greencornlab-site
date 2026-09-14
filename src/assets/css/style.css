@@ -281,13 +281,70 @@ body::after {
   }
 }
 
-/* ロゴがインクを置くように現れる */
+/* ── 大看板が組み上がる ───────────────────────────
+   判子を押すように、上の一行 → ロゴ → 一文 → ステッカー → 目次 の順に置く。
+   ロゴはインクがにじんでから締まる。押したあとは、刷り物の看板のように
+   ごくゆっくり揺れ続ける。
+   動きを減らす設定のときは、はじめから置かれた状態で出す。 */
 @media (prefers-reduced-motion: no-preference) {
-  .hero__logo { animation: ink-in .75s cubic-bezier(.2, .7, .3, 1) both; }
-  @keyframes ink-in {
-    from { opacity: 0; transform: translateY(7px) scale(.985); filter: blur(2.5px); }
-    to   { opacity: 1; transform: none; filter: none; }
+  .punk .hero__sub {
+    animation: eyebrow-in .8s cubic-bezier(.2, .7, .3, 1) .05s both;
   }
+  .punk .hero__type img {
+    animation:
+      stamp-in .95s cubic-bezier(.18, .85, .28, 1) .2s both,
+      sign-sway 11s ease-in-out 1.3s infinite;
+  }
+  .punk .hero__line {
+    animation: rise-in .7s cubic-bezier(.2, .7, .3, 1) .72s both;
+  }
+  .punk .sticker {
+    animation: sticker-in .55s cubic-bezier(.2, .9, .3, 1.4) both;
+  }
+  .punk .sticker:nth-child(1) { animation-delay: .88s; }
+  .punk .sticker:nth-child(2) { animation-delay: .96s; }
+  .punk .sticker:nth-child(3) { animation-delay: 1.04s; }
+  .punk .hero__nav {
+    animation: rise-in .6s cubic-bezier(.2, .7, .3, 1) 1.16s both;
+  }
+  .punk .tape {
+    animation: tape-in .7s cubic-bezier(.2, .7, .3, 1) 1.24s both;
+  }
+
+  @keyframes eyebrow-in {
+    from { opacity: 0; letter-spacing: .6em; }
+    to   { opacity: 1; letter-spacing: .26em; }
+  }
+  /* 判子が紙に当たって、少し戻ってから落ち着く */
+  @keyframes stamp-in {
+    0%   { opacity: 0; transform: scale(1.1) rotate(-1.8deg); filter: blur(8px); }
+    50%  { opacity: 1; }
+    68%  { transform: scale(.982) rotate(.4deg); filter: blur(0); }
+    84%  { transform: scale(1.008) rotate(-.18deg); }
+    100% { opacity: 1; transform: none; filter: none; }
+  }
+  @keyframes sign-sway {
+    0%, 100% { transform: rotate(-.35deg) translateY(0); }
+    50%      { transform: rotate(.35deg) translateY(-3px); }
+  }
+  @keyframes rise-in {
+    from { opacity: 0; transform: translateY(9px); }
+    to   { opacity: 1; transform: none; }
+  }
+  @keyframes sticker-in {
+    from { opacity: 0; transform: translateY(10px) rotate(calc(var(--rot) - 8deg)) scale(.9); }
+    to   { opacity: 1; transform: rotate(var(--rot)); }
+  }
+  @keyframes tape-in {
+    from { opacity: 0; clip-path: inset(0 100% 0 0); }
+    to   { opacity: 1; clip-path: inset(0 0 0 0); }
+  }
+}
+
+/* 触ると、もう一度押したように締まる */
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .punk .hero__type img { transition: transform .25s cubic-bezier(.2, .9, .3, 1.3); }
+  .punk .hero__type:hover img { animation-play-state: paused; transform: scale(1.015); }
 }
 
 /* スクロールで現れる。JSが動いているときだけ隠す */
@@ -510,8 +567,9 @@ body::after {
   font-weight: 700; font-size: .86rem; line-height: 1.5;
   box-shadow: 3px 3px 0 rgba(0,0,0,.35);
 }
-.punk .sticker:nth-child(2n) { background: var(--corn); color: var(--green); transform: rotate(1.8deg); }
-.punk .sticker:nth-child(3n) { transform: rotate(-2.2deg); }
+.punk .sticker { --rot: 0deg; transform: rotate(var(--rot)); }
+.punk .sticker:nth-child(2n) { background: var(--corn); color: var(--green); --rot: 1.8deg; }
+.punk .sticker:nth-child(3n) { --rot: -2.2deg; }
 
 /* ── 本文 ───────────────────────────────────────── */
 .punk .blk p { max-width: 34rem; }
