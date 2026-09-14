@@ -47,6 +47,7 @@ bodyClass: "punk"
   {#- 棚。画面写真が主役で、名前とタグはその下に添える。 -#}
   <section class="blk blk--paper" id="apps" style="--next: var(--paper-2)">
     <div class="wrap">
+      <p class="blk__label" aria-hidden="true"><span>{{ t.home.headings.released }}</span></p>
       <h2 class="dh">
         <span class="dh__en">{{ t.home.headings.released }}</span>
         {%- if lang != "en" %}<span class="dh__ja">{{ t.home.releasedHeading }}</span>{% endif %}
@@ -91,6 +92,7 @@ bodyClass: "punk"
 
   <section class="blk blk--paper2" id="about" style="--next: var(--ink)">
     <div class="wrap">
+      <p class="blk__label" aria-hidden="true"><span>{{ t.home.headings.about }}</span></p>
       <h2 class="dh">
         <span class="dh__en">{{ t.home.headings.about }}</span>
         {%- if lang != "en" %}<span class="dh__ja">{{ t.home.aboutHeading }}</span>{% endif %}
@@ -107,6 +109,7 @@ bodyClass: "punk"
   {%- if pages.comingSoon.length %}
   <section class="blk blk--ink" id="soon" style="--next: var(--green)">
     <div class="wrap">
+      <p class="blk__label" aria-hidden="true"><span>{{ t.home.headings.comingSoon }}</span></p>
       <h2 class="dh">
         <span class="dh__en">{{ t.home.headings.comingSoon }}</span>
         {%- if lang != "en" %}<span class="dh__ja">{{ t.home.comingSoonHeading }}</span>{% endif %}
@@ -137,6 +140,7 @@ bodyClass: "punk"
 
   <section class="blk blk--green" id="contact" style="--next: var(--bg)">
     <div class="wrap">
+      <p class="blk__label" aria-hidden="true"><span>{{ t.home.headings.contact }}</span></p>
       <img class="hero__stamp" src="/assets/brand/stamp-cream.png" alt="" width="520" height="516" loading="lazy">
       <h2 class="dh">
         <span class="dh__en">{{ t.home.headings.contact }}</span>
@@ -149,6 +153,17 @@ bodyClass: "punk"
         <dt>{{ t.home.contactPrivacyLabel }}</dt>
         <dd><a href="mailto:{{ site.email.privacy }}">{{ site.email.privacy }}</a></dd>
       </dl>
+    </div>
+
+    {#- 裾の帯。上の帯はアプリ名、こちらは屋号。中身が違うので繰り返しにならない。 -#}
+    <div class="tape tape--foot" aria-hidden="true">
+      <div class="tape__track">
+        {%- for n in [1, 2] %}
+        <span class="tape__row">
+          {%- for w in ["GREEN CORN LAB", "iOS APPS", "MADE IN JAPAN"] %}{{ w }} <i>✳</i> {% endfor -%}
+        </span>
+        {%- endfor %}
+      </div>
     </div>
   </section>
 

@@ -380,6 +380,11 @@ body::after {
 
 .punk .blk--green a, .punk .blk--ink a { color: inherit; }
 
+/* ── 章のラベル ─────────────────────────────────
+   見出しは流れて消えるが、これは左の余白に貼り付いて残る。
+   余白が取れる幅でだけ出す。 */
+.punk .blk__label { display: none; }
+
 /* ── 見出し ─────────────────────────────────────── */
 /* 英字を大きく、日本語を小さく下に添える。
    英字はロゴの木版に合わせた太いスラブ。和文をこの書体で組むと
@@ -463,8 +468,8 @@ body::after {
    ヒーローの裾に渡すテープ。中身は下にもあるアプリ名なので、
    止まっていても何も失われない。 */
 .punk .tape {
-  margin: 2.75rem calc(50% - 52vw) -1.25rem;
-  width: 104vw;
+  margin: 2.75rem calc(50% - 50vw) -1.25rem;
+  width: 100vw;
   overflow: hidden;
   background: var(--corn);
   color: var(--green);
@@ -484,6 +489,16 @@ body::after {
 @media (prefers-reduced-motion: no-preference) {
   .punk .tape__track { animation: tape-run 34s linear infinite; }
   @keyframes tape-run { to { transform: translateX(-50%); } }
+}
+
+.punk .tape--foot {
+  margin: 3rem calc(50% - 50vw) -2.5rem;
+  background: var(--cream);
+  color: var(--green);
+  transform: rotate(.8deg);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .punk .tape--foot .tape__track { animation-duration: 46s; animation-direction: reverse; }
 }
 
 /* ── ステッカー ─────────────────────────────────── */
@@ -624,8 +639,28 @@ body::after {
 }
 
 /* ── 連絡先 ─────────────────────────────────────── */
+.punk #contact { padding-bottom: 5.5rem; }
 .punk .contact-list dt { color: rgba(244,243,235,.6); }
+.punk .contact-list dd { font-family: var(--mono); font-size: 1.02rem; }
 .punk .contact-list dd a { color: var(--cream); }
+
+@media (min-width: 78rem) {
+  .punk .blk > .wrap { position: relative; }
+  .punk .blk__label {
+    display: block;
+    position: absolute; left: -6.75rem; top: 0; bottom: 0;
+    width: 5.75rem; margin: 0; max-width: none;
+  }
+  .punk .blk__label span {
+    position: sticky; top: 2.25rem; display: block;
+    font-family: var(--mono); font-size: .66rem;
+    font-weight: 700; letter-spacing: .16em; line-height: 1.5;
+    opacity: .45;
+  }
+  /* 濃い面の上では、薄すぎると沈む */
+  .punk .blk--ink .blk__label span,
+  .punk .blk--green .blk__label span { opacity: .6; }
+}
 
 @media (min-width: 40rem) {
   .punk .blk { padding: 4.25rem 0 4.75rem; }
