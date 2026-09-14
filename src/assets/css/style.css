@@ -424,9 +424,9 @@ body::after {
 .punk .hero { padding: 2.25rem 0 3.5rem; text-align: center; }
 .punk .hero__stamp { width: 5.5rem; height: auto; margin: 0 auto 1.25rem; display: block; opacity: .92; }
 .punk .hero__sub {
-  margin: 0 0 1rem;
-  font-size: .82rem; font-weight: 600; letter-spacing: .2em;
-  color: rgba(244, 243, 235, .8);
+  margin: 0 0 1.1rem;
+  font-size: .74rem; font-weight: 700; letter-spacing: .3em;
+  color: rgba(201, 212, 94, .9);
 }
 
 .punk .hero__type {
