@@ -35,7 +35,10 @@ bodyClass: "punk"
   {#- 棚。画面写真が主役で、名前とタグはその下に添える。 -#}
   <section class="blk blk--paper" id="apps" style="--next: var(--paper-2)">
     <div class="wrap">
-      <h2 class="dh">{{ t.home.releasedHeading }}</h2>
+      <h2 class="dh">
+        <span class="dh__en">{{ t.home.headings.released }}</span>
+        {%- if lang != "en" %}<span class="dh__ja">{{ t.home.releasedHeading }}</span>{% endif %}
+      </h2>
       <p class="shelf__note">{{ t.home.shelfNote }}</p>
       <ul class="shelf">
         {%- for item in pages.released %}
@@ -73,7 +76,10 @@ bodyClass: "punk"
 
   <section class="blk blk--paper2" id="about" style="--next: var(--ink)">
     <div class="wrap">
-      <h2 class="dh">{{ t.home.aboutHeading }}</h2>
+      <h2 class="dh">
+        <span class="dh__en">{{ t.home.headings.about }}</span>
+        {%- if lang != "en" %}<span class="dh__ja">{{ t.home.aboutHeading }}</span>{% endif %}
+      </h2>
       <p class="big">{{ t.home.lead }}</p>
       <ul class="stance">
         {%- for item in t.home.stance %}
@@ -86,7 +92,10 @@ bodyClass: "punk"
   {%- if pages.comingSoon.length %}
   <section class="blk blk--ink" id="soon" style="--next: var(--green)">
     <div class="wrap">
-      <h2 class="dh">{{ t.home.comingSoonHeading }}</h2>
+      <h2 class="dh">
+        <span class="dh__en">{{ t.home.headings.comingSoon }}</span>
+        {%- if lang != "en" %}<span class="dh__ja">{{ t.home.comingSoonHeading }}</span>{% endif %}
+      </h2>
       <p>{{ t.home.comingSoonNote }}</p>
       <ul class="app-grid">
         {%- for item in pages.comingSoon %}
@@ -114,7 +123,10 @@ bodyClass: "punk"
   <section class="blk blk--green" id="contact" style="--next: var(--bg)">
     <div class="wrap">
       <img class="hero__stamp" src="/assets/brand/stamp-cream.png" alt="" width="520" height="516" loading="lazy">
-      <h2 class="dh">{{ t.home.contactHeading }}</h2>
+      <h2 class="dh">
+        <span class="dh__en">{{ t.home.headings.contact }}</span>
+        {%- if lang != "en" %}<span class="dh__ja">{{ t.home.contactHeading }}</span>{% endif %}
+      </h2>
       <p>{{ t.home.contactLead }}</p>
       <dl class="contact-list">
         <dt>{{ t.home.contactSupportLabel }}</dt>

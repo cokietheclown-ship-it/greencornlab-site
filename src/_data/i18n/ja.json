@@ -38,7 +38,13 @@
     ],
     "heroLine": "遊ぶものと、家の中で使う道具。iOS のアプリを作っています。",
     "latestBadge": "最新",
-    "shelfNote": "どれも日本のApp Storeで配信中です。"
+    "shelfNote": "どれも日本のApp Storeで配信中です。",
+    "headings": {
+      "released": "OUT NOW",
+      "about": "IN THE LAB",
+      "comingSoon": "ON THE BENCH",
+      "contact": "SAY HELLO"
+    }
   },
   "intro": {
     "download": "App Store で {app} を入手（無料）",
