@@ -291,16 +291,20 @@ body::after {
 }
 
 /* スクロールで現れる。JSが動いているときだけ隠す */
-.js-anim [data-reveal] { opacity: 0; transform: translateY(10px); }
+.js-anim [data-reveal] {
+  opacity: 0; transform: translateY(10px);
+  clip-path: inset(0 0 100% 0);
+}
 .js-anim [data-reveal].is-in {
   opacity: 1; transform: none;
-  transition: opacity .4s ease, transform .4s cubic-bezier(.2, .7, .3, 1);
+  transition: opacity .45s ease, transform .45s cubic-bezier(.2, .7, .3, 1), clip-path .6s cubic-bezier(.2, .7, .3, 1);
+  clip-path: inset(0 0 0 0);
 }
 .js-anim .app-grid > [data-reveal]:nth-child(2).is-in { transition-delay: .06s; }
 .js-anim .app-grid > [data-reveal]:nth-child(3).is-in { transition-delay: .12s; }
 .js-anim .app-grid > [data-reveal]:nth-child(4).is-in { transition-delay: .18s; }
 @media (prefers-reduced-motion: reduce) {
-  .js-anim [data-reveal] { opacity: 1; transform: none; transition: none; }
+  .js-anim [data-reveal] { opacity: 1; transform: none; transition: none; clip-path: none; }
 }
 
 /* スクリーンショットのページ送り */
@@ -336,6 +340,7 @@ body::after {
    この節はすべて .punk の中だけに効く。アプリの各ページには影響しない。 */
 
 .punk {
+  --mono: "Space Mono", ui-monospace, "SF Mono", Menlo, monospace;
   --ink: #262624;
   --green: #16442b;
   --green-mid: #1e6137;
@@ -425,8 +430,9 @@ body::after {
 .punk .hero__stamp { width: 5.5rem; height: auto; margin: 0 auto 1.25rem; display: block; opacity: .92; }
 .punk .hero__sub {
   margin: 0 0 1.1rem;
-  font-size: .74rem; font-weight: 700; letter-spacing: .3em;
-  color: rgba(201, 212, 94, .9);
+  font-family: var(--mono);
+  font-size: .72rem; font-weight: 700; letter-spacing: .26em;
+  color: rgba(201, 212, 94, .92);
 }
 
 .punk .hero__type {
@@ -452,6 +458,33 @@ body::after {
 .punk .hero__nav { margin: 1.5rem 0 0; font-size: .92rem; }
 .punk .hero__nav a { margin: 0 .55rem; text-underline-offset: .25em; }
 
+
+/* ── 流れる帯 ───────────────────────────────────
+   ヒーローの裾に渡すテープ。中身は下にもあるアプリ名なので、
+   止まっていても何も失われない。 */
+.punk .tape {
+  margin: 2.75rem calc(50% - 52vw) -1.25rem;
+  width: 104vw;
+  overflow: hidden;
+  background: var(--corn);
+  color: var(--green);
+  border-top: 2px solid var(--ink);
+  border-bottom: 2px solid var(--ink);
+  padding: .42rem 0;
+  transform: rotate(-1deg);
+}
+.punk .tape__track { display: flex; width: max-content; }
+.punk .tape__row {
+  display: inline-block; white-space: nowrap;
+  padding-right: 1.5rem;
+  font-family: var(--mono);
+  font-size: .82rem; font-weight: 700; letter-spacing: .12em;
+}
+.punk .tape__row i { font-style: normal; opacity: .5; margin: 0 .55rem; }
+@media (prefers-reduced-motion: no-preference) {
+  .punk .tape__track { animation: tape-run 34s linear infinite; }
+  @keyframes tape-run { to { transform: translateX(-50%); } }
+}
 
 /* ── ステッカー ─────────────────────────────────── */
 .punk .stickers { display: flex; flex-wrap: wrap; gap: .55rem; justify-content: center; margin: 0; padding: 0; list-style: none; }
@@ -521,6 +554,10 @@ body::after {
   flex: 1; padding: .9rem 1rem 1.1rem;
   display: flex; flex-direction: column; gap: .4rem;
 }
+.punk .shelf__meta {
+  margin: 0; font-family: var(--mono);
+  font-size: .7rem; letter-spacing: .1em; color: #7c8a7c;
+}
 .punk .shelf__name { margin: 0; font-size: 1.1rem; line-height: 1.4; }
 .punk .shelf__name a { color: var(--ink); text-decoration: none; }
 .punk .shelf__name a:hover { text-decoration: underline; }
@@ -532,7 +569,8 @@ body::after {
   display: flex; flex-wrap: wrap; gap: .35rem;
 }
 .punk .shelf__tags li {
-  font-size: .74rem; letter-spacing: .04em; line-height: 1.6;
+  font-family: var(--mono);
+  font-size: .72rem; letter-spacing: .04em; line-height: 1.7;
   padding: .08rem .5rem;
   border: 1px solid currentColor; border-radius: 20px;
   color: #5c6a5d;
@@ -548,6 +586,8 @@ body::after {
 @media (hover: hover) {
   .punk .shelf__card { transition: transform .18s ease, box-shadow .18s ease; }
   .punk .shelf__card:hover { transform: translate(-2px, -2px); box-shadow: 8px 8px 0 var(--ink); }
+  .punk .shelf__shot img { transition: transform .5s cubic-bezier(.2, .7, .3, 1); }
+  .punk .shelf__card:hover .shelf__shot img { transform: scale(1.05); }
 }
 @media (prefers-reduced-motion: reduce) {
   .punk .shelf__card { transition: none; }

@@ -30,6 +30,18 @@ bodyClass: "punk"
         <a href="#contact">{{ t.home.navContact }}</a>
       </p>
     </div>
+
+    {#- 流れる帯。中身は下にもあるアプリ名なので、読み上げからは外す。
+        2周ぶん並べて半分だけ動かすと、途切れずに繋がる。 -#}
+    <div class="tape" aria-hidden="true">
+      <div class="tape__track">
+        {%- for n in [1, 2] %}
+        <span class="tape__row">
+          {%- for item in pages.apps %}{{ item.name | loc(lang) }} <i>✳</i> {% endfor -%}
+        </span>
+        {%- endfor %}
+      </div>
+    </div>
   </section>
 
   {#- 棚。画面写真が主役で、名前とタグはその下に添える。 -#}
@@ -53,6 +65,9 @@ bodyClass: "punk"
             {%- endif %}
           </div>
           <div class="shelf__body">
+            <p class="shelf__meta">
+              <span class="shelf__no">({% if loop.index < 10 %}0{% endif %}{{ loop.index }})</span>
+            </p>
             <h3 class="shelf__name">
               <a href="/{{ appLang }}/{{ item.slug }}/">{{ item.name | loc(lang) }}</a>
               {%- if item.slug == pages.newest %} <span class="badge badge--new">{{ t.home.latestBadge }}</span>{% endif %}
