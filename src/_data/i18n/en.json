@@ -14,21 +14,21 @@
     "appsHeading": "Apps",
     "contactHeading": "Contact",
     "contactLead": "For general enquiries, use the address below. For questions about a specific app, please use the address listed on that app's support page.",
-    "contactSupportLabel": "General enquiries",
-    "contactPrivacyLabel": "Privacy enquiries",
+    "contactSupportLabel": "General",
+    "contactPrivacyLabel": "Privacy",
     "releasedHeading": "Published apps",
     "comingSoonHeading": "In development",
     "comingSoonNote": "These are the apps I am working on now.",
     "heroSub": "iOS APPS · MADE IN JAPAN",
     "aboutHeading": "What I build",
-    "navAbout": "About",
-    "navApps": "Apps",
-    "navSoon": "In development",
-    "navContact": "Contact",
+    "navAbout": "ABOUT",
+    "navApps": "APPS",
+    "navSoon": "SOON",
+    "navContact": "CONTACT",
     "stickers": [
-      "Play",
-      "Learn",
-      "Everyday"
+      "PLAY",
+      "LEARN",
+      "HOME"
     ],
     "stance": [
       "Some of them ship with no asset files at all. The screens are drawn in code and the sound is synthesised as it plays",
@@ -37,7 +37,7 @@
       "Whatever one app teaches me goes into the next one"
     ],
     "heroLine": "Games to play, and small tools for the house. Made for iOS.",
-    "latestBadge": "Latest",
+    "latestBadge": "NEW",
     "shelfNote": "All of these are on the Japanese App Store.",
     "headings": {
       "released": "OUT NOW",
@@ -140,9 +140,9 @@
     "copyright": "Green Corn Lab"
   },
   "app": {
-    "openStore": "View on the App Store",
+    "openStore": "View on App Store",
     "viewDetail": "Learn more",
-    "comingSoonBadge": "Coming soon",
+    "comingSoonBadge": "SOON",
     "screenshotsHeading": "Screens",
     "screenshotAlt": "{app} screen {n}",
     "categoryLabel": "Category",

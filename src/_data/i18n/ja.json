@@ -14,21 +14,21 @@
     "appsHeading": "アプリ",
     "contactHeading": "お問い合わせ",
     "contactLead": "アプリ全般に関するお問い合わせは、下記までご連絡ください。個別のアプリについてのお問い合わせは、各アプリのサポートページに記載の窓口をご利用ください。",
-    "contactSupportLabel": "全般のお問い合わせ",
-    "contactPrivacyLabel": "プライバシーに関するお問い合わせ",
+    "contactSupportLabel": "General",
+    "contactPrivacyLabel": "Privacy",
     "releasedHeading": "公開中のアプリ",
     "comingSoonHeading": "準備中",
     "comingSoonNote": "現在つくっているアプリです。公開までもうしばらくお待ちください。",
     "heroSub": "iOS APPS · MADE IN JAPAN",
     "aboutHeading": "つくっているもの",
-    "navAbout": "About",
-    "navApps": "アプリ",
-    "navSoon": "準備中",
-    "navContact": "連絡先",
+    "navAbout": "ABOUT",
+    "navApps": "APPS",
+    "navSoon": "SOON",
+    "navContact": "CONTACT",
     "stickers": [
-      "あそび",
-      "まなび",
-      "くらし"
+      "PLAY",
+      "LEARN",
+      "HOME"
     ],
     "stance": [
       "絵も音も、外の素材を使わずに作っているものがあります。画面はコードで描き、音はその場で合成しています",
@@ -37,7 +37,7 @@
       "1本出すたびに、そこで分かったことを次のアプリへ持っていきます"
     ],
     "heroLine": "遊ぶものと、家の中で使う道具。iOS のアプリを作っています。",
-    "latestBadge": "最新",
+    "latestBadge": "NEW",
     "shelfNote": "どれも日本のApp Storeで配信中です。",
     "headings": {
       "released": "OUT NOW",
@@ -140,9 +140,9 @@
     "copyright": "Green Corn Lab"
   },
   "app": {
-    "openStore": "App Store で見る",
+    "openStore": "View on App Store",
     "viewDetail": "詳しく見る",
-    "comingSoonBadge": "準備中",
+    "comingSoonBadge": "SOON",
     "screenshotsHeading": "画面",
     "screenshotAlt": "{app} の画面 {n}",
     "categoryLabel": "カテゴリ",
