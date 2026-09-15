@@ -90,13 +90,13 @@
       }
     ]
   },
-  "status": "coming-soon",
+  "status": "released",
   "tagline": {
     "ja": "忍者が屋根から屋根へ走り続ける、横向きのアクションゲーム。",
     "en": "A side-scrolling action game where a ninja runs from roof to roof."
   },
   "icon": true,
-  "screenshots": 0,
+  "screenshots": 4,
   "tags": {
     "ja": [
       "GAMES",
@@ -108,5 +108,16 @@
       "ACTION",
       "BUY ONCE"
     ]
-  }
+  },
+  "orientation": "landscape",
+  "releasedOn": "2026-09-15",
+  "appStore": {
+    "id": 6810772523,
+    "category": {
+      "ja": "ゲーム",
+      "en": "Games"
+    },
+    "url": "https://apps.apple.com/jp/app/id6810772523"
+  },
+  "appStoreUrl": "https://apps.apple.com/jp/app/id6810772523"
 }

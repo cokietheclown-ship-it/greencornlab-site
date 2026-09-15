@@ -53,12 +53,14 @@ bodyClass: "punk"
         {%- if lang != "en" %}<span class="dh__ja">{{ t.home.releasedHeading }}</span>{% endif %}
       </h2>
       <p class="shelf__note">{{ t.home.shelfNote }}</p>
-      <ul class="shelf">
+      {#- 列数は本数で決める。割り切れない列にすると、最後の1枚だけが行に残る。 -#}
+      {%- set n = pages.released.length %}
+      <ul class="shelf" style="--cols: {% if n % 2 == 0 and n % 3 != 0 %}2{% else %}3{% endif %}">
         {%- for item in pages.released %}
         {%- set appLang = lang if lang in item.languages else item.defaultLanguage %}
         {%- set c = appColors[item.slug] %}
         <li class="shelf__card"{% if c %} style="--tint: {{ c.tintLight }}"{% endif %}>
-          <div class="shelf__shot">
+          <div class="shelf__shot{% if item.orientation == "landscape" %} shelf__shot--wide{% endif %}">
             {%- if item.screenshots %}
             <img src="/assets/apps/{{ item.slug }}/screenshot-1.jpg" alt="" width="1320" height="2868" loading="lazy">
             {%- else %}

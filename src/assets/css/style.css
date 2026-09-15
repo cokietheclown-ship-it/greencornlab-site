@@ -196,6 +196,7 @@ li { margin-bottom: .4rem; }
   scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch;
 }
 .shots__list li { flex: 0 0 auto; margin: 0; scroll-snap-align: center; }
+.shots__list--wide img { width: 340px; }
 .shots__list img {
   width: 200px; height: auto; display: block;
   border: 1px solid var(--border); border-radius: 12px; background: var(--surface);
@@ -232,6 +233,7 @@ hr { border: 0; border-top: 1px solid var(--border); margin: 2rem 0; }
   .app-hero__icon { width: 112px; height: 112px; border-radius: 25px; }
   .app-hero__title { font-size: 1.6rem; }
   .shots__list img { width: 230px; }
+  .shots__list--wide img { width: 420px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -619,6 +621,11 @@ body::after {
   border: 1px solid rgba(0, 0, 0, .22);
   box-shadow: 0 6px 16px rgba(0, 0, 0, .22);
 }
+/* 横向き専用のアプリ。縦持ちの寸法で出すと細い帯になって何も読めない */
+.punk .shelf__shot--wide { align-items: center; padding-top: 0; }
+.punk .shelf__shot--wide img {
+  width: 88%; border-radius: 6px;
+}
 .punk .shelf__shot .shelf__shot--icon {
   width: 34%; align-self: center; margin: auto 0;
   border-radius: 18%; box-shadow: 0 6px 16px rgba(0, 0, 0, .22);
@@ -726,6 +733,9 @@ body::after {
   .punk .hero__stamp { width: 6.5rem; }
   .punk .dh__en { font-size: 2.45rem; }
   .punk .shelf { grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
+}
+@media (min-width: 64rem) {
+  .punk .shelf { grid-template-columns: repeat(var(--cols, 2), 1fr); }
 }
 
 @media (prefers-reduced-motion: reduce) {
