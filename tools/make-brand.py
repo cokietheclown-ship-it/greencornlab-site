@@ -13,6 +13,7 @@ PAPER = np.array([244.0, 243.0, 235.0])
 
 GREEN_DEEP = (22, 68, 43)     # #16442b
 CREAM      = (244, 243, 235)  # #f4f3eb
+INK        = (17, 17, 17)     # #111111（モノトーンの版）
 
 im = Image.open(SRC).convert("RGB")
 a = np.asarray(im).astype(np.float32)
@@ -57,6 +58,7 @@ print("lockup-cream", save_rgba(b, f"{OUT}/lockup-cream.png", 900, flat=CREAM))
 b = trimmed(BOXES["wordline"])
 print("wordline-green", save_rgba(b, f"{OUT}/wordline-green.png", 700, flat=GREEN_DEEP))
 print("wordline-cream", save_rgba(b, f"{OUT}/wordline-cream.png", 700, flat=CREAM))
+print("wordline-ink  ", save_rgba(b, f"{OUT}/wordline-ink.png", 700, flat=INK))
 
 # 丸いスタンプ。色そのままと、クリームで抜いた版
 b = trimmed(BOXES["stamp"])
@@ -80,11 +82,12 @@ ink = np.clip(np.linalg.norm(tile - np.array(GREEN_DEEP, dtype=np.float32), axis
 ink = np.clip((ink - 0.22) / 0.78, 0, 1)
 ys, xs = np.where(ink > 0.35)
 sub = ink[ys.min():ys.max() + 1, xs.min():xs.max() + 1]
-flat = np.dstack([np.full(sub.shape, c, np.uint8) for c in CREAM] + [(sub * 255).astype(np.uint8)])
-mark_cream = Image.fromarray(flat, "RGBA")
-mark_cream = mark_cream.resize((360, round(360 * mark_cream.height / mark_cream.width)), Image.LANCZOS)
-mark_cream.save(f"{OUT}/mark-cream.png")
-print("mark-cream  ", mark_cream.size)
+for color, name in ((CREAM, "cream"), (INK, "ink")):
+    flat = np.dstack([np.full(sub.shape, c, np.uint8) for c in color] + [(sub * 255).astype(np.uint8)])
+    img = Image.fromarray(flat, "RGBA")
+    img = img.resize((360, round(360 * img.height / img.width)), Image.LANCZOS)
+    img.save(f"{OUT}/mark-{name}.png")
+    print(f"mark-{name:6}", img.size)
 
 # アプリアイコン（角丸の緑地）。ファビコンとOG画像に使う
 x0, y0, x1, y1 = trimmed(BOXES["appicon"], thr=0.2)

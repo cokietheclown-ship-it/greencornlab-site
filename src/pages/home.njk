@@ -10,12 +10,15 @@ bodyClass: "punk"
 
   {#- 屋号は画像のロゴではなく文字で組み、画面幅いっぱいに張る。
       真下がすぐ棚になるので、About より先に「作っているもの」が目に入る。 -#}
-  <section class="blk blk--green hero" style="--next: var(--paper)">
+  <section class="blk blk--invert hero">
     <div class="wrap">
       <p class="hero__sub">{{ t.home.heroSub }}</p>
       {#- 一行版のロゴ（角を丸めた抜き版）。横に長いので、大看板の幅にそのまま乗る。 -#}
       <h1 class="hero__type">
-        <img src="/assets/brand/wordline-cream.png" alt="{{ t.home.title }}" width="700" height="234">
+        <picture>
+          <source srcset="/assets/brand/wordline-ink.png" media="(prefers-color-scheme: dark)">
+          <img src="/assets/brand/wordline-cream.png" alt="{{ t.home.title }}" width="700" height="234">
+        </picture>
       </h1>
       <p class="hero__line">{{ t.home.heroLine }}</p>
       <ul class="stickers">
@@ -45,7 +48,7 @@ bodyClass: "punk"
   </section>
 
   {#- 棚。画面写真が主役で、名前とタグはその下に添える。 -#}
-  <section class="blk blk--paper" id="apps" style="--next: var(--paper-2)">
+  <section class="blk" id="apps">
     <div class="wrap">
       <p class="blk__label" aria-hidden="true"><span>{{ t.home.headings.released }}</span></p>
       <h2 class="dh">
@@ -58,8 +61,7 @@ bodyClass: "punk"
       <ul class="shelf" style="--cols: {% if n % 2 == 0 and n % 3 != 0 %}2{% else %}3{% endif %}">
         {%- for item in pages.released %}
         {%- set appLang = lang if lang in item.languages else item.defaultLanguage %}
-        {%- set c = appColors[item.slug] %}
-        <li class="shelf__card"{% if c %} style="--tint: {{ c.tintLight }}"{% endif %}>
+        <li class="shelf__card">
           <div class="shelf__shot{% if item.orientation == "landscape" %} shelf__shot--wide{% endif %}">
             {%- if item.screenshots %}
             <img src="/assets/apps/{{ item.slug }}/screenshot-1.jpg" alt="" width="1320" height="2868" loading="lazy">
@@ -92,7 +94,7 @@ bodyClass: "punk"
     </div>
   </section>
 
-  <section class="blk blk--paper2" id="about" style="--next: var(--ink)">
+  <section class="blk blk--ruled" id="about">
     <div class="wrap">
       <p class="blk__label" aria-hidden="true"><span>{{ t.home.headings.about }}</span></p>
       <h2 class="dh">
@@ -109,7 +111,7 @@ bodyClass: "punk"
   </section>
 
   {%- if pages.comingSoon.length %}
-  <section class="blk blk--ink" id="soon" style="--next: var(--green)">
+  <section class="blk blk--ruled" id="soon">
     <div class="wrap">
       <p class="blk__label" aria-hidden="true"><span>{{ t.home.headings.comingSoon }}</span></p>
       <h2 class="dh">
@@ -140,10 +142,9 @@ bodyClass: "punk"
   </section>
   {%- endif %}
 
-  <section class="blk blk--green" id="contact" style="--next: var(--bg)">
+  <section class="blk blk--invert" id="contact">
     <div class="wrap">
       <p class="blk__label" aria-hidden="true"><span>{{ t.home.headings.contact }}</span></p>
-      <img class="hero__stamp" src="/assets/brand/stamp-cream.png" alt="" width="520" height="516" loading="lazy">
       <h2 class="dh">
         <span class="dh__en">{{ t.home.headings.contact }}</span>
         {%- if lang != "en" %}<span class="dh__ja">{{ t.home.contactHeading }}</span>{% endif %}

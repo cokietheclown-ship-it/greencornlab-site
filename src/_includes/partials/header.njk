@@ -6,14 +6,14 @@
     <a class="site-header__brand site-header__brand--mark" href="/{{ lang }}/" aria-label="{{ site.name | loc(lang) }}">
       <picture>
         <source srcset="/assets/brand/mark-cream.png" media="(prefers-color-scheme: dark)">
-        <img src="/assets/brand/mark-color.png" alt="" width="360" height="396">
+        <img src="/assets/brand/mark-ink.png" alt="" width="360" height="396">
       </picture>
     </a>
     {%- else %}
     <a class="site-header__brand" href="/{{ lang }}/">
       <picture>
         <source srcset="/assets/brand/wordline-cream.png" media="(prefers-color-scheme: dark)">
-        <img src="/assets/brand/wordline-green.png" alt="{{ site.name | loc(lang) }}">
+        <img src="/assets/brand/wordline-ink.png" alt="{{ site.name | loc(lang) }}">
       </picture>
     </a>
     {%- endif %}

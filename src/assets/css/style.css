@@ -3,38 +3,51 @@
    クライアントJSは使わない。 */
 
 :root {
-  --bg: #f5f3ea;
-  --surface: #fffefa;
-  --surface-2: #eae7d8;
-  --hero-bg: #e8e5d6;
-  --text: #1d2420;
-  --muted: #5b635c;
-  --accent: #1e6137;
-  --accent-hover: #16442b;
-  --border: #ddd9c8;
-  --shadow: 0 1px 2px rgba(30, 40, 35, .05), 0 6px 16px rgba(30, 40, 35, .05);
+  /* モノトーン。純白・純黒は使わず、わずかに温度のある無彩色にそろえる。
+     色はスクリーンショットの中だけに置く（紙面に色を入れない）。 */
+  --bg: #f3f3f1;
+  --surface: #fafaf8;
+  --surface-2: #e8e8e5;
+  --text: #111111;
+  --muted: #6f6f6b;
+  --accent: #111111;
+  --accent-hover: #6f6f6b;
+  --border: #dcdcd8;
+  --shadow: none;
 
-  --banner-bg: #fdf6e3;
-  --banner-border: #e6d9a8;
-  --banner-text: #6b5a1e;
+  /* 反転の面。地とちょうど逆になるので、明暗どちらでも締まって見える */
+  --invert-bg: #111111;
+  --invert-text: #f3f3f1;
+  --invert-muted: #9a9a95;
+  --invert-border: #343433;
+  --hero-bg: var(--surface-2);
+
+  --banner-bg: #ecece8;
+  --banner-border: #cfcfc9;
+  --banner-text: #4a4a46;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg: #11170f;
-    --surface: #18201a;
-    --surface-2: #1e271f;
-    --hero-bg: #16442b;
-    --text: #e8ece4;
-    --muted: #9daa9f;
-    --accent: #8fc9a4;
-    --accent-hover: #b0dcc0;
-    --border: #2a352c;
+    --bg: #0e0e0e;
+    --surface: #161616;
+    --surface-2: #1c1c1c;
+    --text: #ededea;
+    --muted: #989893;
+    --accent: #ededea;
+    --accent-hover: #ffffff;
+    --border: #2b2b2b;
     --shadow: none;
 
-    --banner-bg: #26231a;
-    --banner-border: #4a4127;
-    --banner-text: #ddc98b;
+    --invert-bg: #ededea;
+    --invert-text: #111111;
+    --invert-muted: #5d5d59;
+    --invert-border: #cdcdc8;
+    --hero-bg: var(--surface-2);
+
+    --banner-bg: #1c1c1c;
+    --banner-border: #333;
+    --banner-text: #b6b6b1;
   }
 }
 
@@ -262,9 +275,7 @@ body::after {
 }
 
 /* アプリごとの色。アイコンから抜き出した色を下地に薄く敷く */
-.app-hero[style*="--tint"] { background: var(--tint-light); }
-@media (prefers-color-scheme: dark) {
-  .app-hero[style*="--tint"] { background: var(--tint-dark); }
+/* 帯に色は置かない。色はスクリーンショットの中だけ */
 }
 
 /* カードの反応 */
@@ -314,8 +325,8 @@ body::after {
   }
 
   @keyframes eyebrow-in {
-    from { opacity: 0; letter-spacing: .6em; }
-    to   { opacity: 1; letter-spacing: .26em; }
+    from { opacity: 0; letter-spacing: .62em; }
+    to   { opacity: 1; letter-spacing: .3em; }
   }
   /* 判子が紙に当たって、少し戻ってから落ち着く */
   @keyframes stamp-in {
@@ -394,320 +405,236 @@ body::after {
 
 
 /* ══ トップページ（屋号のホーム）════════════════════
-   色面で区切り、境目を破った紙のギザギザにする。
-   網点とインクの荒れで、コピー機で刷った紙面に寄せる。
-   この節はすべて .punk の中だけに効く。アプリの各ページには影響しない。 */
+   モノトーン。紙面には色を置かず、色はスクリーンショットの中だけに出す。
+   区切りは髪の毛のような細い罫と、余白。囲みと影は使わない。
+   この節はすべて .punk の中だけに効く。 */
 
 .punk {
   --mono: "Space Mono", ui-monospace, "SF Mono", Menlo, monospace;
-  --ink: #262624;
-  --green: #16442b;
-  --green-mid: #1e6137;
-  --paper: #f4f3eb;
-  --paper-2: #e7e5d6;
-  --corn: #c9d45e;
-  --cream: #f4f3eb;
+  --display: "Instrument Serif", "Times New Roman", Georgia, serif;
 }
 
-.punk .blk {
-  position: relative;
-  padding: 3.25rem 0 3.75rem;
-  isolation: isolate;
+.punk .blk { position: relative; padding: 3.5rem 0 4rem; }
+.punk .blk--ruled { border-top: 1px solid var(--border); }
+.punk .blk--invert {
+  background: var(--invert-bg);
+  color: var(--invert-text);
+  border: 0;
 }
-/* 破れた境目。次のセクションの色が上に食い込む */
-.punk .blk[style*="--next"]::after {
-  content: "";
-  position: absolute; left: 0; right: 0; bottom: -1px;
-  height: 18px; background: var(--next);
-  clip-path: polygon(0 100%, 3.51% 11.8%, 7.93% 5.7%, 12.03% 28.5%, 14.79% 39.6%, 17.50% 33.8%, 20.29% 7.1%, 24.08% 64.5%, 27.03% 17.4%, 31.38% 73.9%, 35.60% 30.9%, 40.93% 3.6%, 45.94% 22.6%, 48.94% 9.2%, 52.41% 63.7%, 55.51% 45.4%, 59.90% 29.0%, 64.03% 4.9%, 66.80% 16.1%, 71.31% 33.4%, 74.79% 45.7%, 78.65% 23.4%, 83.48% 54.5%, 86.76% 44.8%, 90.83% 68.3%, 95.48% 22.5%, 100.00% 9.2%, 100% 100%);
-  z-index: 2;
-}
-/* 網点。紙面を刷ったような粒を全面に薄く重ねる */
-.punk .blk::before {
-  content: "";
-  position: absolute; inset: 0; z-index: 0; pointer-events: none;
-  background-image: radial-gradient(currentColor 1px, transparent 1.15px);
-  background-size: 7px 7px;
-  opacity: .07;
-}
-.punk .blk > * { position: relative; z-index: 1; }
-
-.punk .blk--green  { background: var(--green);   color: var(--cream); }
-.punk .blk--paper  { background: var(--paper);   color: var(--ink); }
-.punk .blk--paper2 { background: var(--paper-2); color: var(--ink); }
-.punk .blk--ink    { background: var(--ink);     color: var(--cream); }
-
-.punk .blk--green a, .punk .blk--ink a { color: inherit; }
+.punk .blk--invert a { color: inherit; }
+.punk .blk--invert .blk__label span { color: var(--invert-muted); }
 
 /* ── 章のラベル ─────────────────────────────────
    見出しは流れて消えるが、これは左の余白に貼り付いて残る。
    余白が取れる幅でだけ出す。 */
 .punk .blk__label { display: none; }
 
-/* ── 見出し ─────────────────────────────────────── */
-/* 英字を大きく、日本語を小さく下に添える。
-   英字はロゴの木版に合わせた太いスラブ。和文をこの書体で組むと
-   字面が合わないので、日本語は本文の書体のまま小さく置く。 */
-.punk .dh {
-  display: block;
-  margin: 0 0 1.4rem;
-  padding: 0;
-  border: 0;
-  font-weight: 400;
-}
+/* ── 見出し ─────────────────────────────────────
+   英字を大きく、日本語を小さく下に添える。
+   英字は線の細い高コントラストのセリフ。字を大きく組んで、
+   字間を締めたときにいちばん効く書体なので、飾りは足さない。 */
+.punk .dh { display: block; margin: 0 0 1.8rem; padding: 0; border: 0; font-weight: 400; }
 .punk .dh__en {
-  display: inline-block;
-  font-family: "Alfa Slab One", Georgia, "Times New Roman", serif;
-  font-size: 1.85rem;
-  line-height: 1.12;
-  letter-spacing: .005em;
-  transform: rotate(-1.2deg);
-}
-/* ロゴの筆致に合わせた手描きの下線 */
-.punk .dh__en::after {
-  content: "";
   display: block;
-  height: .28em;
-  margin-top: .12em;
-  background: currentColor;
-  -webkit-mask-image: var(--swash); mask-image: var(--swash);
-  -webkit-mask-size: 100% 100%;   mask-size: 100% 100%;
-  -webkit-mask-repeat: no-repeat;  mask-repeat: no-repeat;
+  font-family: var(--display);
+  font-size: clamp(2.4rem, 9vw, 3.4rem);
+  font-weight: 400;
+  line-height: .98;
+  letter-spacing: -.02em;
 }
 .punk .dh__ja {
   display: block;
-  margin-top: .7rem;
-  font-size: .8rem;
-  font-weight: 700;
-  letter-spacing: .16em;
-  opacity: .68;
-}
-.punk {
-  --swash: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 16' preserveAspectRatio='none'%3E%3Cpath d='M3 12.6C48 9.4 96 7.6 150 7.2c48-.4 96 .2 147-2.4-8 4.2-26 5.6-52 6.4-44 1.4-96 1.2-148 1.8-34 .4-66 1.2-94 2.2z'/%3E%3C/svg%3E");
-}
-
-/* ── ヒーロー（大看板）───────────────────────────
-   ロゴ画像ではなく屋号を文字で組み、画面幅いっぱいに張る。
-   幅は SVG の textLength で決めているので、書体の読み込み前後で
-   はみ出したり余ったりしない。 */
-.punk .hero { padding: 2.25rem 0 3.5rem; text-align: center; }
-.punk .hero__stamp { width: 5.5rem; height: auto; margin: 0 auto 1.25rem; display: block; opacity: .92; }
-.punk .hero__sub {
-  margin: 0 0 1.1rem;
+  margin-top: .85rem;
   font-family: var(--mono);
-  font-size: .72rem; font-weight: 700; letter-spacing: .26em;
-  color: rgba(201, 212, 94, .92);
+  font-size: .7rem;
+  letter-spacing: .18em;
+  color: var(--muted);
 }
+.punk .blk--invert .dh__ja { color: var(--invert-muted); }
 
+/* ── ヒーロー（大看板）─────────────────────────── */
+.punk .hero { padding: 2.75rem 0 3.75rem; text-align: center; }
+.punk .hero__sub {
+  margin: 0 0 1.4rem;
+  font-family: var(--mono);
+  font-size: .7rem; font-weight: 400; letter-spacing: .3em;
+  color: var(--invert-muted);
+}
 .punk .hero__type {
-  /* .wrap の外へ出して画面幅いっぱいに使う */
-  margin: 0 calc(50% - 50vw) 1.3rem;
+  margin: 0 calc(50% - 50vw) 1.6rem;
   width: 100vw;
   line-height: 0;
 }
-/* ロゴは 700px 幅の原寸。引き伸ばしすぎると版の粒が眠くなるので上限を置く */
 .punk .hero__type img {
   display: block;
-  width: min(100% - 2rem, 50rem);
+  width: min(100% - 2.5rem, 44rem);
   height: auto;
   margin: 0 auto;
 }
-
 .punk .hero__line {
-  margin: 0 auto 1.5rem;
-  max-width: 30rem;
-  font-size: 1rem; line-height: 1.9;
-  color: rgba(244, 243, 235, .92);
+  margin: 0 auto 1.9rem;
+  max-width: 28rem;
+  font-size: 1rem; line-height: 1.95;
+  color: var(--invert-text);
 }
-.punk .hero__nav { margin: 1.5rem 0 0; font-size: .92rem; }
-.punk .hero__nav a { margin: 0 .55rem; text-underline-offset: .25em; }
-
+.punk .hero__nav {
+  margin: 1.9rem 0 0;
+  font-family: var(--mono); font-size: .72rem; letter-spacing: .14em;
+}
+.punk .hero__nav a { margin: 0 .6rem; text-underline-offset: .35em; }
 
 /* ── 流れる帯 ───────────────────────────────────
-   ヒーローの裾に渡すテープ。中身は下にもあるアプリ名なので、
-   止まっていても何も失われない。 */
+   中身は下にもあるアプリ名なので、止まっていても何も失われない。 */
 .punk .tape {
-  margin: 2.75rem calc(50% - 50vw) -1.25rem;
+  margin: 3.25rem calc(50% - 50vw) -1.5rem;
   width: 100vw;
   overflow: hidden;
-  background: var(--corn);
-  color: var(--green);
-  border-top: 2px solid var(--ink);
-  border-bottom: 2px solid var(--ink);
-  padding: .42rem 0;
-  transform: rotate(-1deg);
+  border-top: 1px solid var(--invert-border);
+  border-bottom: 1px solid var(--invert-border);
+  padding: .8rem 0;
+  color: var(--invert-muted);
 }
 .punk .tape__track { display: flex; width: max-content; }
 .punk .tape__row {
   display: inline-block; white-space: nowrap;
-  padding-right: 1.5rem;
+  padding-right: 2rem;
   font-family: var(--mono);
-  font-size: .82rem; font-weight: 700; letter-spacing: .12em;
+  font-size: .72rem; letter-spacing: .2em;
 }
-.punk .tape__row i { font-style: normal; opacity: .5; margin: 0 .55rem; }
+.punk .tape__row i { font-style: normal; opacity: .45; margin: 0 .9rem; }
 @media (prefers-reduced-motion: no-preference) {
-  .punk .tape__track { animation: tape-run 34s linear infinite; }
+  .punk .tape__track { animation: tape-run 38s linear infinite; }
   @keyframes tape-run { to { transform: translateX(-50%); } }
 }
-
-.punk .tape--foot {
-  margin: 3rem calc(50% - 50vw) -2.5rem;
-  background: var(--cream);
-  color: var(--green);
-  transform: rotate(.8deg);
-}
+.punk .tape--foot { margin: 3.5rem calc(50% - 50vw) -2.75rem; }
 @media (prefers-reduced-motion: no-preference) {
-  .punk .tape--foot .tape__track { animation-duration: 46s; animation-direction: reverse; }
+  .punk .tape--foot .tape__track { animation-duration: 52s; animation-direction: reverse; }
 }
 
-/* ── ステッカー ─────────────────────────────────── */
-.punk .stickers { display: flex; flex-wrap: wrap; gap: .55rem; justify-content: center; margin: 0; padding: 0; list-style: none; }
-.punk .sticker {
-  display: inline-block; margin: 0; padding: .3rem .85rem;
-  background: var(--cream); color: var(--ink);
-  border: 2px solid var(--ink); border-radius: 2px;
-  font-weight: 700; font-size: .86rem; line-height: 1.5;
-  box-shadow: 3px 3px 0 rgba(0,0,0,.35);
+/* ── ステッカー（3つの系統）───────────────────── */
+.punk .stickers {
+  display: flex; flex-wrap: wrap; gap: .5rem; justify-content: center;
+  margin: 0; padding: 0; list-style: none;
 }
-.punk .sticker { --rot: 0deg; transform: rotate(var(--rot)); }
-.punk .sticker:nth-child(2n) { background: var(--corn); color: var(--green); --rot: 1.8deg; }
-.punk .sticker:nth-child(3n) { --rot: -2.2deg; }
+.punk .sticker {
+  --rot: 0deg;
+  display: inline-block; margin: 0; padding: .3rem .95rem;
+  border: 1px solid var(--invert-border); border-radius: 999px;
+  font-family: var(--mono); font-size: .7rem; letter-spacing: .16em; line-height: 1.6;
+  color: var(--invert-text);
+}
 
 /* ── 本文 ───────────────────────────────────────── */
 .punk .blk p { max-width: 34rem; }
-.punk .hero p, .punk .blk--red p, .punk .blk--ink p { margin-left: auto; margin-right: auto; }
-.punk .big { font-size: 1.05rem; line-height: 1.9; }
+.punk .hero p { margin-left: auto; margin-right: auto; }
+.punk .big { font-size: 1.05rem; line-height: 1.95; }
 
-.punk .stance { list-style: none; padding: 0; margin: 1.5rem 0 0; }
+.punk .stance { list-style: none; padding: 0; margin: 1.8rem 0 0; }
 .punk .stance li {
-  margin: 0 0 .7rem; padding-left: 1.6rem; position: relative;
+  margin: 0; padding: .9rem 0 .9rem 2.6rem; position: relative;
+  border-top: 1px solid var(--border);
+  max-width: 40rem;
 }
 .punk .stance li::before {
-  content: "■"; position: absolute; left: 0; top: 0; color: var(--green-mid); font-size: .8em;
+  content: "—"; position: absolute; left: 0; top: .9rem;
+  font-family: var(--mono); color: var(--muted);
 }
 
 /* ── 棚（公開中のアプリ）─────────────────────────
-   画面写真が主役。アイコンと名前だけの一覧では、
-   スクロールして止まってもらえなかった。 */
+   画面写真が主役。紙面が無彩色なので、色はここにしか無い。 */
 .punk #apps > .wrap { max-width: 62rem; }
-.punk .shelf__note { margin: -.6rem 0 1.5rem; font-size: .92rem; opacity: .75; }
-
+.punk .shelf__note {
+  margin: -1.1rem 0 2rem;
+  font-family: var(--mono); font-size: .72rem; letter-spacing: .1em; color: var(--muted);
+}
 .punk .shelf {
   list-style: none; margin: 0; padding: 0;
-  display: grid; gap: 1.2rem;
+  display: grid; gap: 2.25rem 1.5rem;
   grid-template-columns: 1fr;
 }
-.punk .shelf__card {
-  position: relative;
-  display: flex; flex-direction: column;
-  background: var(--cream);
-  border: 2px solid var(--ink);
-  border-radius: 3px;
-  box-shadow: 5px 5px 0 var(--ink);
-  overflow: hidden;
-}
-/* 画面写真は縦長なので、アプリ自身の色を地に敷いて上半分だけ見せる */
+.punk .shelf__card { position: relative; display: flex; flex-direction: column; }
 .punk .shelf__shot {
   aspect-ratio: 4 / 3;
-  background: var(--tint, var(--paper-2));
-  border-bottom: 2px solid var(--ink);
+  background: var(--surface-2);
   display: flex; justify-content: center; align-items: flex-start;
-  padding-top: .9rem;
+  padding-top: 1.1rem;
   overflow: hidden;
 }
-.punk .shelf__shot img {
-  width: 46%; height: auto; flex: 0 0 auto;
-  border-radius: 9px 9px 0 0;
-  border: 1px solid rgba(0, 0, 0, .22);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, .22);
-}
+.punk .shelf__shot img { width: 46%; height: auto; flex: 0 0 auto; }
 /* 横向き専用のアプリ。縦持ちの寸法で出すと細い帯になって何も読めない */
 .punk .shelf__shot--wide { align-items: center; padding-top: 0; }
-.punk .shelf__shot--wide img {
-  width: 88%; border-radius: 6px;
-}
-.punk .shelf__shot .shelf__shot--icon {
-  width: 34%; align-self: center; margin: auto 0;
-  border-radius: 18%; box-shadow: 0 6px 16px rgba(0, 0, 0, .22);
-}
+.punk .shelf__shot--wide img { width: 88%; }
+.punk .shelf__shot .shelf__shot--icon { width: 32%; align-self: center; margin: auto 0; }
 .punk .shelf__body {
-  flex: 1; padding: .9rem 1rem 1.1rem;
-  display: flex; flex-direction: column; gap: .4rem;
+  flex: 1; padding: .9rem 0 0;
+  display: flex; flex-direction: column; gap: .45rem;
+  border-top: 1px solid var(--border);
 }
 .punk .shelf__meta {
   margin: 0; font-family: var(--mono);
-  font-size: .7rem; letter-spacing: .1em; color: #7c8a7c;
+  font-size: .68rem; letter-spacing: .12em; color: var(--muted);
 }
-.punk .shelf__name { margin: 0; font-size: 1.1rem; line-height: 1.4; }
-.punk .shelf__name a { color: var(--ink); text-decoration: none; }
-.punk .shelf__name a:hover { text-decoration: underline; }
+.punk .shelf__name {
+  margin: 0; font-family: var(--display); font-weight: 400;
+  font-size: 1.55rem; line-height: 1.15; letter-spacing: -.01em;
+}
+.punk .shelf__name a { color: var(--text); text-decoration: none; }
 /* カードのどこを押しても詳細へ。App Store のリンクだけ上に出す */
 .punk .shelf__name a::after { content: ""; position: absolute; inset: 0; z-index: 1; }
-.punk .shelf__tagline { margin: 0; font-size: .92rem; line-height: 1.7; color: #4c5a4e; }
+.punk .shelf__tagline { margin: 0; font-size: .9rem; line-height: 1.75; color: var(--muted); }
 .punk .shelf__tags {
-  list-style: none; margin: 0; padding: 0;
-  display: flex; flex-wrap: wrap; gap: .35rem;
+  list-style: none; margin: auto 0 0; padding: .5rem 0 0;
+  display: flex; flex-wrap: wrap; gap: .3rem .9rem;
 }
 .punk .shelf__tags li {
-  font-family: var(--mono);
-  font-size: .72rem; letter-spacing: .04em; line-height: 1.7;
-  padding: .08rem .5rem;
-  border: 1px solid currentColor; border-radius: 20px;
-  color: #5c6a5d;
+  font-family: var(--mono); font-size: .68rem; letter-spacing: .1em;
+  color: var(--muted);
 }
-.punk .shelf__tags--quiet li { color: rgba(244, 243, 235, .75); }
-.punk .shelf__store { position: relative; z-index: 2; margin: .55rem 0 0; padding-top: .1rem; font-size: .92rem; }
-.punk .shelf__tags { margin-top: auto; padding-top: .2rem; }
-.punk .shelf__store a { white-space: nowrap; }
-.punk .badge--new {
-  background: var(--corn); color: var(--green);
-  vertical-align: .12em;
+.punk .shelf__tags--quiet li { color: var(--muted); }
+.punk .shelf__store {
+  position: relative; z-index: 2; margin: .5rem 0 0;
+  font-family: var(--mono); font-size: .7rem; letter-spacing: .1em;
 }
-@media (hover: hover) {
-  .punk .shelf__card { transition: transform .18s ease, box-shadow .18s ease; }
-  .punk .shelf__card:hover { transform: translate(-2px, -2px); box-shadow: 8px 8px 0 var(--ink); }
-  .punk .shelf__shot img { transition: transform .5s cubic-bezier(.2, .7, .3, 1); }
-  .punk .shelf__card:hover .shelf__shot img { transform: scale(1.05); }
-}
-@media (prefers-reduced-motion: reduce) {
-  .punk .shelf__card { transition: none; }
-}
-/* ── アプリのカード ─────────────────────────────── */
-.punk .app-grid { gap: 1rem; }
-.punk .app-card {
-  background: var(--cream);
-  border: 2px solid var(--ink);
-  border-radius: 3px;
-  box-shadow: 5px 5px 0 var(--ink);
-}
-.punk .app-card__name a { color: var(--ink); }
-.punk .app-card__icon img { border-radius: 12px; border: 1px solid rgba(0,0,0,.15); }
-@media (hover: hover) {
-  .punk .app-card:not(.app-card--quiet):hover {
-    transform: translate(-2px, -2px);
-    box-shadow: 8px 8px 0 var(--ink);
-    border-color: var(--ink);
-  }
-}
-.punk .app-card--quiet {
-  background: rgba(244, 243, 235, .1);
-  border-color: var(--cream);
-  box-shadow: 5px 5px 0 rgba(0,0,0,.28);
-  color: var(--cream);
-}
-.punk .app-card--quiet .app-card__tagline { color: rgba(244,243,235,.8); }
+.punk .shelf__store a { white-space: nowrap; text-underline-offset: .35em; }
+.punk .badge--new,
 .punk .badge {
-  background: var(--cream); color: var(--ink);
-  border: 2px solid var(--ink); border-radius: 2px;
-  transform: rotate(-3deg); display: inline-block;
-  padding: .05rem .45rem; font-size: .7rem;
+  display: inline-block; vertical-align: .22em;
+  margin-left: .5rem; padding: .1rem .5rem;
+  border: 1px solid currentColor; border-radius: 999px;
+  font-family: var(--mono); font-size: .58rem; letter-spacing: .16em;
+  color: var(--muted);
+}
+@media (hover: hover) {
+  .punk .shelf__name a:hover { text-decoration: underline; text-underline-offset: .2em; }
+  .punk .shelf__shot img { transition: transform .6s cubic-bezier(.2, .7, .3, 1); }
+  .punk .shelf__card:hover .shelf__shot img { transform: scale(1.04); }
 }
 
+/* ── 準備中のカード ─────────────────────────────── */
+.punk .app-grid { gap: 1.25rem; }
+.punk .app-card {
+  background: none; border: 0; border-top: 1px solid var(--border);
+  border-radius: 0; box-shadow: none;
+  padding: 1.1rem 0 0;
+}
+.punk .app-card__name {
+  font-family: var(--display); font-weight: 400;
+  font-size: 1.35rem; line-height: 1.2;
+}
+.punk .app-card__name a { color: var(--text); }
+.punk .app-card__icon img { border-radius: 14px; border: 0; }
+.punk .app-card--quiet { background: none; color: inherit; }
+.punk .app-card--quiet .app-card__icon img { opacity: 1; }
+.punk .app-card--quiet .app-card__tagline { color: var(--muted); }
+
 /* ── 連絡先 ─────────────────────────────────────── */
-.punk #contact { padding-bottom: 5.5rem; }
-.punk .contact-list dt { color: rgba(244,243,235,.6); }
-.punk .contact-list dd { font-family: var(--mono); font-size: 1.02rem; }
-.punk .contact-list dd a { color: var(--cream); }
+.punk #contact { padding-bottom: 6rem; }
+.punk .contact-list dt {
+  font-family: var(--mono); font-size: .68rem; letter-spacing: .16em;
+  color: var(--invert-muted);
+}
+.punk .contact-list dd { font-family: var(--mono); font-size: .98rem; }
+.punk .contact-list dd a { color: var(--invert-text); text-underline-offset: .3em; }
 
 @media (min-width: 78rem) {
   .punk .blk > .wrap { position: relative; }
@@ -718,26 +645,22 @@ body::after {
   }
   .punk .blk__label span {
     position: sticky; top: 2.25rem; display: block;
-    font-family: var(--mono); font-size: .66rem;
-    font-weight: 700; letter-spacing: .16em; line-height: 1.5;
-    opacity: .45;
+    font-family: var(--mono); font-size: .64rem;
+    letter-spacing: .18em; line-height: 1.6;
+    color: var(--muted);
   }
-  /* 濃い面の上では、薄すぎると沈む */
-  .punk .blk--ink .blk__label span,
-  .punk .blk--green .blk__label span { opacity: .6; }
 }
 
 @media (min-width: 40rem) {
-  .punk .blk { padding: 4.25rem 0 4.75rem; }
-  .punk .hero { padding: 3rem 0 4.5rem; }
-  .punk .hero__stamp { width: 6.5rem; }
-  .punk .dh__en { font-size: 2.45rem; }
-  .punk .shelf { grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
+  .punk .blk { padding: 5rem 0 5.5rem; }
+  .punk .hero { padding: 3.5rem 0 4.75rem; }
+  .punk .dh__en { font-size: clamp(3rem, 5.5vw, 4.25rem); }
+  .punk .shelf { grid-template-columns: repeat(2, 1fr); gap: 2.75rem 2rem; }
 }
 @media (min-width: 64rem) {
   .punk .shelf { grid-template-columns: repeat(var(--cols, 2), 1fr); }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .punk .app-card { transition: none; }
+  .punk .shelf__shot img { transition: none; }
 }
