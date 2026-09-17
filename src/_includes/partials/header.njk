@@ -10,11 +10,8 @@
       </picture>
     </a>
     {%- else %}
-    <a class="site-header__brand" href="/{{ lang }}/">
-      <picture>
-        <source srcset="/assets/brand/wordline-cream.png" media="(prefers-color-scheme: dark)">
-        <img src="/assets/brand/wordline-ink.png" alt="{{ site.name | loc(lang) }}">
-      </picture>
+    <a class="site-header__brand site-header__brand--type" href="/{{ lang }}/" aria-label="{{ site.name | loc(lang) }}">
+      {% set size = "sm" %}{% include "partials/wordmark.njk" %}
     </a>
     {%- endif %}
     {%- set others = [] %}

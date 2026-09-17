@@ -15,10 +15,8 @@ bodyClass: "punk"
       <p class="hero__sub">{{ t.home.heroSub }}</p>
       {#- 一行版のロゴ（角を丸めた抜き版）。横に長いので、大看板の幅にそのまま乗る。 -#}
       <h1 class="hero__type">
-        <picture>
-          <source srcset="/assets/brand/wordline-ink.png" media="(prefers-color-scheme: dark)">
-          <img src="/assets/brand/wordline-cream.png" alt="{{ t.home.title }}" width="700" height="234">
-        </picture>
+        <span class="vh">{{ t.home.title }}</span>
+        {% set size = "lg" %}{% include "partials/wordmark.njk" %}
       </h1>
       <p class="hero__line">{{ t.home.heroLine }}</p>
       <ul class="stickers">
