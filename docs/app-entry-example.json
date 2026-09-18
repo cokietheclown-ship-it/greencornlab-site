@@ -4,6 +4,8 @@
   "slug": "tabiwari",
   "name": { "ja": "TabiWari", "en": "TabiWari" },
   "platform": "iOS",
+  "_comment_listed": "未配信でURLだけ先に用意するときは false。一覧・sitemapに出さず noindex を付ける。配信したら消す",
+  "listed": true,
   "languages": ["ja", "en"],
   "defaultLanguage": "ja",
   "email": "tabiwari@greencornlab.com",

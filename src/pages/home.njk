@@ -38,7 +38,7 @@ bodyClass: "punk"
       <div class="tape__track">
         {%- for n in [1, 2] %}
         <span class="tape__row">
-          {%- for item in pages.apps %}{{ item.name | loc(lang) }} <i>✳</i> {% endfor -%}
+          {%- for item in pages.listedApps %}{{ item.name | loc(lang) }} <i>✳</i> {% endfor -%}
         </span>
         {%- endfor %}
       </div>

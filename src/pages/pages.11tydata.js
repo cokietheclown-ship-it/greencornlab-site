@@ -65,7 +65,10 @@ export default {
       data.kind === "fallback"
         ? `/${data.target.app.defaultLanguage}/${data.target.app.slug}/${data.target.page}/`
         : null,
-    noindex: (data) => data.kind === "fallback" || data.kind === "404",
+    // 未公開のまま先にURLだけ用意したアプリ（listed: false）は、検索結果にも出さない。
+    // 直接開けば読めるので、App Store の審査には差し支えない。
+    noindex: (data) =>
+      data.kind === "fallback" || data.kind === "404" || data.app?.listed === false,
 
     // hreflang（そのアプリが対応している言語だけ）
     alternates: (data) => {

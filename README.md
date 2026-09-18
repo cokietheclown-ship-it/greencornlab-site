@@ -27,6 +27,11 @@ npm run serve     # http://localhost:8080 で確認
 `languages` に書いた言語の訳が抜けていると、ビルドがエラーで止まります
 （英語ページに日本語がそのまま出るのを防ぐため）。
 
+まだ配信していないアプリのURLを、審査のために先に用意したいときは `"listed": false` を足します。
+サポートページとプライバシーポリシーは生成されますが、トップページの一覧にも sitemap.xml にも出ず、
+`noindex` が付きます（URLを直接開けば読めます）。配信が始まったら `status` を `released` にして、
+この行を消してください。
+
 追記したい文章がある場合だけ、以下を置きます（無ければ無視されます）。
 
 - `src/_includes/content/apps/<slug>/support-<lang>.njk` … サポートページのFAQ末尾に追記

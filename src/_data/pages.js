@@ -64,12 +64,21 @@ export default async function () {
       .map((lang) => ({ app, lang, kind: "intro" }))
   );
 
+  // まだ配信していないアプリは、審査に出すためのサポート/ポリシーURLだけを先に用意することがある。
+  // "listed": false を書いたアプリは、トップページの一覧にも sitemap にも出さない
+  // （URLは生きているので、直接開けば読める）。配信が始まったら status を released にして外す。
+  const listed = (app) => app.listed !== false;
+
   // sitemap.xml に載せるURL。フォールバック・404・言語振り分けは載せない。
   const sitemapUrls = [
     ...ALL_LANGS.map((lang) => ({ url: `/${lang}/`, priority: "1.0" })),
     ...intro.map((t) => ({ url: `/${t.lang}/${t.app.slug}/`, priority: "0.9" })),
-    ...targets("support").map((t) => ({ url: `/${t.lang}/${t.app.slug}/support/`, priority: "0.5" })),
-    ...targets("privacy").map((t) => ({ url: `/${t.lang}/${t.app.slug}/privacy/`, priority: "0.3" }))
+    ...targets("support")
+      .filter((t) => listed(t.app))
+      .map((t) => ({ url: `/${t.lang}/${t.app.slug}/support/`, priority: "0.5" })),
+    ...targets("privacy")
+      .filter((t) => listed(t.app))
+      .map((t) => ({ url: `/${t.lang}/${t.app.slug}/privacy/`, priority: "0.3" }))
   ];
 
   // 棚は新しい順に並べる。日付が無いものは後ろへ。
@@ -85,9 +94,11 @@ export default async function () {
     languages: ALL_LANGS,
     home: ALL_LANGS.map((lang) => ({ lang, kind: "home" })),
     apps,
+    // 名前を出してよいアプリだけ（トップの流れる帯など、一覧の外で名前を並べる場所で使う）
+    listedApps: apps.filter(listed),
     released,
     newest,
-    comingSoon: apps.filter((a) => a.status !== "released"),
+    comingSoon: apps.filter((a) => a.status !== "released" && listed(a)),
     intro,
     sitemapUrls,
     support: targets("support"),
