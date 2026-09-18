@@ -111,11 +111,16 @@ a:hover, a:focus { color: var(--accent-hover); }
 .wordmark--sm { --gap: 2px; gap: 7px; font-size: 13px; }
 .wordmark--sm b { width: 1.42em; height: 1.42em; }
 
-/* 大看板：語ごとに改行し、行の幅をそろえる。
-   ブロックは語の長さで幅が変わるが、行の端は必ず合う */
-.wordmark--lg { --gap: .055em; flex-direction: column; gap: .055em; font-size: clamp(2.5rem, 13vw, 5.5rem); }
-.wordmark--lg .wordmark__word { width: 100%; }
-.wordmark--lg b { flex: 1; height: 1.34em; }
+/* 大看板：語ごとに改行。ブロックはすべて同じ正方形で、
+   いちばん長い GREEN の5つが幅いっぱいに収まる大きさに決める。
+   CORN と LAB はそのぶん短い行になる。
+   1行 = 5 × 1.34em + 4 × .055em = 6.92em なので、幅をそれで割る */
+.wordmark--lg {
+  --gap: .055em;
+  flex-direction: column; align-items: center; gap: .055em;
+}
+.wordmark--lg .wordmark__word { justify-content: center; }
+.wordmark--lg b { flex: none; width: 1.34em; height: 1.34em; }
 
 /* ── ヘッダー / フッター ───────────────────────────── */
 .site-header { border-bottom: 1px solid var(--border); background: var(--surface); }
@@ -341,23 +346,23 @@ body::after {
   }
   /* ブロックが頭から1つずつ決まる。にじみや揺れは、この輪郭には合わない */
   .punk .hero__type .wordmark b {
-    animation: box-in .42s cubic-bezier(.2, .82, .25, 1) both;
-    animation-delay: calc(.16s + var(--i, 0) * .04s);
+    animation: box-in .84s cubic-bezier(.2, .82, .25, 1) both;
+    animation-delay: calc(.16s + var(--i, 0) * .08s);
   }
   .punk .hero__line {
-    animation: rise-in .7s cubic-bezier(.2, .7, .3, 1) .72s both;
+    animation: rise-in .7s cubic-bezier(.2, .7, .3, 1) 1.35s both;
   }
   .punk .sticker {
     animation: sticker-in .55s cubic-bezier(.2, .9, .3, 1.4) both;
   }
-  .punk .sticker:nth-child(1) { animation-delay: .88s; }
-  .punk .sticker:nth-child(2) { animation-delay: .96s; }
-  .punk .sticker:nth-child(3) { animation-delay: 1.04s; }
+  .punk .sticker:nth-child(1) { animation-delay: 1.5s; }
+  .punk .sticker:nth-child(2) { animation-delay: 1.58s; }
+  .punk .sticker:nth-child(3) { animation-delay: 1.66s; }
   .punk .hero__nav {
-    animation: rise-in .6s cubic-bezier(.2, .7, .3, 1) 1.16s both;
+    animation: rise-in .6s cubic-bezier(.2, .7, .3, 1) 1.8s both;
   }
   .punk .tape {
-    animation: tape-in .7s cubic-bezier(.2, .7, .3, 1) 1.24s both;
+    animation: tape-in .7s cubic-bezier(.2, .7, .3, 1) 1.9s both;
   }
 
   @keyframes eyebrow-in {
@@ -490,7 +495,9 @@ body::after {
   line-height: 0;
 }
 .punk .hero__type .wordmark {
-  width: min(100% - 2.5rem, 44rem);
+  --w: min(100vw - 2.5rem, 34rem);
+  width: var(--w);
+  font-size: calc(var(--w) / 6.92);
   margin: 0 auto;
 }
 .punk .hero__line {
@@ -674,8 +681,6 @@ body::after {
 }
 
 @media (min-width: 40rem) {
-  /* 広い画面では、3段のままブロックを少し詰める */
-  .wordmark--lg { font-size: clamp(2.6rem, 7.4vw, 4.4rem); }
   .wordmark--sm { font-size: 14px; }
 
   .punk .blk { padding: 5rem 0 5.5rem; }
