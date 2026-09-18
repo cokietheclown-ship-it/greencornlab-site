@@ -9,6 +9,16 @@
     "ja"
   ],
   "defaultLanguage": "ja",
+  "appStore": {
+    "id": 6810844338,
+    "category": {
+      "ja": "教育",
+      "en": "Education"
+    },
+    "url": "https://apps.apple.com/jp/app/id6810844338"
+  },
+  "appStoreUrl": "https://apps.apple.com/jp/app/id6810844338",
+  "releasedOn": "2026-09-16",
   "email": "kurukuru@greencornlab.com",
   "policyUpdated": {
     "ja": "2026年9月8日",
@@ -89,13 +99,13 @@
       }
     ]
   },
-  "status": "coming-soon",
+  "status": "released",
   "tagline": {
     "ja": "メリーゴーランドのユニコーンが問題を背負って回ってくる学習アプリ。",
     "en": "A learning app where carousel unicorns bring the questions round."
   },
   "icon": true,
-  "screenshots": 0,
+  "screenshots": 6,
   "tags": {
     "ja": [
       "LEARNING",
