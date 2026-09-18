@@ -89,33 +89,33 @@ a:hover, a:focus { color: var(--accent-hover); }
   background: var(--surface); border: 1px solid var(--border); border-radius: 6px;
 }
 
-/* ── 箱組みの屋号 ─────────────────────────────────
-   箱の中に語を1つずつ。地と文字が入れ替わるので、
-   明るい面では黒箱に白字、暗い面では白箱に黒字になる。
+/* ── ブロック組みの屋号 ───────────────────────────
+   1文字ずつブロックに入れる。地と文字が入れ替わるので、
+   明るい面では黒ブロックに白字、暗い面では白ブロックに黒字になる。
    画像ではないので、どの大きさでも輪郭が潰れない。 */
-.wordmark { display: flex; gap: .18em; line-height: 1; }
+.wordmark { display: flex; line-height: 1; }
+.wordmark__word { display: flex; gap: var(--gap); }
 .wordmark b {
-  display: block;
+  display: grid; place-items: center;
   background: var(--text);
   color: var(--bg);
   font-family: "Archivo Black", "Helvetica Neue", Arial, sans-serif;
   font-weight: 400;
-  letter-spacing: -.01em;
-  padding: .16em .2em .2em;
-  text-align: center;
+  letter-spacing: 0;
+  padding-bottom: .06em;   /* 書体のベースラインのぶん、見た目の中心を下げる */
 }
 /* 反転した面の上では、地と文字の役が入れ替わる */
 .blk--invert .wordmark b { background: var(--invert-text); color: var(--invert-bg); }
 
-.wordmark--sm { font-size: 15px; }
-.wordmark--sm b { min-width: 3.4em; }
+/* ヘッダー：1行に12ブロック。正方形をきっちり並べる */
+.wordmark--sm { --gap: 2px; gap: 7px; font-size: 13px; }
+.wordmark--sm b { width: 1.42em; height: 1.42em; }
 
-.wordmark--lg {
-  gap: .1em;
-  font-size: clamp(2.6rem, 15.5vw, 3.4rem);
-  flex-direction: column;
-}
-.wordmark--lg b { padding: .12em .18em .16em; }
+/* 大看板：語ごとに改行し、行の幅をそろえる。
+   ブロックは語の長さで幅が変わるが、行の端は必ず合う */
+.wordmark--lg { --gap: .055em; flex-direction: column; gap: .055em; font-size: clamp(2.5rem, 13vw, 5.5rem); }
+.wordmark--lg .wordmark__word { width: 100%; }
+.wordmark--lg b { flex: 1; height: 1.34em; }
 
 /* ── ヘッダー / フッター ───────────────────────────── */
 .site-header { border-bottom: 1px solid var(--border); background: var(--surface); }
@@ -339,13 +339,11 @@ body::after {
   .punk .hero__sub {
     animation: eyebrow-in .8s cubic-bezier(.2, .7, .3, 1) .05s both;
   }
-  /* 箱が左から1つずつ落ちて決まる。にじみや揺れは、この輪郭には合わない */
+  /* ブロックが頭から1つずつ決まる。にじみや揺れは、この輪郭には合わない */
   .punk .hero__type .wordmark b {
-    animation: box-in .5s cubic-bezier(.2, .82, .25, 1) both;
+    animation: box-in .42s cubic-bezier(.2, .82, .25, 1) both;
+    animation-delay: calc(.16s + var(--i, 0) * .04s);
   }
-  .punk .hero__type .wordmark b:nth-child(1) { animation-delay: .18s; }
-  .punk .hero__type .wordmark b:nth-child(2) { animation-delay: .3s; }
-  .punk .hero__type .wordmark b:nth-child(3) { animation-delay: .42s; }
   .punk .hero__line {
     animation: rise-in .7s cubic-bezier(.2, .7, .3, 1) .72s both;
   }
@@ -676,10 +674,9 @@ body::after {
 }
 
 @media (min-width: 40rem) {
-  /* 横に3つ並べる。箱の幅はそろえて、行の端をきっちり合わせる */
-  .wordmark--lg { flex-direction: row; font-size: clamp(2.2rem, 6.2vw, 4.6rem); }
-  .wordmark--lg b { flex: 1; }
-  .wordmark--sm { font-size: 16px; }
+  /* 広い画面では、3段のままブロックを少し詰める */
+  .wordmark--lg { font-size: clamp(2.6rem, 7.4vw, 4.4rem); }
+  .wordmark--sm { font-size: 14px; }
 
   .punk .blk { padding: 5rem 0 5.5rem; }
   .punk .hero { padding: 3.5rem 0 4.75rem; }

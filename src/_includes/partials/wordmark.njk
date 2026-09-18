@@ -1,6 +1,17 @@
-{#- 箱の中に語を1つずつ入れた屋号。BBC の3つ組と同じ組み方。
-    画像ではなく文字なので、どの大きさでも潰れず、明暗で色が入れ替わる。
-    size: "lg"（大看板）/ "sm"（ヘッダー） -#}
+{#- 屋号を1文字ずつブロックに入れる。BBC の B|B|C と同じ組み方。
+    画像ではなく文字なので、どの大きさでも輪郭が潰れず、明暗で色が入れ替わる。
+    from + loop.index0 が全体の通し番号で、ブロックが決まっていく順番に使う。
+    （Nunjucks は文字列を1文字ずつ回せないので、文字の配列で持つ）
+    size: "lg"（大看板・語ごとに改行）/ "sm"（ヘッダー・1行） -#}
+{%- set words = [
+  { chars: ["G", "R", "E", "E", "N"], from: 0 },
+  { chars: ["C", "O", "R", "N"],      from: 5 },
+  { chars: ["L", "A", "B"],           from: 9 }
+] %}
 <span class="wordmark wordmark--{{ size | default('sm') }}" aria-hidden="true">
-  <b>GREEN</b><b>CORN</b><b>LAB</b>
+  {%- for word in words %}
+  <span class="wordmark__word">
+    {%- for ch in word.chars %}<b style="--i: {{ word.from + loop.index0 }}">{{ ch }}</b>{% endfor -%}
+  </span>
+  {%- endfor %}
 </span>
