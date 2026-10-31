@@ -69,6 +69,28 @@
     </section>
     {%- endfor %}
 
+    {#- 団体からの問い合わせの入口。個人の利用者向けの節とは別に置く。
+        学校や事業所が一括配布を検討するときに見る点は、保護者が見る点と違う。 #}
+    {%- if intro and intro.organizations %}
+    <section class="org-block" data-reveal>
+      <h2>{{ intro.organizations.heading }}</h2>
+      {%- for para in intro.organizations.body %}
+      <p>{{ para }}</p>
+      {%- endfor %}
+      {%- if intro.organizations.list %}
+      <ul>
+        {%- for item in intro.organizations.list %}
+        <li>{{ item }}</li>
+        {%- endfor %}
+      </ul>
+      {%- endif %}
+      {%- if app.email %}
+      <p class="contact">{{ intro.organizations.contactLead }}
+        <a href="mailto:{{ app.email }}">{{ app.email }}</a></p>
+      {%- endif %}
+    </section>
+    {%- endif %}
+
     {%- if app.appStoreUrl %}
     <section class="cta-block" data-reveal>
       <h2>{{ t.intro.downloadHeading }}</h2>
