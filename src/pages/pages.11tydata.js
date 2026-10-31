@@ -33,6 +33,7 @@ export default {
         case "support": return `${name} ${t.support.titleSuffix} | ${loc(data.site.name, data.lang)}`;
         case "privacy": return `${name} ${t.privacy.title} | ${loc(data.site.name, data.lang)}`;
         case "fallback": return t.fallback.title;
+        case "notes-index": return `${t.notes.title} | ${loc(data.site.name, data.lang)}`;
         case "404": return `${t.notFound.title} | ${loc(data.site.name, data.lang)}`;
         default: return loc(data.site.name, data.lang);
       }

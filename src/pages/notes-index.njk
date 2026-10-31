@@ -1,0 +1,26 @@
+---
+pagination:
+  data: pages.languages
+  size: 1
+  alias: noteLang
+permalink: "/{{ noteLang }}/notes/"
+eleventyComputed:
+  lang: "{{ noteLang }}"
+  pageKind: "notes-index"
+---
+{%- set posts = collections.notes | noteList(lang) %}
+<h1>{{ t.notes.title }}</h1>
+<p class="lead">{{ t.notes.lead }}</p>
+
+{%- if posts.length %}
+<ul class="note-list">
+  {%- for post in posts %}
+  <li class="note-list__item">
+    <h2><a href="{{ post.url }}">{{ post.data.title }}</a></h2>
+    <p>{{ post.data.description }}</p>
+  </li>
+  {%- endfor %}
+</ul>
+{%- else %}
+<p>{{ t.notes.empty }}</p>
+{%- endif %}

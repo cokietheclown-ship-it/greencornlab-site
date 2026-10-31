@@ -20,6 +20,14 @@ export default function (eleventyConfig) {
     return value[lang] ?? null;
   });
 
+  // 記事をその言語のものだけに絞り、新しい順に並べる。
+  // 日付はファイル名ではなく frontmatter の date を正とする（公開日を後から直せるように）。
+  eleventyConfig.addFilter("noteList", (collection, lang) =>
+    (collection ?? [])
+      .filter((item) => (item.data.lang ?? "ja") === lang)
+      .sort((a, b) => String(b.data.date ?? "").localeCompare(String(a.data.date ?? "")))
+  );
+
   // 文字列中の {app} をアプリ名に差し替える（i18n の共通文言用）
   eleventyConfig.addFilter("fill", (str, vars) => {
     if (typeof str !== "string") return "";

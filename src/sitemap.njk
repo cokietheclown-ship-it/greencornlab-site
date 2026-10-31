@@ -10,4 +10,16 @@ eleventyExcludeFromCollections: true
     <priority>{{ item.priority }}</priority>
   </url>
 {%- endfor %}
+{%- for post in collections.notes %}
+  <url>
+    <loc>{{ site.url }}{{ post.url }}</loc>
+    <priority>0.7</priority>
+  </url>
+{%- endfor %}
+{%- for lang in pages.languages %}
+  <url>
+    <loc>{{ site.url }}/{{ lang }}/notes/</loc>
+    <priority>0.4</priority>
+  </url>
+{%- endfor %}
 </urlset>

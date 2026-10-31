@@ -4,6 +4,7 @@
   "otherLangName": "English",
   "nav": {
     "home": "ホーム",
+    "notes": "記録のはなし",
     "support": "サポート",
     "privacy": "プライバシーポリシー",
     "skipToContent": "本文へスキップ"
@@ -45,6 +46,11 @@
       "comingSoon": "ON THE BENCH",
       "contact": "SAY HELLO"
     }
+  },
+  "notes": {
+    "title": "記録のはなし",
+    "lead": "子どもの記録をつけることについて、調べて分かったことや、作りながら考えたことを置いています。",
+    "empty": "まだ記事はありません。"
   },
   "intro": {
     "download": "App Store で {app} を入手（無料）",

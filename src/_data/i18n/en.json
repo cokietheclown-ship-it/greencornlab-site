@@ -4,6 +4,7 @@
   "otherLangName": "日本語",
   "nav": {
     "home": "Home",
+    "notes": "Notes",
     "support": "Support",
     "privacy": "Privacy Policy",
     "skipToContent": "Skip to content"
@@ -45,6 +46,11 @@
       "comingSoon": "ON THE BENCH",
       "contact": "SAY HELLO"
     }
+  },
+  "notes": {
+    "title": "Notes",
+    "lead": "Notes on keeping records of a child, written while building these apps.",
+    "empty": "No notes yet."
   },
   "intro": {
     "download": "Get {app} on the App Store (free)",
